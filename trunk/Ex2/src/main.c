@@ -9,7 +9,6 @@ void quit();
 void strip_newline(char *str, int size);
 void run_command(char* command);
 char* get_command_param(char* command, int param_number);
-void print_error(char* error);
 
 bool exitFlag = false;
 
@@ -38,7 +37,14 @@ void run_command(char* command) {
 	char* command_name = get_command_param(command, 0);
 
 	if(strcmp("add_vertex", command_name) == 0) {
-		add_vertex("name");
+		char* vertex_name = get_command_param(command, 1);
+		if(vertex_name == NULL) {
+			print_error("Command format is not valid");
+		} else if(strlen(vertex_name) < 1) {
+			print_error("When adding a vertex name must have at least one letter");
+		} else {
+			add_vertex(vertex_name);
+		}
 	} else if(strcmp("remove_vertex", command_name) == 0) {
 		add_vertex("name");
 	} else if(strcmp("add_edge", command_name) == 0) {
@@ -46,7 +52,7 @@ void run_command(char* command) {
 	} else if(strcmp("remove_edge", command_name) == 0) {
 		add_vertex("name");
 	} else if(strcmp("print", command_name) == 0) {
-		add_vertex("name");
+		print();
 	} else if(strcmp("cluster", command_name) == 0) {
 		add_vertex("name");
 	} else if(strcmp("quit", command_name) == 0) {
@@ -59,11 +65,15 @@ void run_command(char* command) {
 // this function retrieve a parameter from the command according to the given param_number
 char* get_command_param(char* command, int param_number) {
 	int current_param = 0;
+	char command_tmp[MAX_LENGTH];
+	strcpy(command_tmp, command);
+
 	char* user_input = NULL;
-	user_input = strtok(command, " ");
+	user_input = strtok(command_tmp, " ");
 
 	while(current_param < param_number) {
 		user_input = strtok(NULL, " ");
+		current_param++;
 	}
 
 	return user_input;
@@ -80,10 +90,4 @@ void strip_newline(char *str, int size) {
         }
     }
 }
-
-// this function prints an error message
-void print_error(char* error) {
-	printf("Error: %s \n", error);
-}
-
 

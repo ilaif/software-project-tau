@@ -21,4 +21,6 @@ void print();
 
 void cluster(int num_of_clusters);
 
+void print_error(char* error);
+
 #endif
