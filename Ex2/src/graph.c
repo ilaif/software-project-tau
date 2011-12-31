@@ -1,8 +1,9 @@
 
+#include <stdio.h>
 #include "graph.h"
 
 void add_vertex(char* name) {
-
+	printf("Add vertex: %s \n", name);
 }
 
 void remove_vertex_by_id(int id) {
@@ -26,9 +27,14 @@ void remove_edge(int id) {
 }
 
 void print() {
-
+	printf("Print \n");
 }
 
 void cluster(int num_of_clusters) {
 
+}
+
+// this function prints an error message
+void print_error(char* error) {
+	printf("Error: %s \n", error);
 }
