@@ -38,9 +38,7 @@ void run_command(char* command) {
 
 	if(strcmp("add_vertex", command_name) == 0) {
 		char* vertex_name = get_command_param(command, 1);
-		if(vertex_name == NULL) {
-			print_error("Command format is not valid");
-		} else if(strlen(vertex_name) < 1) {
+		if(vertex_name == NULL || strlen(vertex_name) < 1) {
 			print_error("When adding a vertex name must have at least one letter");
 		} else {
 			add_vertex(vertex_name);
