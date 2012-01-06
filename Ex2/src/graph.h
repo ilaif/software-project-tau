@@ -23,4 +23,20 @@ void cluster(int num_of_clusters);
 
 void print_error(char* error);
 
+int next_ver();
+
+int next_ed();
+
+int search_ver(char* name);
+
+bool edge_duplication(int id1, int id2);
+
+bool ver_exist(int id);
+
+bool ed_exist(int id);
+
+bool edges_attached(int id);
+
+void print_edges();
+
 #endif
