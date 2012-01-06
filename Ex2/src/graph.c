@@ -76,7 +76,7 @@ void remove_vertex_by_name(char* name) {
 	ver_count--;
 }
 
-void add_edge_by_name(char* first_vertex_name, char* second_vertex_name, float weight) {
+void add_edge_by_name(char* first_vertex_name, char* second_vertex_name, double weight) {
 	int search_first = search_ver(first_vertex_name);
 	int search_second = search_ver(second_vertex_name);
 	if (search_first == -1 || search_second == -1) {
@@ -90,7 +90,7 @@ void add_edge_by_name(char* first_vertex_name, char* second_vertex_name, float w
 	add_edge_by_id(search_first, search_second, weight);
 }
 
-void add_edge_by_id(int head_vertex_id, int tail_vertex_id, float weight) {
+void add_edge_by_id(int head_vertex_id, int tail_vertex_id, double weight) {
 	if (ver_exist(head_vertex_id) == false || ver_exist(tail_vertex_id) == false) {
 		printf("Error: First/second vertex was not found\n");
 		return;
