@@ -39,6 +39,10 @@ void quit() {
 
 // the function parse the command string and runs a function accordingly
 void run_command(char* command) {
+	if(command == NULL || strlen(command) < 1 || isspace(*command)) {
+		print_error("Command is not recognized");
+		return;
+	}
 	char* command_name = get_command_param(command, 0);
 
 	if(strcmp("add_vertex", command_name) == 0) {
