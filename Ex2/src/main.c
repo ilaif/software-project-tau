@@ -10,9 +10,11 @@
 void quit();
 void strip_newline(char *str, int size);
 void run_command(char* command);
-char* get_command_param(char* command, int param_number);
+char* get_command_param(const char* command, int param_number);
+bool valid_command_params(const char* command, int num_of_params);
 bool isNumeric (const char * s);
 bool isInteger (const char * s);
+bool isContainLetter(char *mystring);
 
 bool exitFlag = false;
 
@@ -40,20 +42,33 @@ void quit() {
 // the function parse the command string and runs a function accordingly
 void run_command(char* command) {
 	if(command == NULL || strlen(command) < 1 || isspace(*command)) {
-		print_error("Command is not recognized");
+		print_error("Command format is not valid");
 		return;
 	}
 	char* command_name = get_command_param(command, 0);
 
 	if(strcmp("add_vertex", command_name) == 0) {
+		if(!valid_command_params(command, 2)) {
+			print_error("Command format is not valid");
+			return;
+		}
+
 		char* vertex_name = get_command_param(command, 1);
 		if(vertex_name == NULL || strlen(vertex_name) < 1) {
+			print_error("Command format is not valid");
+			return;
+		} else if (!isContainLetter(vertex_name)) {
 			print_error("When adding a vertex name must have at least one letter");
 			return;
 		} else {
 			add_vertex(vertex_name);
 		}
 	} else if(strcmp("remove_vertex", command_name) == 0) {
+		if(!valid_command_params(command, 2)) {
+			print_error("Command format is not valid");
+			return;
+		}
+
 		char* vertex = get_command_param(command, 1);
 		if(vertex == NULL || strlen(vertex) < 1) {
 			print_error("Command format is not valid");
@@ -68,6 +83,11 @@ void run_command(char* command) {
 			}
 		}
 	} else if(strcmp("add_edge", command_name) == 0) {
+		if(!valid_command_params(command, 4)) {
+			print_error("Command format is not valid");
+			return;
+		}
+
 		char* vertex_a = get_command_param(command, 1);
 		if(vertex_a == NULL || strlen(vertex_a) < 1) {
 			print_error("Command format is not valid");
@@ -107,6 +127,11 @@ void run_command(char* command) {
 		}
 
 	} else if(strcmp("remove_edge", command_name) == 0) {
+		if(!valid_command_params(command, 2)) {
+			print_error("Command format is not valid");
+			return;
+		}
+
 		char* edge_id_str = get_command_param(command, 1);
 		if(edge_id_str == NULL || strlen(edge_id_str) < 1) {
 			print_error("Command format is not valid");
@@ -122,8 +147,18 @@ void run_command(char* command) {
 			}
 		}
 	} else if(strcmp("print", command_name) == 0) {
+		if(!valid_command_params(command, 1)) {
+			print_error("Command format is not valid");
+			return;
+		}
+
 		print();
 	} else if(strcmp("cluster", command_name) == 0) {
+		if(!valid_command_params(command, 2)) {
+			print_error("Command format is not valid");
+			return;
+		}
+
 		char* num_clusters_str = get_command_param(command, 1);
 		if(num_clusters_str == NULL || strlen(num_clusters_str) < 1) {
 			print_error("Command format is not valid");
@@ -143,6 +178,11 @@ void run_command(char* command) {
 			}
 		}
 	} else if(strcmp("quit", command_name) == 0) {
+		if(!valid_command_params(command, 1)) {
+			print_error("Command format is not valid");
+			return;
+		}
+
 		quit();
 	} else {
 		print_error("Command is not recognized");
@@ -151,7 +191,7 @@ void run_command(char* command) {
 }
 
 // the function retrieves a parameter from the command according to the given param_number
-char* get_command_param(char* command, int param_number) {
+char* get_command_param(const char* command, int param_number) {
 	int current_param = 0;
 	char command_tmp[MAX_LENGTH];
 	strcpy(command_tmp, command);
@@ -167,6 +207,15 @@ char* get_command_param(char* command, int param_number) {
 	return user_input;
 }
 
+// the function check if the number of params in the command is valid
+bool valid_command_params(const char* command, int num_of_params) {
+	char* extra_command = get_command_param(command, num_of_params);
+	if(extra_command == NULL || strlen(extra_command) < 1) {
+		return true;
+	}
+	return false;
+}
+
 // the function removes the newline from the end of a string entered using fgets.
 void strip_newline(char *str, int size) {
     int i;
@@ -179,7 +228,7 @@ void strip_newline(char *str, int size) {
     }
 }
 
-// Returns true (non-zero) if character-string parameter represents a signed or unsigned floating-point number. Otherwise returns false (zero).
+// Returns true if character-string parameter represents a signed or unsigned floating-point number. Otherwise returns false.
 bool isNumeric (const char * s) {
     if (s == NULL || *s == '\0' || isspace(*s))
       return 0;
@@ -188,7 +237,7 @@ bool isNumeric (const char * s) {
     return *p == '\0';
 }
 
-// Returns true (non-zero) if character-string parameter represents a signed or unsigned integer number. Otherwise returns false (zero).
+// Returns true if character-string parameter represents a signed or unsigned integer number. Otherwise returns false.
 bool isInteger (const char * s) {
     if (s == NULL || *s == '\0' || isspace(*s))
       return 0;
@@ -197,3 +246,17 @@ bool isInteger (const char * s) {
     return *p == '\0';
 }
 
+// Returns true if there is a letter in the string. Otherwise returns false.
+bool isContainLetter(char *mystring) {
+   const char *letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+   char *c = mystring;
+
+   while (*c) {
+	   if (strchr(letters, *c)) {
+		  return true;
+	   }
+	   c++;
+   }
+
+   return false;
+}
