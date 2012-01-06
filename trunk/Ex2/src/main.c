@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <ctype.h>
 #include "graph.h"
 
 #define MAX_LENGTH 300
@@ -10,6 +11,8 @@ void quit();
 void strip_newline(char *str, int size);
 void run_command(char* command);
 char* get_command_param(char* command, int param_number);
+bool isNumeric (const char * s);
+bool isInteger (const char * s);
 
 bool exitFlag = false;
 
@@ -52,10 +55,11 @@ void run_command(char* command) {
 			print_error("Command format is not valid");
 			return;
 		} else {
-			int vertex_id = atoi(vertex);
-			if(vertex_id == 0 && !strcmp("0", vertex)) {
+			if(!isInteger(vertex)) {
 				remove_vertex_by_name(vertex);
 			} else {
+				int vertex_id;
+				sscanf(vertex, "%d", &vertex_id);
 				remove_vertex_by_id(vertex_id);
 			}
 		}
@@ -65,31 +69,34 @@ void run_command(char* command) {
 			print_error("Command format is not valid");
 			return;
 		}
-		int vertex_a_id = atoi(vertex_a);
 
 		char* vertex_b = get_command_param(command, 2);
 		if(vertex_b == NULL || strlen(vertex_b) < 1) {
 			print_error("Command format is not valid");
 			return;
 		}
-		int vertex_b_id = atoi(vertex_b);
 
 		char* weight_str = get_command_param(command, 3);
 		if(weight_str == NULL || strlen(weight_str) < 1) {
 			print_error("Command format is not valid");
 			return;
 		}
-		float weight = atof(weight_str);
-		if(weight == 0 && !strcmp("0", weight_str)) {
+		if(!isNumeric(weight_str)) {
 			print_error("When adding an edge weight must be a number");
 			return;
 		}
+		double weight;
+		sscanf(weight_str, "%lf", &weight);
 		if(weight < 0) {
 			print_error("When adding an edge weight must be positive");
 			return;
 		}
 
-		if((vertex_a_id != 0 || strcmp("0", vertex_a)) && (vertex_b_id != 0 || strcmp("0", vertex_b))) {
+		if(isInteger(vertex_a) && isInteger(vertex_b)) {
+			int vertex_a_id;
+			sscanf(vertex_a, "%d", &vertex_a_id);
+			int vertex_b_id;
+			sscanf(vertex_b, "%d", &vertex_b_id);
 			add_edge_by_id(vertex_a_id, vertex_b_id, weight);
 		} else {
 			add_edge_by_name(vertex_a, vertex_b, weight);
@@ -101,11 +108,12 @@ void run_command(char* command) {
 			print_error("Command format is not valid");
 			return;
 		} else {
-			int edge_id = atoi(edge_id_str);
-			if(edge_id == 0 && !strcmp("0", edge_id_str)) {
+			if(!isInteger(edge_id_str)) {
 				print_error("Edge id must be a number");
 				return;
 			} else {
+				int edge_id;
+				sscanf(edge_id_str, "%d", &edge_id);
 				remove_edge(edge_id);
 			}
 		}
@@ -117,7 +125,12 @@ void run_command(char* command) {
 			print_error("Command format is not valid");
 			return;
 		} else {
-			int num_clusters = atoi(num_clusters_str);
+			if(!isInteger(num_clusters_str)) {
+				print_error("Command format is not valid");
+				return;
+			}
+			int num_clusters;
+			sscanf(num_clusters_str, "%d", &num_clusters);
 			if(num_clusters < 1) {
 				print_error("Number of clusters must be a number bigger or equal to 1");
 				return;
@@ -160,5 +173,23 @@ void strip_newline(char *str, int size) {
             return;
         }
     }
+}
+
+// Returns true (non-zero) if character-string parameter represents a signed or unsigned floating-point number. Otherwise returns false (zero).
+bool isNumeric (const char * s) {
+    if (s == NULL || *s == '\0' || isspace(*s))
+      return 0;
+    char * p;
+    strtod (s, &p);
+    return *p == '\0';
+}
+
+// Returns true (non-zero) if character-string parameter represents a signed or unsigned integer number. Otherwise returns false (zero).
+bool isInteger (const char * s) {
+    if (s == NULL || *s == '\0' || isspace(*s))
+      return 0;
+    char * p;
+    strtol (s, &p, 10);
+    return *p == '\0';
 }
 
