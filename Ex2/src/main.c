@@ -52,7 +52,7 @@ void run_command(char* command) {
 			return;
 		} else {
 			int vertex_id = atoi(vertex);
-			if(vertex_id == 0) {
+			if(vertex_id == 0 && !strcmp("0", vertex)) {
 				remove_vertex_by_name(vertex);
 			} else {
 				remove_vertex_by_id(vertex_id);
@@ -78,8 +78,8 @@ void run_command(char* command) {
 			print_error("Command format is not valid");
 			return;
 		}
-		int weight = atoi(weight_str);
-		if(weight == 0) {
+		float weight = atof(weight_str);
+		if(weight == 0 && !strcmp("0", weight_str)) {
 			print_error("When adding an edge weight must be a number");
 			return;
 		}
@@ -88,7 +88,7 @@ void run_command(char* command) {
 			return;
 		}
 
-		if(vertex_a_id != 0 && vertex_b_id != 0) {
+		if((vertex_a_id != 0 || strcmp("0", vertex_a)) && (vertex_b_id != 0 || strcmp("0", vertex_b))) {
 			add_edge_by_id(vertex_a_id, vertex_b_id, weight);
 		} else {
 			add_edge_by_name(vertex_a, vertex_b, weight);
@@ -101,7 +101,7 @@ void run_command(char* command) {
 			return;
 		} else {
 			int edge_id = atoi(edge_id_str);
-			if(edge_id == 0) {
+			if(edge_id == 0 && !strcmp("0", edge_id_str)) {
 				print_error("Edge id must be a number");
 				return;
 			} else {
