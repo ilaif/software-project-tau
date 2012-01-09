@@ -5,7 +5,7 @@
 
 /* Include declaration for graph methods */
 
-void add_vertex(char* name);
+void add_vertex(const char* name);
 
 void remove_vertex_by_id(int id);
 
@@ -20,6 +20,8 @@ void remove_edge(int id);
 void print();
 
 void cluster(int num_of_clusters);
+
+void free_and_quit();
 
 void print_error(char* error);
 
