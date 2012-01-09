@@ -14,7 +14,7 @@ char* get_command_param(const char* command, int param_number);
 bool valid_command_params(const char* command, int num_of_params);
 bool isNumeric (const char * s);
 bool isInteger (const char * s);
-bool isContainLetter(char *mystring);
+bool isContainLetter(const char *mystring);
 
 bool exitFlag = false;
 
@@ -46,14 +46,13 @@ void run_command(char* command) {
 		return;
 	}
 	char* command_name = get_command_param(command, 0);
-
 	if(strcmp("add_vertex", command_name) == 0) {
 		if(!valid_command_params(command, 2)) {
 			print_error("Command format is not valid");
 			return;
 		}
 
-		char* vertex_name = get_command_param(command, 1);
+		const char* vertex_name = get_command_param(command, 1);
 		if(vertex_name == NULL || strlen(vertex_name) < 1) {
 			print_error("Command format is not valid");
 			return;
@@ -61,7 +60,9 @@ void run_command(char* command) {
 			print_error("When adding a vertex name must have at least one letter");
 			return;
 		} else {
+			printf("%s\n", vertex_name);//<-----------------------------
 			add_vertex(vertex_name);
+			printf("%s\n", vertex_name);//<-----------------------------
 		}
 	} else if(strcmp("remove_vertex", command_name) == 0) {
 		if(!valid_command_params(command, 2)) {
@@ -182,7 +183,7 @@ void run_command(char* command) {
 			print_error("Command format is not valid");
 			return;
 		}
-
+		free_and_quit();
 		quit();
 	} else {
 		print_error("Command is not recognized");
@@ -203,7 +204,6 @@ char* get_command_param(const char* command, int param_number) {
 		user_input = strtok(NULL, " ");
 		current_param++;
 	}
-
 	return user_input;
 }
 
@@ -247,16 +247,14 @@ bool isInteger (const char * s) {
 }
 
 // Returns true if there is a letter in the string. Otherwise returns false.
-bool isContainLetter(char *mystring) {
+bool isContainLetter(const char *c) {
    const char *letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-   char *c = mystring;
-
-   while (*c) {
-	   if (strchr(letters, *c)) {
+   int i = 0;
+   while (c[i] != 0) {
+	   if (strchr(letters, c[i]) != NULL) {
 		  return true;
 	   }
-	   c++;
+	   i++;
    }
-
    return false;
 }
