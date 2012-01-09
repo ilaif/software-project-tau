@@ -4,17 +4,22 @@
 #include <stdlib.h>
 #include "graph.h"
 
-vertex *ver, *ver_tmp; //vertices array
-edge *ed, *ed_tmp; //edges array
+vertex *ver; //vertices array
+edge *ed; //edges array
 int ver_len = 0, ed_len = 0, ver_count = 0, ed_count = 0, ver_last = -1, ed_last = -1;
 
-void add_vertex(char* name) {
+void add_vertex(const char* name) {
+	vertex *ver_tmp = NULL;
+	printf("length:%d	000%s000\n", strlen(name), name);//check
 	char* name_tmp = malloc((strlen(name)+1)*sizeof(char));
+	printf("length:%d	999%s999\n", strlen(name), name);//check
 	if (name_tmp == NULL){
 		printf("Error: Memory allocation failed\n");
 		return;
 	}
+	printf("111%s111\n", name);//check
 	strcpy(name_tmp,name);
+	printf("222%s222\n",name_tmp);//check
 	int next = next_ver();
 	//printf("%d 111\n%d 222\n", strlen(name), strlen(name_tmp));//check
 	if (next == ver_len) {
@@ -26,6 +31,7 @@ void add_vertex(char* name) {
 		ver = ver_tmp;
 		ver_len += 20;
 	}
+	printf("333%s333\n",name_tmp);//check
 	//printf("%d 333\n%d 444\n", strlen(name), strlen(name_tmp));//check
 	ver[next].name = malloc((strlen(name_tmp)+1)*sizeof(char));
 	//printf("string %s\nlength %d\n", name_tmp, strlen(name_tmp));//check
@@ -40,7 +46,7 @@ void add_vertex(char* name) {
 		ver_last = next;
 	}
 	free(name_tmp);
-	//printf("%s\n", ver[next].name);//check
+	printf("%s\n", ver[next].name);//check
 }
 
 void remove_vertex_by_id(int id) {
@@ -91,6 +97,7 @@ void add_edge_by_name(char* first_vertex_name, char* second_vertex_name, double 
 }
 
 void add_edge_by_id(int head_vertex_id, int tail_vertex_id, double weight) {
+	edge *ed_tmp = NULL;
 	if (ver_exist(head_vertex_id) == false || ver_exist(tail_vertex_id) == false) {
 		printf("Error: First/second vertex was not found\n");
 		return;
@@ -103,7 +110,6 @@ void add_edge_by_id(int head_vertex_id, int tail_vertex_id, double weight) {
 		printf("Error: No duplicated edges are allowed in the network\n");
 		return;
 	}
-	//check if weight < 0 and print an error if needed
 	int next = next_ed();
 	if (next == ed_len) {
 		ed_tmp = realloc(ed,sizeof(edge)*(ed_len + 20));
@@ -156,6 +162,17 @@ void cluster(int num_of_clusters) {
 // this function prints an error message
 void print_error(char* error) {
 	printf("Error: %s \n", error);
+}
+
+void free_and_quit() {
+	int i;
+	free(ed);
+	for (i = 0; i <= ver_last; ++i) {
+		if (ver[i].deleted == false) {
+			free(ver[i].name);
+		}
+	}
+	free(ver);
 }
 
 int next_ver() {
