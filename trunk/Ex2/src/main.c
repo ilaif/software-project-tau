@@ -204,7 +204,9 @@ char* get_command_param(const char* command, int param_number) {
 		user_input = strtok(NULL, " ");
 		current_param++;
 	}
-	return user_input;
+
+	char* param = strdup(user_input);
+	return param;
 }
 
 // the function check if the number of params in the command is valid
