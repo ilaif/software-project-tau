@@ -1,4 +1,5 @@
-
+//Full Name 1: Or Segal; Id No 1: 203993118; User Name 1: orsegal
+//Full Name 2: Aviv Mor; Id No 2: 201254059; User Name 2: avivmor
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -10,16 +11,16 @@ int ver_len = 0, ed_len = 0, ver_count = 0, ed_count = 0, ver_last = -1, ed_last
 
 void add_vertex(const char* name) {
 	vertex *ver_tmp = NULL;
-	printf("length:%d	000%s000\n", strlen(name), name);//check
-	char* name_tmp = malloc((strlen(name)+1)*sizeof(char));
-	printf("length:%d	999%s999\n", strlen(name), name);//check
-	if (name_tmp == NULL){
-		printf("Error: Memory allocation failed\n");
-		return;
-	}
-	printf("111%s111\n", name);//check
-	strcpy(name_tmp,name);
-	printf("222%s222\n",name_tmp);//check
+	//printf("length:%d	000%s000\n", strlen(name), name);//check
+	//char* name_tmp = malloc((strlen(name)+1)*sizeof(char));
+	//printf("length:%d	999%s999\n", strlen(name), name);//check
+	//if (name_tmp == NULL){
+	//	printf("Error: Memory allocation failed\n");
+	//	return;
+	//}
+	//printf("111%s111\n", name);//check
+	//strcpy(name_tmp,name);
+	//printf("222%s222\n",name_tmp);//check
 	int next = next_ver();
 	//printf("%d 111\n%d 222\n", strlen(name), strlen(name_tmp));//check
 	if (next == ver_len) {
@@ -31,22 +32,22 @@ void add_vertex(const char* name) {
 		ver = ver_tmp;
 		ver_len += 20;
 	}
-	printf("333%s333\n",name_tmp);//check
+	//printf("333%s333\n",name_tmp);//check
 	//printf("%d 333\n%d 444\n", strlen(name), strlen(name_tmp));//check
-	ver[next].name = malloc((strlen(name_tmp)+1)*sizeof(char));
+	ver[next].name = malloc((strlen(name)+1)*sizeof(char));
 	//printf("string %s\nlength %d\n", name_tmp, strlen(name_tmp));//check
 	if (ver[next].name == NULL){
 		printf("Error: Memory allocation failed\n");
 		return;
 	}
-	strcpy(ver[next].name,name_tmp);
+	strcpy(ver[next].name,name);
 	ver[next].deleted = false;
 	ver_count++;
 	if (next > ver_last) {
 		ver_last = next;
 	}
-	free(name_tmp);
-	printf("%s\n", ver[next].name);//check
+	//free(name_tmp);
+	//printf("%s\n", ver[next].name);//check
 }
 
 void remove_vertex_by_id(int id) {
@@ -150,13 +151,41 @@ void print() {
 			printf("%d: %s\n", i, ver[i].name);
 		}
 	}
-	print_edges();
+	if (ed_count == 0) {
+		return;
+	}
+	printf("%d edges: \n", ed_count);
+	for (i = 0; i <= ed_last; ++i) {
+		if (ed_exist(i) == true) {
+			printf("%d: %s-%s %.3f\n", i, ver[ed[i].v1_id].name, ver[ed[i].v2_id].name, ed[i].weight);
+		}
+	}
 }
 
 void cluster(int num_of_clusters) {
-
-	print_edges();
-	//printf("The random clustering score for %d clusters is %.3f\n", );
+	int i;
+	double score = 0.0;
+	srand(time(NULL));
+	printf("%d vertices:\n", ver_count);
+	for (i = 0; i <= ver_last; ++i) {
+		if (ver_exist(i) == true) {
+			ver[i].cluster = 1 + (rand() % num_of_clusters);
+			printf("%d: %s %d\n", i, ver[i].name, ver[i].cluster);
+		}
+	}
+	printf("%d edges: \n", ed_count);
+	for (i = 0; i <= ed_last; ++i) {
+		if (ed_exist(i) == true) {
+			if (ver[ed[i].v1_id].cluster == ver[ed[i].v2_id].cluster) {
+				score += ed[i].weight;
+			}
+			else {
+				score -= ed[i].weight;
+			}
+			printf("%d: %s-%s %.3f\n", i, ver[ed[i].v1_id].name, ver[ed[i].v2_id].name, ed[i].weight);
+		}
+	}
+	printf("The random clustering score for %d clusters is %.3f\n", num_of_clusters, score);
 }
 
 // this function prints an error message
@@ -194,8 +223,6 @@ int next_ed() {
 	}
 	return i;
 }
-
-
 
 //the function returns -1 if the name does not exist, -2 if there is more than one match,
 //otherwise it returns the id with that name.
@@ -246,17 +273,4 @@ bool edges_attached(int id) {
 		}
 	}
 	return false;
-}
-
-void print_edges() {
-	if (ed_count == 0) {
-		return;
-	}
-	int i;
-	printf("%d edges: \n", ed_count);
-	for (i = 0; i <= ed_last; ++i) {
-		if (ed_exist(i) == true) {
-			printf("%d: %s-%s %.3f\n", i, ver[ed[i].v1_id].name, ver[ed[i].v2_id].name, ed[i].weight);
-		}
-	}
 }
