@@ -3,26 +3,18 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <time.h>
 #include "graph.h"
 
 vertex *ver; //vertices array
 edge *ed; //edges array
-int ver_len = 0, ed_len = 0, ver_count = 0, ed_count = 0, ver_last = -1, ed_last = -1;
+int ver_len = 0, ed_len = 0; //the length of the the arrays
+int ver_count = 0, ed_count = 0; //the actual number of vertices/edges
+int ver_last = -1, ed_last = -1; //the highest index of a cell that has been filled at least one time
 
 void add_vertex(const char* name) {
 	vertex *ver_tmp = NULL;
-	//printf("length:%d	000%s000\n", strlen(name), name);//check
-	//char* name_tmp = malloc((strlen(name)+1)*sizeof(char));
-	//printf("length:%d	999%s999\n", strlen(name), name);//check
-	//if (name_tmp == NULL){
-	//	printf("Error: Memory allocation failed\n");
-	//	return;
-	//}
-	//printf("111%s111\n", name);//check
-	//strcpy(name_tmp,name);
-	//printf("222%s222\n",name_tmp);//check
 	int next = next_ver();
-	//printf("%d 111\n%d 222\n", strlen(name), strlen(name_tmp));//check
 	if (next == ver_len) {
 		ver_tmp = realloc(ver,sizeof(vertex)*(ver_len + 20));
 		if (ver_tmp == NULL) {
@@ -32,10 +24,7 @@ void add_vertex(const char* name) {
 		ver = ver_tmp;
 		ver_len += 20;
 	}
-	//printf("333%s333\n",name_tmp);//check
-	//printf("%d 333\n%d 444\n", strlen(name), strlen(name_tmp));//check
 	ver[next].name = malloc((strlen(name)+1)*sizeof(char));
-	//printf("string %s\nlength %d\n", name_tmp, strlen(name_tmp));//check
 	if (ver[next].name == NULL){
 		printf("Error: Memory allocation failed\n");
 		return;
@@ -46,8 +35,6 @@ void add_vertex(const char* name) {
 	if (next > ver_last) {
 		ver_last = next;
 	}
-	//free(name_tmp);
-	//printf("%s\n", ver[next].name);//check
 }
 
 void remove_vertex_by_id(int id) {
