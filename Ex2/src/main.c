@@ -1,4 +1,5 @@
-
+//Full Name 1: Or Segal; Id No 1: 203993118; User Name 1: orsegal
+//Full Name 2: Aviv Mor; Id No 2: 201254059; User Name 2: avivmor
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -60,9 +61,7 @@ void run_command(char* command) {
 			print_error("When adding a vertex name must have at least one letter");
 			return;
 		} else {
-			printf("%s\n", vertex_name);//<-----------------------------
 			add_vertex(vertex_name);
-			printf("%s\n", vertex_name);//<-----------------------------
 		}
 	} else if(strcmp("remove_vertex", command_name) == 0) {
 		if(!valid_command_params(command, 2)) {
