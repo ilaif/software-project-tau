@@ -175,11 +175,12 @@ void cluster(int num_of_clusters) {
 	printf("The random clustering score for %d clusters is %.3f\n", num_of_clusters, score);
 }
 
-// this function prints an error message
+// this function prints an error message.
 void print_error(char* error) {
 	printf("Error: %s \n", error);
 }
 
+// this function frees the the memory allocated for the program before exit.
 void free_and_quit() {
 	int i;
 	free(ed);
@@ -191,6 +192,7 @@ void free_and_quit() {
 	free(ver);
 }
 
+// this function finds the first available cell in the vertices array and returns its index.
 int next_ver() {
 	int i;
 	for (i = 0; i <= ver_last; ++i) {
@@ -201,6 +203,7 @@ int next_ver() {
 	return i;
 }
 
+// this function finds the first available cell in the edges array and returns its index.
 int next_ed() {
 	int i;
 	for (i = 0; i <= ed_last; ++i) {
@@ -211,8 +214,8 @@ int next_ed() {
 	return i;
 }
 
-//the function returns -1 if the name does not exist, -2 if there is more than one match,
-//otherwise it returns the id with that name.
+// this function returns -1 if the name does not exist, -2 if there is more than one match,
+// otherwise it returns the id with that name.
 int search_ver(char* name) {
 	int i, p = -1;
 	for (i = 0; i <= ver_last; ++i) {
@@ -228,6 +231,8 @@ int search_ver(char* name) {
 	return p;
 }
 
+// this function checks if edge between the given vertices is already exist, and returns true if it does,
+// otherwise it returns false.
 bool edge_duplication(int id1, int id2) {
 	int i;
 	for (i = 0; i < ed_len; ++i) {
@@ -238,6 +243,8 @@ bool edge_duplication(int id1, int id2) {
 	return false;
 }
 
+// this functions checks if there is an active vertex with the given id, and returns true if there is,
+// otherwise it returns false.
 bool ver_exist(int id) {
 	if(id > ver_last || id < 0 || ver[id].deleted == true) {
 		return false;
@@ -245,6 +252,8 @@ bool ver_exist(int id) {
 	return true;
 }
 
+// this functions checks if there is an active edge with the given id, and returns true if there is,
+// otherwise it returns false.
 bool ed_exist(int id) {
 	if (id > ed_last || id < 0 || ed[id].deleted == true) {
 		return false;
@@ -252,6 +261,8 @@ bool ed_exist(int id) {
 	return true;
 }
 
+// this function checks there is an edge that attached to the vertex with the given id,
+// and returns true if there is, otherwise it returns false.
 bool edges_attached(int id) {
 	int i;
 	for (i = 0; i <= ed_last; ++i) {
