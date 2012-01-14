@@ -17,7 +17,7 @@ bool isNumeric (const char * s);
 bool isInteger (const char * s);
 bool isContainLetter(const char *mystring);
 
-bool exitFlag = false;
+bool exitFlag = false; //determines whether the program should receive another command or terminate
 
 int main(void) {
 	//REMOVE THESE LINES BEFORE SUBMITING - fix for windows
@@ -36,6 +36,7 @@ int main(void) {
 	return 0;
 }
 
+// the function quits the program
 void quit() {
 	exitFlag = true;
 }
