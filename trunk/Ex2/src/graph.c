@@ -1,16 +1,16 @@
-//Full Name 1: Or Segal; Id No 1: 203993118; User Name 1: orsegal
-//Full Name 2: Aviv Mor; Id No 2: 201254059; User Name 2: avivmor
+/*Full Name 1: Or Segal; Id No 1: 203993118; User Name 1: orsegal*/
+/*Full Name 2: Aviv Mor; Id No 2: 201254059; User Name 2: avivmor*/
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
 #include "graph.h"
 
-vertex *ver; //vertices array
-edge *ed; //edges array
-int ver_len = 0, ed_len = 0; //the length of the the arrays
-int ver_count = 0, ed_count = 0; //the actual number of vertices/edges
-int ver_last = -1, ed_last = -1; //the highest index of a cell that has been filled at least one time
+vertex *ver; /*vertices array*/
+edge *ed; /*edges array*/
+int ver_len = 0, ed_len = 0; /*the length of the the arrays*/
+int ver_count = 0, ed_count = 0; /*the actual number of vertices/edges*/
+int ver_last = -1, ed_last = -1; /*the highest index of a cell that has been filled at least one time*/
 
 void add_vertex(const char* name) {
 	vertex *ver_tmp = NULL;
@@ -86,6 +86,8 @@ void add_edge_by_name(char* first_vertex_name, char* second_vertex_name, double 
 
 void add_edge_by_id(int head_vertex_id, int tail_vertex_id, double weight) {
 	edge *ed_tmp = NULL;
+	int next;
+
 	if (ver_exist(head_vertex_id) == false || ver_exist(tail_vertex_id) == false) {
 		printf("Error: First/second vertex was not found\n");
 		return;
@@ -98,7 +100,7 @@ void add_edge_by_id(int head_vertex_id, int tail_vertex_id, double weight) {
 		printf("Error: No duplicated edges are allowed in the network\n");
 		return;
 	}
-	int next = next_ed();
+	next = next_ed();
 	if (next == ed_len) {
 		ed_tmp = realloc(ed,sizeof(edge)*(ed_len + 20));
 		if (ed_tmp == NULL) {
@@ -128,10 +130,11 @@ void remove_edge(int id) {
 }
 
 void print() {
+	int i;
+
 	if (ver_count == 0) {
 		return;
 	}
-	int i;
 	printf("%d vertices:\n", ver_count);
 	for (i = 0; i <= ver_last; ++i) {
 		if (ver_exist(i) == true) {
@@ -175,12 +178,12 @@ void cluster(int num_of_clusters) {
 	printf("The random clustering score for %d clusters is %.3f\n", num_of_clusters, score);
 }
 
-// this function prints an error message.
+/* this function prints an error message.*/
 void print_error(char* error) {
 	printf("Error: %s \n", error);
 }
 
-// this function frees the the memory allocated for the program before exit.
+/* this function frees the the memory allocated for the program before exit.*/
 void free_and_quit() {
 	int i;
 	free(ed);
@@ -192,7 +195,7 @@ void free_and_quit() {
 	free(ver);
 }
 
-// this function finds the first available cell in the vertices array and returns its index.
+/* this function finds the first available cell in the vertices array and returns its index.*/
 int next_ver() {
 	int i;
 	for (i = 0; i <= ver_last; ++i) {
@@ -203,7 +206,7 @@ int next_ver() {
 	return i;
 }
 
-// this function finds the first available cell in the edges array and returns its index.
+/* this function finds the first available cell in the edges array and returns its index.*/
 int next_ed() {
 	int i;
 	for (i = 0; i <= ed_last; ++i) {
@@ -214,8 +217,8 @@ int next_ed() {
 	return i;
 }
 
-// this function returns -1 if the name does not exist, -2 if there is more than one match,
-// otherwise it returns the id with that name.
+/* this function returns -1 if the name does not exist, -2 if there is more than one match,*/
+/* otherwise it returns the id with that name.*/
 int search_ver(char* name) {
 	int i, p = -1;
 	for (i = 0; i <= ver_last; ++i) {
@@ -224,15 +227,15 @@ int search_ver(char* name) {
 				p = i;
 			}
 			else {
-				return -2;//
+				return -2;
 			}
 		}
 	}
 	return p;
 }
 
-// this function checks if edge between the given vertices is already exist, and returns true if it does,
-// otherwise it returns false.
+/* this function checks if edge between the given vertices is already exist, and returns true if it does,*/
+/* otherwise it returns false.*/
 bool edge_duplication(int id1, int id2) {
 	int i;
 	for (i = 0; i < ed_len; ++i) {
@@ -243,8 +246,8 @@ bool edge_duplication(int id1, int id2) {
 	return false;
 }
 
-// this functions checks if there is an active vertex with the given id, and returns true if there is,
-// otherwise it returns false.
+/* this functions checks if there is an active vertex with the given id, and returns true if there is,*/
+/* otherwise it returns false.*/
 bool ver_exist(int id) {
 	if(id > ver_last || id < 0 || ver[id].deleted == true) {
 		return false;
@@ -252,8 +255,8 @@ bool ver_exist(int id) {
 	return true;
 }
 
-// this functions checks if there is an active edge with the given id, and returns true if there is,
-// otherwise it returns false.
+/* this functions checks if there is an active edge with the given id, and returns true if there is,*/
+/* otherwise it returns false.*/
 bool ed_exist(int id) {
 	if (id > ed_last || id < 0 || ed[id].deleted == true) {
 		return false;
@@ -261,8 +264,8 @@ bool ed_exist(int id) {
 	return true;
 }
 
-// this function checks there is an edge that attached to the vertex with the given id,
-// and returns true if there is, otherwise it returns false.
+/* this function checks there is an edge that attached to the vertex with the given id,*/
+/* and returns true if there is, otherwise it returns false.*/
 bool edges_attached(int id) {
 	int i;
 	for (i = 0; i <= ed_last; ++i) {

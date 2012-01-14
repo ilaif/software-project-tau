@@ -1,5 +1,5 @@
-//Full Name 1: Or Segal; Id No 1: 203993118; User Name 1: orsegal
-//Full Name 2: Aviv Mor; Id No 2: 201254059; User Name 2: avivmor
+/*Full Name 1: Or Segal; Id No 1: 203993118; User Name 1: orsegal*/
+/*Full Name 2: Aviv Mor; Id No 2: 201254059; User Name 2: avivmor*/
 #ifndef GRAPH_H
 #define GRAPH_H
 
