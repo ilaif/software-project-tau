@@ -20,19 +20,63 @@ bool isContainLetter(const char *mystring);
 
 bool exitFlag = false; /*determines whether the program should receive another command or terminate*/
 
-int main(void) {
+int main(int argc, char *argv[]) {
+	char* input_folder;
+	char* output_folder;
+	char* clusters_lower_bound_str;
+	char* clusters_upper_bound_str;
+	int clusters_lower_bound;
+	int clusters_upper_bound;
+	char command[MAX_LENGTH];
+
 	//REMOVE THESE LINES BEFORE SUBMITING - fix for windows
 	setvbuf(stdout, NULL, _IONBF, 0);
 	setvbuf(stderr, NULL, _IONBF, 0);
 	//***********************************
 
-	char command[MAX_LENGTH];
-
-	while(!exitFlag) {
-		fgets(command, MAX_LENGTH, stdin);
-		strip_newline(command, MAX_LENGTH);
-		run_command(command);
+	if(argc != 5) {
+		print_error("Invalid number of arguments");
+		return 0;
 	}
+
+	char* input_folder = argv[1];
+	char* output_folder = argv[2];
+	char* clusters_lower_bound_str = argv[3];
+	char* clusters_upper_bound_str = argv[4];
+
+	if(!isInteger(clusters_lower_bound_str)) {
+		print_error("Number of clusters lower bound invalid value");
+		return 0;
+	} else {
+		clusters_lower_bound = atoi(clusters_lower_bound_str);
+	}
+
+	if(!isInteger(clusters_upper_bound_str)) {
+		print_error("Number of clusters upper bound invalid value");
+		return 0;
+	} else {
+		clusters_upper_bound = atoi(clusters_upper_bound_str);
+	}
+
+
+	FILE *file = fopen (input_folder, "r");
+	if (file != NULL) {
+
+		while(fgets(command, sizeof command, file) != NULL) { /* read a line */
+			strip_newline(command, MAX_LENGTH);
+			run_command(command);
+		}
+		fclose ( file );
+	} else {
+		print_error("File did not open");
+	}
+
+
+	//while(!exitFlag) {
+	//	fgets(command, MAX_LENGTH, stdin);
+	//	strip_newline(command, MAX_LENGTH);
+	//	run_command(command);
+	//}
 
 	return 0;
 }
