@@ -1,44 +1,49 @@
-/*Full Name 1: Or Segal; Id No 1: 203993118; User Name 1: orsegal*/
-/*Full Name 2: Aviv Mor; Id No 2: 201254059; User Name 2: avivmor*/
 #ifndef GRAPH_H
 #define GRAPH_H
 
 #include "types.h"
 
-/* Include declaration for graph methods */
+typedef struct graphStruct {
+	vertex *vertices;
+	edge *edges;
+	/* The last index of a vertex (not deleted) */
+	int lastVerIdx;
+	/* The last index of an edge (not deleted) */
+	int lastEdgeIdx;
+	/* The number of groups of 20 vertices */
+	int verLength;
+	/* The number of groups of 20 edges */
+	int edgeLength;
+	/* The current number of vertices in the array */
+	int numVertices;
+	/* The current number of edges in the array */
+	int numEdges;
+} graph;
 
-void add_vertex(const char* name);
+int add_vertex(graph*, char*);
+int remove_vertex_id(graph*, int);
+int remove_vertex_name(graph*, char*);
+int add_edge_names(graph*, char*, char*, double);
+int add_edge_ids(graph*, int, int, double);
+int remove_edge(graph*, int);
+void print(graph*, bool);
+void cluster(graph*, int);
 
-void remove_vertex_by_id(int id);
-
-void remove_vertex_by_name(char* name);
-
-void add_edge_by_name(char* first_vertex_name, char* second_vertex_name, double weight);
-
-void add_edge_by_id(int head_vertex_id, int tail_vertex_id, double weight);
-
-void remove_edge(int id);
-
-void print();
-
-void cluster(int num_of_clusters);
-
-void free_and_quit();
-
-void print_error(char* error);
-
-int next_ver();
-
-int next_ed();
-
-int search_ver(char* name);
-
-bool edge_duplication(int id1, int id2);
-
-bool ver_exist(int id);
-
-bool ed_exist(int id);
-
-bool edges_attached(int id);
+#define ERROR_CMD_NAME 1
+#define ERROR_CMD_FORMAT 2
+#define ERROR_WEIGHT_NUMBER 3
+#define ERROR_WEIGHT_POSITIVE 4
+#define ERROR_VER_ONE_LETTER 5
+#define ERROR_EDGE_ID_NUMBER 6
+#define ERROR_VER_ID_NUMBER 7
+#define ERROR_NUMBER_OF_CLUSTERS 8
+#define ERROR_MALLOC 9
+#define ERROR_VER_NOT_EXIST 10
+#define ERROR_VER_SAME_NAME 11
+#define ERROR_VER_NOT_FOUND 12
+#define ERROR_SELF_LOOPS 13
+#define ERROR_EDGE_DUPLICATE 14
+#define ERROR_EDGE_NOT_EXIST 15
+#define ERROR_VER_DEGREE_NOT_ZERO 16
 
 #endif
