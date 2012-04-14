@@ -1,334 +1,500 @@
-/*Full Name 1: Or Segal; Id No 1: 203993118; User Name 1: orsegal*/
-/*Full Name 2: Aviv Mor; Id No 2: 201254059; User Name 2: avivmor*/
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <assert.h>
 #include "graph.h"
+#include "cluster.h"
 
-#define MAX_LENGTH 300
 
-void quit();
-void strip_newline(char *str, int size);
-void run_command(char* command);
-char* get_command_param(const char* command, int param_number);
-char* strdup (const char *s);
-bool valid_command_params(const char* command, int num_of_params);
-bool isNumeric (const char * s);
-bool isInteger (const char * s);
-bool isContainLetter(const char *mystring);
+#define MAX_LENGTH 305
 
-bool exitFlag = false; /*determines whether the program should receive another command or terminate*/
+/* The function returns true if the received string represents a non-negative/positive integer. */
+/* mode = 0 - for non-negative */
+/* mode = 1 - for positive */
+bool is_str_non_negative_int(char* str, int mode) {
+	int result = 0;
+	int parsingCheck = 0;
 
-int main(int argc, char *argv[]) {
-	char* input_folder;
-	char* output_folder;
-	char* clusters_lower_bound_str;
-	char* clusters_upper_bound_str;
-	int clusters_lower_bound;
-	int clusters_upper_bound;
-	char command[MAX_LENGTH];
+	parsingCheck = sscanf(str, "%d", &result);
 
-	//REMOVE THESE LINES BEFORE SUBMITING - fix for windows
-	setvbuf(stdout, NULL, _IONBF, 0);
-	setvbuf(stderr, NULL, _IONBF, 0);
-	//***********************************
-
-	if(argc != 5) {
-		print_error("Invalid number of arguments");
-		return 0;
+	if (parsingCheck == 0) {
+		return false;
 	}
-
-	char* input_folder = argv[1];
-	char* output_folder = argv[2];
-	char* clusters_lower_bound_str = argv[3];
-	char* clusters_upper_bound_str = argv[4];
-
-	if(!isInteger(clusters_lower_bound_str)) {
-		print_error("Number of clusters lower bound invalid value");
-		return 0;
+	/* string is not double */
+	if ( strchr(str, '.')==NULL ) {
+		if (result >= mode) {
+			return true;
+		} else {
+			return false; 
+		}
+	/* double */
 	} else {
-		clusters_lower_bound = atoi(clusters_lower_bound_str);
+		return false;
 	}
+}
 
-	if(!isInteger(clusters_upper_bound_str)) {
-		print_error("Number of clusters upper bound invalid value");
-		return 0;
+/* The function returns true if the received string represents double, otherwise false. */
+bool is_str_double(char* str) {
+	int parsingCheck = 0;
+	double tmp = 0;
+
+	parsingCheck=sscanf(str, "%lf", &tmp);
+	/* parsing failed */
+	if (parsingCheck == 0) {
+		return false;
 	} else {
-		clusters_upper_bound = atoi(clusters_upper_bound_str);
-	}
-
-
-	FILE *file = fopen (input_folder, "r");
-	if (file != NULL) {
-
-		while(fgets(command, sizeof command, file) != NULL) { /* read a line */
-			strip_newline(command, MAX_LENGTH);
-			run_command(command);
-		}
-		fclose ( file );
-	} else {
-		print_error("File did not open");
-	}
-
-
-	//while(!exitFlag) {
-	//	fgets(command, MAX_LENGTH, stdin);
-	//	strip_newline(command, MAX_LENGTH);
-	//	run_command(command);
-	//}
-
-	return 0;
-}
-
-/* the function quits the program*/
-void quit() {
-	exitFlag = true;
-}
-
-/* the function parse the command string and runs a function accordingly*/
-void run_command(char* command) {
-	char* command_name;
-	char* vertex_name;
-	char* vertex;
-	char* vertex_a;
-	char* vertex_b;
-	int vertex_a_id;
-	int vertex_b_id;
-	char* weight_str;
-	double weight;
-	char* edge_id_str;
-	int edge_id;
-	char* num_clusters_str;
-	int num_clusters;
-
-	if(command == NULL || strlen(command) < 1 || isspace(*command)) {
-		print_error("Command format is not valid");
-		return;
-	}
-	command_name = get_command_param(command, 0);
-	if(strcmp("add_vertex", command_name) == 0) {
-		if(!valid_command_params(command, 2)) {
-			print_error("Command format is not valid");
-			return;
-		}
-
-		vertex_name = get_command_param(command, 1);
-		if(vertex_name == NULL || strlen(vertex_name) < 1) {
-			print_error("Command format is not valid");
-			return;
-		} else if (!isContainLetter(vertex_name)) {
-			print_error("When adding a vertex name must have at least one letter");
-			return;
-		} else {
-			add_vertex(vertex_name);
-		}
-	} else if(strcmp("remove_vertex", command_name) == 0) {
-		if(!valid_command_params(command, 2)) {
-			print_error("Command format is not valid");
-			return;
-		}
-
-		vertex = get_command_param(command, 1);
-		if(vertex == NULL || strlen(vertex) < 1) {
-			print_error("Command format is not valid");
-			return;
-		} else {
-			if(!isInteger(vertex)) {
-				remove_vertex_by_name(vertex);
-			} else {
-				int vertex_id;
-				sscanf(vertex, "%d", &vertex_id);
-				remove_vertex_by_id(vertex_id);
-			}
-		}
-	} else if(strcmp("add_edge", command_name) == 0) {
-		if(!valid_command_params(command, 4)) {
-			print_error("Command format is not valid");
-			return;
-		}
-
-		vertex_a = get_command_param(command, 1);
-		if(vertex_a == NULL || strlen(vertex_a) < 1) {
-			print_error("Command format is not valid");
-			return;
-		}
-
-		vertex_b = get_command_param(command, 2);
-		if(vertex_b == NULL || strlen(vertex_b) < 1) {
-			print_error("Command format is not valid");
-			return;
-		}
-
-		weight_str = get_command_param(command, 3);
-		if(weight_str == NULL || strlen(weight_str) < 1) {
-			print_error("Command format is not valid");
-			return;
-		}
-		if(!isNumeric(weight_str)) {
-			print_error("When adding an edge weight must be a number");
-			return;
-		}
-		sscanf(weight_str, "%lf", &weight);
-		if(weight < 0) {
-			print_error("When adding an edge weight must be positive");
-			return;
-		}
-
-		if(isInteger(vertex_a) && isInteger(vertex_b)) {
-			sscanf(vertex_a, "%d", &vertex_a_id);
-			sscanf(vertex_b, "%d", &vertex_b_id);
-			add_edge_by_id(vertex_a_id, vertex_b_id, weight);
-		} else {
-			add_edge_by_name(vertex_a, vertex_b, weight);
-		}
-
-	} else if(strcmp("remove_edge", command_name) == 0) {
-		if(!valid_command_params(command, 2)) {
-			print_error("Command format is not valid");
-			return;
-		}
-
-		edge_id_str = get_command_param(command, 1);
-		if(edge_id_str == NULL || strlen(edge_id_str) < 1) {
-			print_error("Command format is not valid");
-			return;
-		} else {
-			if(!isInteger(edge_id_str)) {
-				print_error("Edge id must be a number");
-				return;
-			} else {
-				sscanf(edge_id_str, "%d", &edge_id);
-				remove_edge(edge_id);
-			}
-		}
-	} else if(strcmp("print", command_name) == 0) {
-		if(!valid_command_params(command, 1)) {
-			print_error("Command format is not valid");
-			return;
-		}
-
-		print();
-	} else if(strcmp("cluster", command_name) == 0) {
-		if(!valid_command_params(command, 2)) {
-			print_error("Command format is not valid");
-			return;
-		}
-
-		 num_clusters_str = get_command_param(command, 1);
-		if(num_clusters_str == NULL || strlen(num_clusters_str) < 1) {
-			print_error("Command format is not valid");
-			return;
-		} else {
-			if(!isInteger(num_clusters_str)) {
-				print_error("Command format is not valid");
-				return;
-			}
-			sscanf(num_clusters_str, "%d", &num_clusters);
-			if(num_clusters < 1) {
-				print_error("Number of clusters must be a number bigger or equal to 1");
-				return;
-			} else {
-				cluster(num_clusters);
-			}
-		}
-	} else if(strcmp("quit", command_name) == 0) {
-		if(!valid_command_params(command, 1)) {
-			print_error("Command format is not valid");
-			return;
-		}
-		free_and_quit();
-		quit();
-	} else {
-		print_error("Command is not recognized");
-		return;
-	}
-}
-
-/* the function retrieves a parameter from the command according to the given param_number*/
-char* get_command_param(const char* command, int param_number) {
-	char command_tmp[MAX_LENGTH];
-	char* user_input;
-	char* param;
-	int current_param;
-
-	strcpy(command_tmp, command);
-	user_input = NULL;
-	user_input = strtok(command_tmp, " ");
-
-	current_param = 0;
-	while(current_param < param_number) {
-		user_input = strtok(NULL, " ");
-		current_param++;
-	}
-
-	param = strdup(user_input);
-	return param;
-}
-
-/* Aquires memory for string, duplicates it, and returns the duplication.*/
-char* strdup (const char *s) {
-	char* d;
-
-	if (s == NULL)
-		return NULL;
-
-    d = malloc (strlen (s) + 1);
-    if (d != NULL)
-        strcpy (d,s);
-    return d;
-}
-
-/* the function check if the number of params in the command is valid*/
-bool valid_command_params(const char* command, int num_of_params) {
-	char* extra_command = get_command_param(command, num_of_params);
-	if(extra_command == NULL || strlen(extra_command) < 1) {
 		return true;
+	}
+}
+
+/* The function returns true if str contains a letter, otherwise false. */
+bool contains_letter(char* str) {
+	int i = 0;
+	int length = 0;
+
+	length = (int)strlen(str);
+
+	for (i = 0; i < length; i++) {
+		if (isalpha(str[i])) {
+			return true;
+		}
 	}
 	return false;
 }
 
-/* the function removes the newline from the end of a string entered using fgets.*/
-void strip_newline(char *str, int size) {
-    int i;
-
-    for ( i = 0; i < size; ++i ) {
-        if ( str[i] == '\n' ) {
-            str[i] = '\0';
-            return;
-        }
-    }
+/* The function converts the received string to an integer */
+/* The function assumes the string represents a valid integer. */
+int str_to_int(char* str) {
+	int result = 0;
+	sscanf(str, "%d", &result);
+	return result;
 }
 
-/* Returns true if character-string parameter represents a signed or unsigned floating-point number. Otherwise returns false.*/
-bool isNumeric (const char * s) {
-	char * p;
-
-	if (s == NULL || *s == '\0' || isspace(*s))
-      return 0;
-    strtod (s, &p);
-    return *p == '\0';
+/* The function converts the received string to a double. */
+/* The function assumes the string represents a valid double. */
+double str_to_double(char* str) {
+	double result = 0;
+	sscanf(str, "%lf", &result);
+	return result;
 }
 
-/* Returns true if character-string parameter represents a signed or unsigned integer number. Otherwise returns false.*/
-bool isInteger (const char * s) {
-	char * p;
 
-	if (s == NULL || *s == '\0' || isspace(*s))
-      return 0;
-    strtol (s, &p, 10);
-    return *p == '\0';
+/* The function inserts into result the next word in the string (ignoring white-spaces and beginning at idx). */
+/* If no word was found, it will insert an empty string. */
+/* return: If a word was found - The index of the last char. */
+/* If no word was found - -1 */
+int get_next_word(char* str, int idx, char* result) {
+	int i = 0;
+	
+	/* Loops until found '\n' char or non white-space char */
+	while ( (isspace(str[idx])) && (idx<(int)strlen(str)-1) ) {
+		idx++;
+	}
+	/* No word was found */
+	if (idx==(int)strlen(str)-1) {
+		return -1;
+	}
+	/* Copy word to result */
+	while ( (isspace(str[idx]) == false) && (idx < (int)strlen(str)-1) ) {
+		result[i]=str[idx];
+		idx++;
+		i++;
+	}
+	result[i]='\0';
+	return (idx-1);
 }
 
-/* Returns true if there is a letter in the string. Otherwise returns false.*/
-bool isContainLetter(const char *c) {
-   const char *letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-   int i = 0;
-   while (c[i] != 0) {
-	   if (strchr(letters, c[i]) != NULL) {
-		  return true;
-	   }
-	   i++;
-   }
-   return false;
+
+/* The function runs the received command from the input */
+int run_command(graph* grp, char* command) {
+	int len = (int)strlen(command)-1;
+	int tmp = 0, tmp2 = 0, nextWordIdx = 0;
+	double weight=0;
+	char operation[MAX_LENGTH]="";
+	/* The commands have maximum 3 parameters */
+	char params[3][MAX_LENGTH];
+
+	/* Empty command */
+	if (command[0]=='\n') {
+		return ERROR_CMD_NAME;
+	}
+	/* The command starts with a white space */
+	if (isspace(command[0])) {
+		return ERROR_CMD_NAME;
+	}
+	/* The command ends with a white space */
+	if (isspace(command[len-1])) {
+		return ERROR_CMD_FORMAT;
+	}
+
+	nextWordIdx=get_next_word(command, 0, operation); /* getting the first word -> command name. */
+
+	if (strcmp(operation, "add_vertex") == 0) { 
+		strcpy(params[0], "");   
+		nextWordIdx=get_next_word(command, nextWordIdx+1, params[0]);
+
+		if ( (nextWordIdx==-1) || (nextWordIdx != (len-1)) ) {
+			return ERROR_CMD_FORMAT;
+		}
+
+		if (contains_letter(params[0]) == false) {
+			return ERROR_VER_ONE_LETTER;
+		}
+
+		return add_vertex(grp, params[0]);
+	}
+
+	if (strcmp(operation, "remove_vertex") == 0) { 
+		strcpy(params[0], "");
+		nextWordIdx=get_next_word(command, nextWordIdx+1, params[0]);
+
+		if ( (nextWordIdx==-1) || (nextWordIdx != (len-1)) ) {
+			return ERROR_CMD_FORMAT;
+		}
+
+		if (contains_letter(params[0])) {
+			tmp=remove_vertex_name(grp, params[0]);
+			if (tmp==ERROR_VER_DEGREE_NOT_ZERO) {
+				printf("Error: Cannot delete vertex %s since there are edges connected to it\n", params[0]);
+				return 0;
+			}
+			return tmp;
+		} else {
+			if (is_str_non_negative_int(params[0],0)) {
+				tmp=strToInt(params[0]);
+				tmp2=remove_vertex_id(grp, tmp);
+				if (tmp2==ERROR_VER_DEGREE_NOT_ZERO) {
+					printf("Error: Cannot delete vertex %s since there are edges connected to it\n", 
+						   (*((*grp).vertices+tmp)).name);
+					return 0;
+				}
+				return tmp2;
+			} else {
+				return ERROR_CMD_FORMAT;
+			}
+		}
+	}
+
+	if (strcmp(operation, "add_edge") == 0) { 
+		strcpy(params[0], "");
+		strcpy(params[1], "");
+		strcpy(params[2], "");
+		nextWordIdx=get_next_word(command, nextWordIdx+1, params[0]);
+		if (nextWordIdx==-1) {
+			return ERROR_CMD_FORMAT;
+		}
+		nextWordIdx=get_next_word(command, nextWordIdx+1, params[1]);
+		if (nextWordIdx==-1) {
+			return ERROR_CMD_FORMAT;
+		}
+		nextWordIdx=get_next_word(command, nextWordIdx+1, params[2]);
+		if (nextWordIdx==-1) {
+			return ERROR_CMD_FORMAT;
+		}
+		if (nextWordIdx != (len-1)) {
+			return ERROR_CMD_FORMAT;
+		}
+		if (is_str_double(params[2])==false) {
+			return ERROR_WEIGHT_NUMBER;
+		}
+		weight=str_to_double(params[2]);
+		if (weight<0) {
+			return ERROR_WEIGHT_POSITIVE;
+		}
+		if ((contains_letter(params[0])) && (contains_letter(params[1])==false)) {  
+			 return ERROR_CMD_FORMAT;
+		}
+		if ((is_str_non_negative_int(params[0],0)) && (is_str_non_negative_int(params[1],0)==false)) { 
+			 return ERROR_VER_ID_NUMBER;
+		}
+		if ( ((contains_letter(params[0])==false) && (is_str_non_negative_int(params[0],0)==false)) ||
+			 ((contains_letter(params[1])==false) && (is_str_non_negative_int(params[1],0)==false)) ) {
+				 return ERROR_CMD_FORMAT;
+		}
+		if (contains_letter(params[0])) {
+			return add_edge_names(grp, params[0], params[1], weight);
+		} else {
+			return add_edge_ids(grp, strToInt(params[0]), strToInt(params[1]), weight);
+		}
+	}
+
+	if (strcmp(operation, "remove_edge") == 0) { 
+		strcpy(params[0], "");
+		nextWordIdx=get_next_word(command, nextWordIdx+1, params[0]);
+
+		if ( (nextWordIdx==-1) || (nextWordIdx != (len-1)) ) {
+			return ERROR_CMD_FORMAT;
+		}
+
+		if (is_str_non_negative_int(params[0],0)) {
+			return remove_edge(grp, strToInt(params[0]));
+		} else {
+			return ERROR_EDGE_ID_NUMBER;
+		}
+	}
+
+	if (strcmp(operation, "print") == 0) {       
+		if (nextWordIdx != (len-1)) {
+			return ERROR_CMD_FORMAT;
+		}
+		print(grp, false);
+		return 0;
+	}
+
+	if (strcmp(operation, "cluster") == 0) { 
+		strcpy(params[0], "");
+		nextWordIdx=get_next_word(command, nextWordIdx+1, params[0]);
+
+		if ( (nextWordIdx==-1) || (nextWordIdx != (len-1)) ) {
+			return ERROR_CMD_FORMAT;
+		}
+
+		if (is_str_non_negative_int(params[0],0)==false) {
+				return ERROR_NUMBER_OF_CLUSTERS;
+		}
+		tmp=strToInt(params[0]);
+		if (tmp < 1) {
+			return ERROR_NUMBER_OF_CLUSTERS;
+		} else {
+			cluster(grp, tmp);
+			return 0;
+		}
+	}
+
+	/* No valid command matched the received command */
+	return  ERROR_CMD_NAME;
+}
+
+
+/* The function reads fill the graph from the input files */
+/* The parameter verticesOrEdges determines whether the input file is for vertices or edges */
+int fill_graph(FILE* fil, graph *grp, int verticesOrEdges) {
+	char line[MAX_LENGTH];
+	char cmd[MAX_LENGTH+10];
+	int error;
+
+	while(1) {
+		fgets(line, MAX_LENGTH, fil);
+		if (feof(fil)) {
+			break;
+		}
+	
+		if (verticesOrEdges==0) {
+			strcpy(cmd, "add_vertex ");
+		} else {
+			strcpy(cmd, "add_edge ");
+		}
+
+		strcat(cmd, line);
+		error=run_command(grp, cmd);
+		/* Checks the command ran successfully */
+		if (error != 0) {
+			return error;         
+		}
+	}
+
+	return 0;
+}
+
+/* The function writes the clustered graph for k=U to the results file */
+void graph_to_file(graph *grp, FILE* result) {
+	int i = 0;
+	char* verNameA;
+	char* verNameB;
+
+	/* Writes number of vertices */
+	if (grp->numVertices > 0) {
+		fprintf(result, "%d vertices:\n", grp->numVertices);
+	}
+	/* Writes vertices */
+	for(i = 0; i <= grp->lastVerIdx; i++) {
+		fprintf(result, "%d: %s %d\n", i, (grp->vertices+i)->name, (grp->vertices+i)->cluster);
+	}
+	/* Writes number of edges */
+	if (grp->numEdges > 0) {
+		fprintf(result, "%d edges:\n", grp->numEdges);
+	}
+	/* Writes edges */
+	for(i = 0; i <= grp->lastEdgeIdx; i++) {
+		verNameA = (grp->vertices+(grp->edges+i)->v1_id)->name;
+        verNameB = (grp->vertices+(grp->edges+i)->v2_id)->name;
+
+        fprintf(result, "%d: %s-%s %.3f\n", i, verNameA, verNameB, (grp->edges+i)->weight);
+	}
+}  
+
+
+void print_error(int error_number) {
+	switch(error_number) {
+		case ERROR_CMD_NAME: printf("Error: Command is not recognized\n");
+				break;
+		case ERROR_CMD_FORMAT: printf("Error: Command format is not valid\n");
+				break;
+		case ERROR_WEIGHT_NUMBER: printf("Error: When adding an edge weight must be a number\n");
+				break;
+		case ERROR_WEIGHT_POSITIVE: printf("Error: When adding an edge weight must be positive\n");
+				break;
+		case ERROR_VER_ONE_LETTER: printf("Error: When adding a vertex name must have at least one letter\n");
+				break;
+		case ERROR_EDGE_ID_NUMBER: printf("Error: Edge id must be a number\n");
+				break;
+		case ERROR_VER_ID_NUMBER: printf("Error: Vertex id must be a number\n");
+				break;
+		case ERROR_NUMBER_OF_CLUSTERS: printf("Error: Number of clusters must be a number bigger or equal to 1\n");
+				break;
+		case ERROR_MALLOC: printf("Error: Memory allocation failed\n");
+				break;
+		case ERROR_VER_NOT_EXIST: printf("Error: Requested vertex does not exist\n");
+				 break;
+		case ERROR_VER_SAME_NAME: printf("Error: More than one vertex with the requested name exists, please remove using id\n");
+				 break;
+		case ERROR_VER_NOT_FOUND: printf("Error: First/second vertex was not found\n");
+				 break;
+		case ERROR_SELF_LOOPS: printf("Error: No self loops are allowed in the graph\n");
+				 break;
+		case ERROR_EDGE_DUPLICATE: printf("Error: No duplicated edges are allowed in the graph\n");
+				 break;
+		case ERROR_EDGE_NOT_EXIST: printf("Error: Requested edge does not exist\n");
+				 break;
+		default: printf("Error not recognized!\n");
+				 break;
+	}
+}
+
+int main(int argc, char *argv[]) {
+
+	int i = 0, error = 0, L, U;
+	/* for CPLEX */
+	double objval=0;
+	char *vertices_file_name, *edges_file_name, *results_file_name;
+	FILE *vertices_file, *edges_file, *results_file;
+
+	graph *ptr;
+	graph grp;
+
+	/* Graph properties initialization */
+	grp.lastVerIdx=-1;
+	grp.lastEdgeIdx=-1;
+	grp.verLength=0;
+	grp.edgeLength=0;
+	grp.numVertices=0;
+	grp.numEdges=0;
+	grp.vertices=NULL;
+	grp.edges=NULL;
+
+	ptr=&grp;
+
+	/* Invalid number of arguments */
+	if (argc != 5) {
+		printf("Error: Wrong number of input arguments\n");
+		return 0;
+	}
+
+	vertices_file_name=(char*)malloc((strlen(argv[1])+10)*sizeof(char));
+	if (vertices_file_name == NULL) {   
+		print_error(ERROR_MALLOC);
+		return 0;
+	}
+	strcpy(vertices_file_name, argv[1]);
+	strcat(vertices_file_name, "/nodes");
+	vertices_file = fopen(vertices_file_name,"r");
+	if (vertices_file_name == NULL) {   
+		printf("Error: Nodes file could not be opened or the path/file doesn't exist\n");
+		return 0;
+	}
+
+
+	edges_file_name=(char*)malloc((strlen(argv[1])+10)*sizeof(char));
+	if (edges_file_name == NULL) {   
+		print_error(ERROR_MALLOC);
+		return 0;
+	}
+	strcpy(edges_file_name, argv[1]);
+	strcat(edges_file_name, "/edges");
+	edges_file = fopen(edges_file_name,"r");
+	if (edges_file_name == NULL) {   
+		printf("Error: Edges file could not be opened or the path/file doesn't exist\n");
+		return 0;
+	}
+
+
+	results_file_name=(char*)malloc((strlen(argv[2])+10)*sizeof(char));
+	if (results_file_name == NULL) {   
+		print_error(ERROR_MALLOC);
+		return 0;
+	}
+	strcpy(results_file_name, argv[2]);
+	strcat(results_file_name, "/results");
+	results_file = fopen(results_file_name,"w");
+	if (results_file_name == NULL) {   
+		printf("Error: Results file could not be opened or the path doesn't exist\n");
+		return 0;
+	}
+
+
+	if (is_str_non_negative_int(argv[3],1) && is_str_non_negative_int(argv[4],1)) { 
+		L=strToInt(argv[3]);
+	    U=strToInt(argv[4]);
+		if (U<L) {  
+			printf("Error: Lower bound for the number of clusters is bigger than the upper bound\n");
+			return 0;
+		}
+	} else {
+		printf("Error: Lower or upper bound for the number of clusters isn't a positive integer\n");
+		return 0;
+	}
+
+	/* Inserting the vertices from the input file to the graph */
+	error=fill_graph(vertices_file, ptr, 0);
+	if (error != 0) {   
+		print_error(error);  
+		return 0;
+	}
+
+	/* Inserting the edges from the input file to the graph */
+	error=fill_graph(edges_file, ptr, 1);
+	if (error != 0) {   
+		print_error(error);  
+		return 0;
+	}
+
+	/* Running the cluster algorithm */
+	for (i=L; i<=U; i++) {
+		error=k_cluster(ptr, i, &objval);
+		if (error != 0) {
+			if (error == ERROR_MALLOC) {
+				print_error(ERROR_MALLOC);
+			}
+			return 0;
+		}
+		fprintf(results_file,"%d: %.3f\n", i, objval); /* clustering scores */
+	}
+
+	fprintf(results_file,"\n"); 
+
+	/* Write the clustered graph for k=U */
+	fprintf(results_file,"The clustered graph for %d:\n", U);
+	graph_to_file(ptr, results_file);
+
+
+	free(vertices_file_name);
+	free(edges_file_name);
+	free(results_file_name);
+
+	fclose(vertices_file);
+	fclose(edges_file);  
+	fclose(results_file); 
+
+	/* Free memory */
+	for(i=0; i<=grp.lastVerIdx; i++) {
+		if ( (*(grp.vertices+i)).deleted == false ) {
+			free( (*(grp.vertices+i)).name );
+		}
+	}
+
+	free( grp.vertices );
+	free( grp.edges );
+
+	return 0;
 }
