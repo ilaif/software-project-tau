@@ -21,11 +21,11 @@ typedef struct graphStruct {
 } graph;
 
 int add_vertex(graph*, char*);
-int remove_vertex_id(graph*, int);
-int remove_vertex_name(graph*, char*);
-int add_edge_names(graph*, char*, char*, double);
-int add_edge_ids(graph*, int, int, double);
-int remove_edge(graph*, int);
+int remove_vertex_by_id(graph*, int);
+int remove_vertex_by_name(graph*, char*);
+int add_edge_by_names(graph*, char*, char*, double);
+int add_edge_by_ids(graph*, int, int, double);
+int remove_edge_by_id(graph*, int);
 void print(graph*, bool);
 void cluster(graph*, int);
 

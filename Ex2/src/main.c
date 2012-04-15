@@ -154,7 +154,7 @@ int run_command(graph* grp, char* command) {
 		}
 
 		if (contains_letter(params[0])) {
-			tmp=remove_vertex_name(grp, params[0]);
+			tmp=remove_vertex_by_name(grp, params[0]);
 			if (tmp==ERROR_VER_DEGREE_NOT_ZERO) {
 				printf("Error: Cannot delete vertex %s since there are edges connected to it\n", params[0]);
 				return 0;
@@ -163,7 +163,7 @@ int run_command(graph* grp, char* command) {
 		} else {
 			if (is_str_non_negative_int(params[0],0)) {
 				tmp=strToInt(params[0]);
-				tmp2=remove_vertex_id(grp, tmp);
+				tmp2=remove_vertex_by_id(grp, tmp);
 				if (tmp2==ERROR_VER_DEGREE_NOT_ZERO) {
 					printf("Error: Cannot delete vertex %s since there are edges connected to it\n", 
 						   (*((*grp).vertices+tmp)).name);
@@ -213,13 +213,13 @@ int run_command(graph* grp, char* command) {
 				 return ERROR_CMD_FORMAT;
 		}
 		if (contains_letter(params[0])) {
-			return add_edge_names(grp, params[0], params[1], weight);
+			return add_edge_by_names(grp, params[0], params[1], weight);
 		} else {
-			return add_edge_ids(grp, strToInt(params[0]), strToInt(params[1]), weight);
+			return add_edge_by_ids(grp, strToInt(params[0]), strToInt(params[1]), weight);
 		}
 	}
 
-	if (strcmp(operation, "remove_edge") == 0) { 
+	if (strcmp(operation, "remove_edge_by_id") == 0) {
 		strcpy(params[0], "");
 		nextWordIdx=get_next_word(command, nextWordIdx+1, params[0]);
 
@@ -228,7 +228,7 @@ int run_command(graph* grp, char* command) {
 		}
 
 		if (is_str_non_negative_int(params[0],0)) {
-			return remove_edge(grp, strToInt(params[0]));
+			return remove_edge_by_id(grp, strToInt(params[0]));
 		} else {
 			return ERROR_EDGE_ID_NUMBER;
 		}
