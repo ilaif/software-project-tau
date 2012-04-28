@@ -11,9 +11,8 @@
 /* cluster.c - Entering and optimizing k-clustering integer linear programming problem */
 
 #include "cluster.h"
-
-/* for coping with solution values 'close' to 1 (accuracy) */ 
-#define IS_VALUE_1(X) ((1 - X) < 0.00001)  
+/* this macro enable us coping with solution values which are close to 1 (accuracy) */
+#define IS_VALUE_CLOSE_TO_1(X) ((1 - X) < 0.00001)
 
 /* This routine initializes the cplex enviorement, sets screen as an output for cplex errors and notifications, 
    and sets parameters for cplex. It calls for a mixed integer program solution and frees the environment.
@@ -23,47 +22,37 @@
    Read solution (both objective function value and variables assignment). Add out parameter to the calling function to 
    return the objective function max solution.
 */
-int k_cluster(graph* grp, int K, double *objval, char* output_folder) {
+int k_cluster(graph* my_graph, int K, double *objval, char* output_folder) {
 
-   int i, j, V=grp->numOfVertices, E=grp->numOfEdges;
-   int T1=2*E*K, T2=E*K, T3=V, T4=K;  /* constraints types and sizes */
-   int* next_ind=NULL;                
+   int i,j,V=my_graph->numOfVertices,E=my_graph->numOfEdges;
+   int C1=2*E*K,C2=E*K,C3=V,C4=K;  /*constraints types and sizes*/
+   int* next_index=NULL;
 
    /* Declare pointers for the variables and arrays that will contain
       the data which define the LP problem. */
 
-   char* probname = NULL;  
-   int numcols=K*(V+E);   /* number of variables */
-   int numrows=T1+T2+T3+T4;   /* number of constraints */
-   int objsen=CPX_MAX;     /* maximize in obj. function */
-   double *obj = NULL;
-   double *rhs = NULL;
-   char *sense = NULL;
-   int *matbeg = NULL;
-   int *matcnt = NULL;
-   int *matind = NULL;
-   double *matval = NULL;
-   double *lb = NULL;
-   double *ub = NULL;
-
-   /* for CPXchgctype */
-   int cnt=0;
+   char *probname=NULL;
+   int numcols=K*(V+E);   /*#variables*/
+   int numrows=C1+C2+C3+C4;   /*#constraints*/
+   int objsen=CPX_MAX;     /*maximize in obj. function*/
+   double *obj=NULL,*rhs=NULL;
+   char *sense=NULL;
+   int *matbeg=NULL,*matcnt=NULL,*matind=NULL;
+   double *matval=NULL,*lb=NULL,*ub=NULL;
+   /*CPXchgctype*/
+   int count=0;
    int *indices = NULL;
    char *ctype = NULL;
-
-   /* for CPXsolution */
+   /*CPXsolution*/
    int solstat=0;
    double* x=NULL; 
-
-   /* for CPXwriteprob */
+   /*CPXwriteprob*/
    char *sol_file_path = NULL;  /* for <K>.lp */
-   char tmp[FILE_NAME_LEN];
+   char tmp[FILE_NAME_LENGTH];
   
-
    /* Declare and allocate space for the variables and arrays where we
       will store the optimization results including the status, objective
       value and variable values. */
-
    CPXENVptr env              = NULL;
    CPXLPptr  lp               = NULL;
    int       status;
@@ -95,13 +84,12 @@ int k_cluster(graph* grp, int K, double *objval, char* output_folder) {
    }
 
    /* Create the problem. */
-   probname=(char*)malloc((strlen("k-cluster")+1)*sizeof(char));
+   probname=(char*)malloc(sizeof(char)*(strlen("k-cluster")+1));
    if (probname==NULL) {
 	   status=ERROR_MALLOC_FAILED; 
 	   goto TERMINATE;
    }
    strcpy(probname,"k-cluster");  
- 
    lp = CPXcreateprob (env, &status, probname);
 
    /* A returned pointer of NULL may mean that not enough memory
@@ -116,60 +104,69 @@ int k_cluster(graph* grp, int K, double *objval, char* output_folder) {
       goto TERMINATE;
    }
 
-
    /* filling in the data structures for the problem */
 
+   /* lower and upper bounds for the variables */
    lb = (double*)malloc(numcols*sizeof(double));
    ub = (double*)malloc(numcols*sizeof(double)); 
-   /* lower and upper bounds for the variables */
+
 
    if ((lb==NULL) || (ub==NULL)) {
 	  status=ERROR_MALLOC_FAILED; 
 	  goto TERMINATE;
    }
 
+   /* binary variables: */
    for (i=0; i<numcols; i++) {
 	   lb[i]=0;
-	   ub[i]=1; /* because they are binary variables */
+	   ub[i]=1;
    }
 
-
-   obj = (double*)malloc(numcols*sizeof(double)); /* objective function coefficients */
+   /* objective function coefficients */
+   obj = (double*)malloc(numcols*sizeof(double));
    if (obj==NULL) {
 	  status=ERROR_MALLOC_FAILED; 
 	  goto TERMINATE;
    }
 
    for (i=0; i<K*V; i++) {
-	   obj[i]=0;  /* coefficient of every x_i_p is 0 */
+	   obj[i]=0;
    }
    for (i=K*V; i<numcols; i++) {
-	   obj[i]=(grp->edges+((i-K*V)%E))->weight; /* weights of edges, repeatedly */
+	   obj[i]=(my_graph->edges+((i-K*V)%E))->weight; /* weights of edges */
    }
 
-
-   rhs = (double*)malloc(numrows*sizeof(double)); /* right hand side values of the constraints */
-   sense = (char*)malloc(numrows*sizeof(char));  /* inequality signs of the constraints */
+   /* rhs values of the constraints */
+   rhs = (double*)malloc(numrows*sizeof(double));
+   /* inequality signs of the constraints */
+   sense = (char*)malloc(numrows*sizeof(char));
    if ((rhs==NULL) || (sense==NULL)) {
 	  status=ERROR_MALLOC_FAILED; 
 	  goto TERMINATE;
    }
 
-   /* numrows = T1+T2+T3+T4 - according to the 4 types of the constraints */
+   /* numrows=T1+T2+T3+T4 - due to the 4 types of constraints */
 
-   for (i=0; i<T1; i++) {   /* type 1 constraints */
+   /* type 1 */
+   for (i=0; i<C1; i++) {
 	   rhs[i]=0;
 	   sense[i]='L';
    }
-   for (i=T1; i<T1+T2; i++) {   /* type 2 constraints */
+
+   /* type 2 */
+   for (i=C1; i<C1+C2; i++) {
 	   rhs[i]=-1;
 	   sense[i]='G';
    }
-   for (i=T1+T2; i<T1+T2+T3; i++) {   /* type 3 constraints */
+
+   /* type 3 */
+   for (i=C1+C2; i<C1+C2+C3; i++) {
 	   rhs[i]=1;
 	   sense[i]='E';
    }
-   for (i=T1+T2+T3; i<numrows; i++) {   /* type 4 constraints */
+
+   /* type 4 */
+   for (i=C1+C2+C3; i<numrows; i++) {
 	   rhs[i]=1;
 	   sense[i]='G';
    }
@@ -181,40 +178,42 @@ int k_cluster(graph* grp, int K, double *objval, char* output_folder) {
       x_0_1,...,x_(|V|-1)_1,...,x_0_k,...,x_(|V|-1)_k,
 	  z_0_1,...,z_(|E|-1)_1,...,z_0_k,...,z_(|E|-1)_k */
 
-   matbeg = (int*)calloc(numcols, sizeof(int));   /* as number of variables */
+   matbeg = (int*)calloc(numcols, sizeof(int));
    matcnt = (int*)calloc(numcols, sizeof(int));
    if ((matbeg==NULL) || (matcnt==NULL)) {
 	  status=ERROR_MALLOC_FAILED; 
 	  goto TERMINATE;
    }
 
-   for (i=K*V; i<numcols; i++) { 
    /* edges variables z_j_p, which come after nodes x_i_k variables */
-	   matcnt[i]=3;    /* appears in exactly 3 constraints */
+   for (i=K*V; i<numcols; i++) { 
+	   matcnt[i]=3;    /* appears in 3 constraints */
    }
 
    /* nodes x_i_k variables */
-   for (i=0; i<E; i++) {  /* x_i_k appears in 2*(degree of vertex vi) + 2 constraints */
-	   /* calculation for x_0_1 to x_(|V|-1)_1; for higher cluster number - the same */
-	   matcnt[(grp->edges+i)->v1_id]+=2;
-	   matcnt[(grp->edges+i)->v2_id]+=2;
+   /* x_i_k appears in 2*(degree of vertex vi) + 2 constraints */
+   /* calculation for x_0_1 to x_(|V|-1)_1; for higher cluster number - the same */
+   for (i=0; i<E; i++) {
 	   /* calculates the 2*(degree of vertex vi) part */
+	   matcnt[(my_graph->edges+i)->v1_id]+=2;
+	   matcnt[(my_graph->edges+i)->v2_id]+=2;
    }
 
-   for (i=0; i<V; i++) {  
-	   /* adding the '+2' for x_0_1 to x_(|V|-1)_1 */ 
+   /* adding the '+2' for x_0_1 to x_(|V|-1)_1 */
+   for (i=0; i<V; i++) {
 	   matcnt[i]+=2;   
    }
 
+   /* filling for the rest of x_i_k variables, for cluster num. > 1,
+	using already filled x_0_1 to x_(|V|-1)_1 */
    for (i=V; i<K*V; i++) {   
-	   /* filling for the rest of x_i_k variables, for cluster num. > 1, 
-	      using already filled x_0_1 to x_(|V|-1)_1 */
 	   matcnt[i]=matcnt[i%V];
    }
 
-
-   matbeg[0]=0; /* assuming the graph isn't empty */
-   for (i=0; i<numcols; i++) { /* filling matbeg with the help of matcnt */
+   /* assuming the graph isn't empty */
+   matbeg[0]=0;
+   /* filling matbeg with the help of matcnt */
+   for (i=0; i<numcols; i++) {
 	   matbeg[i]=matbeg[i-1]+matcnt[i-1];
    }
 
@@ -253,125 +252,117 @@ int k_cluster(graph* grp, int K, double *objval, char* output_folder) {
 	  x_0_k+...+x_(|V|-1)_k=>1
       (total T4 const. of V varibales.) */
 
+   /* same as the number of total instances of variables in constraints */
+   matind = (int*)calloc((2*C1+3*C2+K*C3+V*C4), sizeof(int));
+   matval = (double*)calloc((2*C1+3*C2+K*C3+V*C4), sizeof(double));
 
-   matind = (int*)calloc((2*T1+3*T2+K*T3+V*T4), sizeof(int));   
-   /* as number of total instances of variables in the constraints */
-   matval = (double*)calloc((2*T1+3*T2+K*T3+V*T4), sizeof(double));  
+   /* next_index will be initialized to the values of matbeg. for each variable will hold and
+	update the place in matind(matval) for its next constraint index */
+   next_index = (int*)calloc(numcols, sizeof(int));
 
-   next_ind = (int*)calloc(numcols, sizeof(int)); 
-   /* will be initialized with values of matbeg. 
-      for each variable, will hold and
-      update the place in matind/matval for its next constraint index */
-
-   if ((matind==NULL) || (matval==NULL) || (next_ind==NULL)) {
+   if ((matind==NULL) || (matval==NULL) || (next_index==NULL)) {
 	  status=ERROR_MALLOC_FAILED; 
 	  goto TERMINATE;
    }
 
-   for (i=0; i<numcols; i++) { /* initializing next_ind with matbeg */
-	    next_ind[i]=matbeg[i]; 
+   /* initializing next_index with matbeg */
+   for (i=0; i<numcols; i++) {
+	    next_index[i]=matbeg[i];
    }
 
-   /* filling matind/matval for x_i_p varibales */
+   /* filling matind(matval) for x_i_p varibales */
    
    /* filling indexes of constraints in type1 where they appear
       ((degree of vertex) constraints of each var.)
 	  as type1 is the first, those are also overall indexes */
-
-   for (i=0; i<E; i++) {  /* add comment */
+   for (i=0; i<E; i++) {
 	   for (j=1; j<=K; j++) {  /* change */
-	   /* we run on edges and clusters. we look on edge's 2 vertices.
-	      first, we go to the index of x_(ei end)_j in next_ind, skipping (j-1)*V vars.
-	      of lower clusters. then, we put in matind/matval, according to next_int
-		  'pointer', the correct constraint index:
-		  we skip (j-1) cluster 'groups' of 2*E constraints of lower clusters,
-		  and as each z_p_k has 2 constraints, we add 2*i.
-		  (same for 2nd end of edge, but with 2*i+1) */
-		     matind[next_ind[(j-1)*V+(grp->edges+i)->v1_id]]=(j-1)*2*E+2*i;
-			 matind[next_ind[(j-1)*V+(grp->edges+i)->v2_id]]=(j-1)*2*E+2*i+1;
-			 matval[next_ind[(j-1)*V+(grp->edges+i)->v1_id]]=-1;
-			 matval[next_ind[(j-1)*V+(grp->edges+i)->v2_id]]=-1;
-			 next_ind[(j-1)*V+(grp->edges+i)->v1_id]++;
-			 next_ind[(j-1)*V+(grp->edges+i)->v2_id]++;
+	   /* we run on edges and clusters. we look on the 2 vertices of the edge.
+	      first of all, we go to the index of x_(ei end)_j in next_ind, skipping (j-1)*V vars.
+	      of lower clusters. then we put in matind(matval), according to next_int
+		  'pointer', the correct constraint index: we skip (j-1) cluster 'groups' of 2*E
+		  constraints of lower clusters, and as each z_p_k has 2 constraints, we add 2*i.
+		  we do the same for the 2nd end of the edge, with 2*i+1 */
+		     matind[next_index[(j-1)*V+(my_graph->edges+i)->v1_id]]=(j-1)*2*E+2*i;
+			 matind[next_index[(j-1)*V+(my_graph->edges+i)->v2_id]]=(j-1)*2*E+2*i+1;
+			 matval[next_index[(j-1)*V+(my_graph->edges+i)->v1_id]]=-1;
+			 matval[next_index[(j-1)*V+(my_graph->edges+i)->v2_id]]=-1;
+			 next_index[(j-1)*V+(my_graph->edges+i)->v1_id]++;
+			 next_index[(j-1)*V+(my_graph->edges+i)->v2_id]++;
 	   }
    }
 
   /* filling indexes of constraints in type2 where they appear 
-     ((degree of vertex) constraints of each var.)
+     (degree of vertex) constraints of each variable
 	 to get the overall index, we add T1 to the inner index in type2 */
-
    for (i=0; i<E; i++) {  
 	   for (j=1; j<=K; j++) {  
-	   /* same explanation as previously,
-	      but here, to get to the correct constraint index:
+	   /* same as the previous explanation,
+	      but in order to get to the correct constraint index:
 		  we skip (j-1) cluster 'groups' of E, and add i
-		  (both edge ends in same equation */
-		     matind[next_ind[(j-1)*V+(grp->edges+i)->v1_id]]=T1+(j-1)*E+i;
-			 matind[next_ind[(j-1)*V+(grp->edges+i)->v2_id]]=T1+(j-1)*E+i;
-			 matval[next_ind[(j-1)*V+(grp->edges+i)->v1_id]]=-1;
-			 matval[next_ind[(j-1)*V+(grp->edges+i)->v2_id]]=-1;
-			 next_ind[(j-1)*V+(grp->edges+i)->v1_id]++;
-			 next_ind[(j-1)*V+(grp->edges+i)->v2_id]++;
+		  (both edge ends in same equation) */
+		     matind[next_index[(j-1)*V+(my_graph->edges+i)->v1_id]]=C1+(j-1)*E+i;
+			 matind[next_index[(j-1)*V+(my_graph->edges+i)->v2_id]]=C1+(j-1)*E+i;
+			 matval[next_index[(j-1)*V+(my_graph->edges+i)->v1_id]]=-1;
+			 matval[next_index[(j-1)*V+(my_graph->edges+i)->v2_id]]=-1;
+			 next_index[(j-1)*V+(my_graph->edges+i)->v1_id]++;
+			 next_index[(j-1)*V+(my_graph->edges+i)->v2_id]++;
 	   }
    }
 
    /* filling indexes of constraints in type3 where they appear
-      (1 constraint of each var.)
-	  to get the overall index, we add T1+T2 to the inner index in type3 */
-
+      1 constraint of each variable
+	  in order to get the overall index, we add C1+C2 to the inner index in type3 */
+   /* the correct constraint index is i%V, as we have all
+	cluster numbers in every equation */
    for (i=0; i<K*V; i++) {  
-	   /* the correct constraint index is i%V, as we have all
-	   cluster numbers in every equation */
-	   matind[next_ind[i]]=T1+T2+i%V; 
-	   matval[next_ind[i]]=1; 
-	   next_ind[i]++;
+	   matind[next_index[i]]=C1+C2+i%V;
+	   matval[next_index[i]]=1;
+	   next_index[i]++;
    }
 
 
    /* filling indexes of constraints in type4 where they appear 
-      (1 constraint of each var.)
-	  to get the overall index, we add T1+T2+T3 to the inner index in type4 */
-
+      1 constraint of each variable
+	  in order to get the overall index, we add C1+C2+C3 to the inner index in type4 */
    for (i=0; i<K*V; i++) {
 	   /* the correct constraint index is i/V, as we have all
 	   vertices indexes in every equation */
-	   matind[next_ind[i]]=T1+T2+T3+i/V; 
-	   matval[next_ind[i]]=1; 
-	   next_ind[i]++;
+	   matind[next_index[i]]=C1+C2+C3+i/V;
+	   matval[next_index[i]]=1;
+	   next_index[i]++;
    }
 
 
-   /* filling matind/matval for z_i_p varibales */
+   /* filling matind(matval) for z_i_p variables */
+	/* filling indexes of constraints in type1 where they appear
+      2 constraints of each variable
+	  as type1 is the first, those are overall indexes too */
 
-    /* filling indexes of constraints in type1 where they appear 
-      (2 constraints of each var.)
-	  as type1 is the first, those are also overall indexes */
-
-   for (i=K*V; i<numcols; i++) {  
-	   /* the correct constraint index is 2*(i-K*V), 
-	      as (i-K*V) is a running index on z_j_p variables, 
-		  and as each z_j_p has 2 constraints, we mult. by 2
-		  to get its 1st index
-		  (and then 2*(i-K*V)+1, for the next ind.) */
-	   matind[next_ind[i]]=2*(i-K*V); 
-	   matval[next_ind[i]]=1; 
-	   next_ind[i]++;
-	   matind[next_ind[i]]=2*(i-K*V)+1; 
-	   matval[next_ind[i]]=1; 
-	   next_ind[i]++;
+   /* the correct constraint index is 2*(i-K*V),
+   	      as (i-K*V) is a running index on z_j_p variables,
+   		  and as each z_j_p has 2 constraints, we multiply by 2
+   		  to get its 1st index
+   		  and then 2*(i-K*V)+1, for the next index */
+   for (i=K*V; i<numcols; i++) {
+	   matind[next_index[i]]=2*(i-K*V);
+	   matval[next_index[i]]=1;
+	   next_index[i]++;
+	   matind[next_index[i]]=2*(i-K*V)+1;
+	   matval[next_index[i]]=1;
+	   next_index[i]++;
    }
 
    /* filling indexes of constraints in type2 where they appear 
-      (1 constraint of each var.)
+      1 constraint of each variable
 	  to get the overall index, we add T1 to the inner index in type2 
-	  (no z_j_p appearances in types 3 and 4) */
-
-   for (i=K*V; i<numcols; i++) { 
-	   /* here the correct constraint index is (i-K*V), 
-	      as (i-K*V) is a running index on z_j_p variables */
-	   matind[next_ind[i]]=T1+(i-K*V); 
-	   matval[next_ind[i]]=1; 
-	   next_ind[i]++;
+	  no z_j_p appearances in types 3 and 4 */
+   /* here the correct constraint index is (i-K*V),
+      as (i-K*V) is a running index on z_j_p variables */
+   for (i=K*V; i<numcols; i++) {
+	   matind[next_index[i]]=C1+(i-K*V);
+	   matval[next_index[i]]=1;
+	   next_index[i]++;
    }
                   
 
@@ -388,21 +379,22 @@ int k_cluster(graph* grp, int K, double *objval, char* output_folder) {
 
    
    /* filling ctype arrays */
-
-   cnt=numcols; /* we'll define binary type for all variables */
-   indices = (int*)malloc(cnt*sizeof(int));
-   ctype = (char*)malloc(cnt*sizeof(char));
+   /* we will define binary type for all variables */
+   count=numcols;
+   indices = (int*)malloc(count*sizeof(int));
+   ctype = (char*)malloc(count*sizeof(char));
    if ((indices==NULL) || (ctype==NULL)) {
 	  status=ERROR_MALLOC_FAILED; 
 	  goto TERMINATE;
    }
 
-   for (i=0; i<cnt; i++) {  /* binary type fill */
+   /* binary type filling */
+   for (i=0; i<count; i++) {
 	   indices[i]=i; 
 	   ctype[i]='B';
    }
 
-   status = CPXchgctype (env, lp, cnt, indices, ctype);
+   status = CPXchgctype (env, lp, count, indices, ctype);
    if ( status ) {
       fprintf (stderr, "Error: Failed to define variables types (as binary).\n");
       goto TERMINATE;
@@ -418,7 +410,8 @@ int k_cluster(graph* grp, int K, double *objval, char* output_folder) {
 
 
    /* obtaining the solution */
-   x=(double*)malloc(numcols*sizeof(double)); /* will receive solution values of the variables */ 
+   /* it will receive solution values of the variables */
+   x=(double*)malloc(numcols*sizeof(double));
    if (x==NULL) {
 	  status=ERROR_MALLOC_FAILED; 
 	  goto TERMINATE;
@@ -435,7 +428,8 @@ int k_cluster(graph* grp, int K, double *objval, char* output_folder) {
    /* This command is commented out, but you can uncomment it and use it to save 
 	  your lp file for your personal validation */
 
-   sol_file_path=(char*)malloc((strlen(output_folder)+FILE_NAME_LEN)*sizeof(char)); /* for .lp file */  
+   /* for .lp file */
+   sol_file_path=(char*)malloc((strlen(output_folder)+FILE_NAME_LENGTH)*sizeof(char));
     if (sol_file_path==NULL) {
 	  status=ERROR_MALLOC_FAILED; 
 	  goto TERMINATE;
@@ -459,14 +453,13 @@ int k_cluster(graph* grp, int K, double *objval, char* output_folder) {
 
 
 
-   /* filling the cluster numbers in vertices array, according to the CPLEX solution.
-      that way, we return the solution to main, together with objval */
+   /* filling the cluster numbers in the vertices array, according to the CPLEX solution.
+      so, we return the solution to main with objval */
    for (i=0; i<V; i++) {
 	   for (j=0; j<K; j++) {
-		   if (IS_VALUE_1(x[j*V+i])) {  /* varibale x_i_j assigned to 1 */
-			   (grp->vertices+i)->cluster=j+1;
-			   break;
-			   /* curr. vertex cluster field is assigned, and we're done with this vertex. */
+		   if (IS_VALUE_1(x[j*V+i])) {  /* variable x_i_j is assigned to 1 */
+			   (my_graph->vertices+i)->cluster=j+1;
+			   break; /* current vertex cluster field is assigned, and we're done with this vertex. */
 		   }
 	   }
    }
