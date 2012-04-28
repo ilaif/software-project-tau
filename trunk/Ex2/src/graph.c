@@ -1,33 +1,159 @@
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <malloc.h>
-#include <ctype.h>
-#include <time.h>
-
 #include "graph.h"
 
-#define group 20
+#define GROUP 20
 
-/* The function adds a new vertex to the graph */
-int add_vertex(graph *grp, char *verName) {
+/* will add 20 new memory cells to the required array: 1 - vert., 0 - edges. */
+int add_memory(graph *grp, int isVer) {
+	vertex* tmp1=NULL;
+	edge* tmp2=NULL;
+
+	if (isVer==1) {  /* add to vertices array. */
+		if ( (*grp).verLen == 0 ) {  /* wasn't allocated yet. */
+			tmp1=(vertex*)calloc(GROUP, sizeof(vertex));
+			if (tmp1 == NULL) {  /* failed. */
+				return ERROR_MALLOC_FAILED;
+			}
+			(*grp).vertices = tmp1;
+			tmp1=NULL;
+			(*grp).verLen++;
+			return 0;
+		} else {      /* adding 20 cells, reallocation. */
+			tmp1=(vertex*)realloc((*grp).vertices, (GROUP*((*grp).verLen+1))*sizeof(vertex));
+			if (tmp1 == NULL) {  /* failed. */
+				return ERROR_MALLOC_FAILED;
+			}
+			(*grp).vertices = tmp1;
+			tmp1=NULL;
+			(*grp).verLen++;
+			return 0;
+		}
+
+	} else { /* add to edges array. */
+		if ( (*grp).edgLen == 0 ) {  /* wasn't allocated yet. */
+			tmp2=(edge*)calloc(GROUP, sizeof(edge));
+			if (tmp2 == NULL) {  /* failed. */
+				return ERROR_MALLOC_FAILED;
+			}
+			(*grp).edges = tmp2;
+			tmp2=NULL;
+			(*grp).edgLen++;
+			return 0;
+		} else {      /* adding 20 cells, reallocation. */
+			tmp2=(edge*)realloc((*grp).edges, (GROUP*((*grp).edgLen+1))*sizeof(edge));
+			if (tmp2 == NULL) {  /* failed. */
+				return ERROR_MALLOC_FAILED;
+			}
+			(*grp).edges = tmp2;
+			tmp2=NULL;
+			(*grp).edgLen++;
+			return 0;
+		}
+	}
+}
+
+/* end of memory allocation. */
+
+
+/* help functions. */
+
+/* returns true iff the degree of vertex at id is 0. */
+bool is_vertex_degree_zero(graph *grp, int id) {
+	int i=0;
+
+	for(i=0; i<=(*grp).lastEdgIdx; i++) {
+		if ((*((*grp).edges+i)).deleted == false) { /* existing edge. */
+			if ( ((*((*grp).edges+i)).v1_id==id) || ((*((*grp).edges+i)).v2_id==id) ) {
+				return false;
+			}
+		}
+	}
+
+	return true;
+}
+
+/* returns the first index of vertex 'name' if it exists, and -1 otherwise. */
+int is_vertex_name_exist(graph *grp, char* nam) {
+	int i=0;
+
+	for(i=0; i<=(*grp).lastVerIdx; i++) {
+		if ( (*((*grp).vertices+i)).deleted == false ) {   /* existing vertex. */
+			if (strcmp(nam, (*((*grp).vertices+i)).name) == 0) {  /* names are equal. */
+				return i;
+			}
+		}
+	}
+
+	return -1;
+}
+
+/* returns true iff vertex with 'name' appears more than once. */
+bool is_multiple_vertex_name(graph *grp, char* nam) {
+	int i=0;
+	int counter=0;
+
+	for(i=0; i<=(*grp).lastVerIdx; i++) {
+		if ( (*((*grp).vertices+i)).deleted == false ) {   /* existing vertex. */
+			if (strcmp(nam, (*((*grp).vertices+i)).name) == 0) {  /* names are equal. */
+				counter++;
+				if (counter>1) {
+					return true;
+				}
+			}
+		}
+	}
+
+	return false;
+}
+
+
+/* adds vertex 'name' at index ind, assuming it's free. */
+int insert_vertex(graph *grp, char* nam, int ind) {
+	char* tmp;	
+	(*((*grp).vertices+ind)).deleted=false;
+	(*((*grp).vertices+ind)).cluster=0;
+	tmp=(char*)calloc(((int)strlen(nam)+1), sizeof(char));
+	if (tmp==NULL) {  /* failed. */
+		return ERROR_MALLOC_FAILED;
+	}
+
+	(*((*grp).vertices+ind)).name=tmp;
+	tmp=NULL;
+	strcpy((*((*grp).vertices+ind)).name,nam);
+
+	(*grp).numVer++;
+	return 0;
+}
+
+/* adds edge v1-v2-w at index ind, assuming it's free. */
+void insert_edge(graph *grp, int ind, int v1, int v2, double w) {
+	(*((*grp).edges+ind)).deleted=false;
+	(*((*grp).edges+ind)).weight=w;
+	(*((*grp).edges+ind)).v1_id=v1;
+	(*((*grp).edges+ind)).v2_id=v2;
+
+	(*grp).numEdg++;
+}
+
+
+/* end of help functions. */
+
+
+int add_vertex(graph *grp, char *nam) {
 	int i=0, check=0;
 	int mem=0;
 
-	if ( (*grp).numVertices == (*grp).lastVerIdx+1 ) {
+	if ( (*grp).numVer == (*grp).lastVerIdx+1 ) {
 
-		 /* Check if the array is full */
-		if ( (*grp).numVertices == ((*grp).verLength * group) ) {
-			mem=memory_allocation(grp, 1);
-			if (mem!=0) {
+		if ( (*grp).numVer == ((*grp).verLen * GROUP) ) {  /* array is full. */
+			mem=add_memory(grp, 1);
+			if (mem!=0) {   /* reallocation failed. */
 				return mem;
 			}
 		}
 
-		check=add_vertex_in_index(grp, verName, (*grp).lastVerIdx+1);
+		check=insert_vertex(grp, nam, (*grp).lastVerIdx+1); /* adding at the very end. */
 
-		/* Check if memory allocation failed */
-		if (check!=0) {
+		if (check!=0) {  /* allocation of memory for name failed. */
 			return check;
 		}
 
@@ -38,10 +164,9 @@ int add_vertex(graph *grp, char *verName) {
 	
 	for(i=0; i<=(*grp).lastVerIdx; i++) {
 		if ( (*((*grp).vertices+i)).deleted ) {
-			check=add_vertex_in_index(grp, verName, i);
+			check=insert_vertex(grp, nam, i); /* adding at index i. */
 
-			/* Check if memory allocation failed */
-			if (check!=0) {
+			if (check!=0) {  /* allocation of memory for name failed. */
 				return check;
 			} else {
 				return 0;
@@ -50,23 +175,27 @@ int add_vertex(graph *grp, char *verName) {
 	}
 	return 0;
 }
+/* end of add_vertex. */
 
-/* The function removes a vertex with the received id */
+
 int remove_vertex_by_id(graph *grp, int id) {
-	if (id > (*grp).lastVerIdx) {
-		return ERROR_VER_NOT_EXIST;
+	
+	if (id > (*grp).lastVerIdx) {  /* out of range. */
+		return ERROR_VERTEX_NOT_EXIST;
 	}
-	if ( (*((*grp).vertices+id)).deleted ) {
-		return ERROR_VER_NOT_EXIST;
+
+	if ( (*((*grp).vertices+id)).deleted ) { /* vertex doesn't exist. */
+		return ERROR_VERTEX_NOT_EXIST;
 	}
-	if (is_degree_zero(grp,id)==false) {
-		return ERROR_VER_DEGREE_NOT_ZERO;
+
+	if (is_vertex_degree_zero(grp,id)==false) { /* edges attached to it. */
+		return ERROR_VERTEX_CANNOT_BE_DELETED;
 	}
 	
 	(*((*grp).vertices+id)).deleted=true;
-	(*grp).numVertices--;
+	(*grp).numVer--;
 
-	free((*((*grp).vertices+id)).name);
+	free((*((*grp).vertices+id)).name);  /* memory free. */
 
 	if (id==(*grp).lastVerIdx) {
 		(*grp).lastVerIdx--;
@@ -74,115 +203,126 @@ int remove_vertex_by_id(graph *grp, int id) {
 
 	return 0;
 }
+/* end of remove_vertex_by_id. */
 
-/* The function removes a vertex with the received name */
-int remove_vertex_by_name(graph *grp, char* verName) {
+int remove_vertex_by_name(graph *grp, char* nam) {
 
-	int firstInd=get_vertex_index(grp, verName);
+	int firstInd=is_vertex_name_exist(grp, nam);
 
-	if (firstInd==-1) {
-		return ERROR_VER_NOT_EXIST;
-	}
-	if (is_muliple_vertex_name(grp, verName)) {
-		return ERROR_VER_SAME_NAME;
+	if (firstInd==-1) {   /* vertex doesn't exist. */
+		return ERROR_VERTEX_NOT_EXIST;
 	}
 
-	return remove_vertex_by_id(grp, firstInd);
+	if (is_multiple_vertex_name(grp, nam)) {  /* 'name' appears more than once. */
+		return ERROR_MULTIPLE_VERTICES_NAME;
+	}
+
+	return remove_vertex_by_id(grp, firstInd); /* using prev. proc. */
 }
+/* end of remove_vertex_by_name. */
 
-/* The function adds an edge between v1 and v2 with weight w */
+
 int add_edge_by_ids(graph* grp, int v1, int v2, double w) {
 	int i=0, mem=0;
 
-	if ( (v1 > (*grp).lastVerIdx) || (v2 > (*grp).lastVerIdx) ) {
-		return ERROR_VER_NOT_FOUND;
-	}
-	if ( ((*((*grp).vertices+v1)).deleted) || ((*((*grp).vertices+v2)).deleted) ) {
-		return ERROR_VER_NOT_FOUND;
-	}
-	if (v1==v2) {
-		return ERROR_SELF_LOOPS;
+	if ( (v1 > (*grp).lastVerIdx) || (v2 > (*grp).lastVerIdx) ) {  /* out of range. */
+		return ERROR_VERTEX_NOT_FOUND;
 	}
 
-	for(i=0; i<=(*grp).lastEdgeIdx; i++) {
-		if ((*((*grp).edges+i)).deleted == false) {
+	if ( ((*((*grp).vertices+v1)).deleted) || ((*((*grp).vertices+v2)).deleted) ) {
+		return ERROR_VERTEX_NOT_FOUND;
+	}
+
+	if (v1==v2) {
+		return ERROR_INVALID_LOOP;
+	}
+
+	for(i=0; i<=(*grp).lastEdgIdx; i++) {
+		if ((*((*grp).edges+i)).deleted == false) {   /* existing edge. */
 			if ( ( ((*((*grp).edges+i)).v1_id==v1) && ((*((*grp).edges+i)).v2_id==v2) ) ||
 				 ( ((*((*grp).edges+i)).v1_id==v2) && ((*((*grp).edges+i)).v2_id==v1) ) ) {
-				return ERROR_EDGE_DUPLICATE;
+				 /* duplicate edge detected. */
+				return ERROR_DUPLICATED_EDGES;
 			}
 		}
 	}
 
-	if ( (*grp).numEdges == (*grp).lastEdgeIdx+1 ) {
 
-		if ( (*grp).numEdges == ((*grp).edgeLength * group) ) {
-			mem=memory_allocation(grp, 0);
-			if (mem!=0) {
+	if ( (*grp).numEdg == (*grp).lastEdgIdx+1 ) {
+
+		if ( (*grp).numEdg == ((*grp).edgLen * GROUP) ) { /* array is full. */
+			mem=add_memory(grp, 0);
+			if (mem!=0) {   /* reallocation failed. */
 				return mem;
 			}
 		}
 
-		add_edge_in_index(grp, (*grp).lastEdgeIdx+1, v1, v2, w);
+		insert_edge(grp, (*grp).lastEdgIdx+1, v1, v2, w); /* at the very end. */
 
-		(*grp).lastEdgeIdx++;
+		(*grp).lastEdgIdx++;
 
 		return 0;
 	}
 
-	for(i=0; i<=(*grp).lastEdgeIdx; i++) {
+	for(i=0; i<=(*grp).lastEdgIdx; i++) {
 		if ( (*((*grp).edges+i)).deleted ) {
 
-			add_edge_in_index(grp, i, v1, v2, w);
+			insert_edge(grp, i, v1, v2, w); /* at index i. */
 	
 			return 0;
 		}
 	}
 	return 0;
 }
+/* end of add_edge_by_ids. */
 
-/* The function adds an edge between v1 and v2 with weight w */
+
 int add_edge_by_names(graph* grp, char* v1, char* v2, double w) {
-	int v1exist=get_vertex_index(grp, v1);
-	int v2exist=get_vertex_index(grp, v2);
+	int v1exist=is_vertex_name_exist(grp, v1);
+	int v2exist=is_vertex_name_exist(grp, v2);
 
 	if ( (v1exist==-1) || (v2exist==-1) ) {
-		return ERROR_VER_NOT_FOUND;
-	}
-	if ( (is_muliple_vertex_name(grp, v1)) || (is_muliple_vertex_name(grp, v2)) ) {
-		return ERROR_VER_NOT_FOUND;
+		return ERROR_VERTEX_NOT_FOUND;
 	}
 
-	return add_edge_by_ids(grp, v1exist, v2exist, w);
+	if ( (is_multiple_vertex_name(grp, v1)) || (is_multiple_vertex_name(grp, v2)) ) {
+		return ERROR_VERTEX_NOT_FOUND;
+	}
+
+	return add_edge_by_ids(grp, v1exist, v2exist, w); /* using prev. proc. */
 }
+/* end of add_edge_by_names. */
 
-/* The function removes an edge with the received id */
+
 int remove_edge_by_id(graph* grp, int id) {
 	
-	if (id > (*grp).lastEdgeIdx) {
+	if (id > (*grp).lastEdgIdx) {  /* out of range. */
 		return ERROR_EDGE_NOT_EXIST;
 	}
+
 	if ((*((*grp).edges+id)).deleted) {
 		return ERROR_EDGE_NOT_EXIST;
 	}
 
 	(*((*grp).edges+id)).deleted=true;
-	(*grp).numEdges--;
+	(*grp).numEdg--;
 
-	if (id==(*grp).lastEdgeIdx) {
-		(*grp).lastEdgeIdx--;
+	if (id==(*grp).lastEdgIdx) {
+		(*grp).lastEdgIdx--;
 	}
 
 	return 0;
 }
+/* end of remove_edge_by_id. */
 
-/* Prints the graph */
-void print(graph *grp, bool clust) {
+
+void print(graph *grp, bool clust) { /* cluster will call print with clust=1. */
 	int i=0;
 	char* name1;
 	char* name2;
 
-	if ((*grp).numVertices > 0) {
-		printf("%d vertices:\n", (*grp).numVertices);
+	if ((*grp).numVer > 0) {
+		printf("%d vertices:\n", (*grp).numVer);
 	}
 
 	for(i=0; i<=(*grp).lastVerIdx; i++) {
@@ -197,11 +337,11 @@ void print(graph *grp, bool clust) {
 
 	}
 
-	if ((*grp).numEdges > 0) {
-		printf("%d edges:\n", (*grp).numEdges);
+	if ((*grp).numEdg > 0) {
+		printf("%d edges:\n", (*grp).numEdg);
 	}
 
-	for(i=0; i<=(*grp).lastEdgeIdx; i++) {
+	for(i=0; i<=(*grp).lastEdgIdx; i++) {
 		if ((*((*grp).edges+i)).deleted == false) {
 			printf("%d: ", i);
 			name1=(*((*grp).vertices+(*((*grp).edges+i)).v1_id)).name;
@@ -211,171 +351,40 @@ void print(graph *grp, bool clust) {
 		}
 	}
 }  
+/* end of print. */
 
-/* Creates a random cluster */
+
 void cluster(graph *grp, int k) {
 	double score=0;
 	int i=0;
-	int v1=0, v2=0;
+	int v1=0, v2=0;  /* for edge ends. */
 
-	/* initiate random seed */
-	srand((int)time(0));
+	srand((int)time(0));  /* init. random num. generator. */
 
-	/* Giving each vertex a cluster number */
 	for(i=0; i<=(*grp).lastVerIdx; i++) {
-		if ( (*((*grp).vertices+i)).deleted == false ) {
+		if ( (*((*grp).vertices+i)).deleted == false ) {  /* existing vertex. */
 			(*((*grp).vertices+i)).cluster = (rand() % k) + 1;
+			/* giving each vertex random clust. # from 1 to k. */
 		}
 	}
 
-	/* Calculate the sum */
-	for(i=0; i<=(*grp).lastEdgeIdx; i++) {
-		if ( (*((*grp).edges+i)).deleted == false) {
+
+	for(i=0; i<=(*grp).lastEdgIdx; i++) { /* calculating the score of the clustering. */
+		if ( (*((*grp).edges+i)).deleted == false) {  /* existing edge. */
 			v1=(*((*grp).edges+i)).v1_id;
 			v2=(*((*grp).edges+i)).v2_id;
 
 			if ( (*((*grp).vertices+v1)).cluster == (*((*grp).vertices+v2)).cluster ) {
+				/* edge is in a cluster. */
 				score=score+(*((*grp).edges+i)).weight;
-			} else {
+			} else {   /* edge is between clusters. */
 				score=score-(*((*grp).edges+i)).weight;
 			}	
 		}
 	}
 
-	print(grp, true);
+	print(grp, true);  /* printing. */
 
 	printf("The random clustering score for %d clusters is %.3f\n", k, score);  
 }  
-
-/* The function allocates 20 new memory cells */
-/* Vertices array: 1 */
-/* Edges array: 0 */
-int memory_allocation(graph *grp, int isVer) {
-	vertex* tmpVer=NULL;
-	edge* tmpEdg=NULL;
-
-	/* Add to vertices array */
-	if (isVer==1) {
-		if ( (*grp).verLength == 0 ) {
-			tmpVer=(vertex*)calloc(group, sizeof(vertex));
-			if (tmpVer == NULL) {
-				return ERROR_MALLOC;
-			}
-			(*grp).vertices = tmpVer;
-			tmpVer=NULL;
-			(*grp).verLength++;
-			return 0;
-		} else {
-			tmpVer=(vertex*)realloc((*grp).vertices, (group*((*grp).verLength+1))*sizeof(vertex));
-			if (tmpVer == NULL) {
-				return ERROR_MALLOC;
-			}
-			(*grp).vertices = tmpVer;
-			tmpVer=NULL;
-			(*grp).verLength++;
-			return 0;
-		}
-	/* Add to edges array */
-	} else {
-		if ( (*grp).edgeLength == 0 ) {
-			tmpEdg=(edge*)calloc(group, sizeof(edge));
-			if (tmpEdg == NULL) {
-				return ERROR_MALLOC;
-			}
-			(*grp).edges = tmpEdg;
-			tmpEdg=NULL;
-			(*grp).edgeLength++;
-			return 0;
-		} else {
-			tmpEdg=(edge*)realloc((*grp).edges, (group*((*grp).edgeLength+1))*sizeof(edge));
-			if (tmpEdg == NULL) {
-				return ERROR_MALLOC;
-			}
-			(*grp).edges = tmpEdg;
-			tmpEdg=NULL;
-			(*grp).edgeLength++;
-			return 0;
-		}
-	}
-}
-
-/* Tools */
-
-/* The function returns true if the degree of vertex with the received id is 0, otherwise false */
-bool is_degree_zero(graph *grp, int id) {
-	int i=0;
-
-	for(i=0; i<=(*grp).lastEdgeIdx; i++) {
-		if ((*((*grp).edges+i)).deleted == false) {
-			if ( ((*((*grp).edges+i)).v1_id==id) || ((*((*grp).edges+i)).v2_id==id) ) {
-				return false;
-			}
-		}
-	}
-
-	return true;
-}
-
-/* The function returns the first index of vertex with the received name, if it does not exist returns -1 */
-int get_vertex_index(graph *grp, char* verName) {
-	int i=0;
-
-	for(i=0; i<=(*grp).lastVerIdx; i++) {
-		if ( (*((*grp).vertices+i)).deleted == false ) {
-			/* Check equlity between names */
-			if (strcmp(verName, (*((*grp).vertices+i)).name) == 0) {
-				return i;
-			}
-		}
-	}
-
-	return -1;
-}
-
-/* The function returns true if there 2 or more vertices with received name */
-bool is_muliple_vertex_name(graph *grp, char* verName) {
-	int i=0;
-	int counter=0;
-
-	for(i=0; i<=(*grp).lastVerIdx; i++) {
-		if ( (*((*grp).vertices+i)).deleted == false ) {
-			/* Check equlity between names */
-			if (strcmp(verName, (*((*grp).vertices+i)).name) == 0) {
-				counter++;
-				if (counter>1) {
-					return true;
-				}
-			}
-		}
-	}
-
-	return false;
-}
-
-/* The function adds a vertex with the received name at idx */
-int add_vertex_in_index(graph *grp, char* verName, int idx) {
-	char* tmp;
-	(*((*grp).vertices+idx)).deleted=false;
-	(*((*grp).vertices+idx)).cluster=0;
-	tmp=(char*)calloc(((int)strlen(verName)+1), sizeof(char));
-	if (tmp==NULL) {
-		return ERROR_MALLOC;
-	}
-
-	(*((*grp).vertices+idx)).name=tmp;
-	tmp=NULL;
-	strcpy((*((*grp).vertices+idx)).name,verName);
-
-	(*grp).numVertices++;
-	return 0;
-}
-
-/* The function adds an edge (v1, v2) with weight w at idx */
-void add_edge_in_index(graph *grp, int ind, int v1, int v2, double w) {
-	(*((*grp).edges+ind)).deleted=false;
-	(*((*grp).edges+ind)).weight=w;
-	(*((*grp).edges+ind)).v1_id=v1;
-	(*((*grp).edges+ind)).v2_id=v2;
-
-	(*grp).numEdges++;
-}
+/* end of cluster. */

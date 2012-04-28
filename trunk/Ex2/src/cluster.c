@@ -23,9 +23,9 @@
    Read solution (both objective function value and variables assignment). Add out parameter to the calling function to 
    return the objective function max solution.
 */
-int k_cluster(graph* grp, int K, double *objval) {
+int k_cluster(graph* grp, int K, double *objval, char* output_folder) {
 
-   int i, j, V=grp->numVertices, E=grp->numEdges;
+   int i, j, V=grp->numVer, E=grp->numEdg;
    int T1=2*E*K, T2=E*K, T3=V, T4=K;  /* constraints types and sizes */
    int* next_ind=NULL;                
 
@@ -54,6 +54,10 @@ int k_cluster(graph* grp, int K, double *objval) {
    /* for CPXsolution */
    int solstat=0;
    double* x=NULL; 
+
+   /* for CPXwriteprob */
+   char *sol_file_path = NULL;  /* for <K>.lp */
+   char tmp[FILE_NAME_LEN];
   
 
    /* Declare and allocate space for the variables and arrays where we
@@ -93,7 +97,7 @@ int k_cluster(graph* grp, int K, double *objval) {
    /* Create the problem. */
    probname=(char*)malloc((strlen("k-cluster")+1)*sizeof(char));
    if (probname==NULL) {
-	   status=ERROR_MALLOC;
+	   status=ERROR_MALLOC_FAILED; 
 	   goto TERMINATE;
    }
    strcpy(probname,"k-cluster");  
@@ -120,7 +124,7 @@ int k_cluster(graph* grp, int K, double *objval) {
    /* lower and upper bounds for the variables */
 
    if ((lb==NULL) || (ub==NULL)) {
-	  status=ERROR_MALLOC;
+	  status=ERROR_MALLOC_FAILED; 
 	  goto TERMINATE;
    }
 
@@ -132,7 +136,7 @@ int k_cluster(graph* grp, int K, double *objval) {
 
    obj = (double*)malloc(numcols*sizeof(double)); /* objective function coefficients */
    if (obj==NULL) {
-	  status=ERROR_MALLOC;
+	  status=ERROR_MALLOC_FAILED; 
 	  goto TERMINATE;
    }
 
@@ -147,7 +151,7 @@ int k_cluster(graph* grp, int K, double *objval) {
    rhs = (double*)malloc(numrows*sizeof(double)); /* right hand side values of the constraints */
    sense = (char*)malloc(numrows*sizeof(char));  /* inequality signs of the constraints */
    if ((rhs==NULL) || (sense==NULL)) {
-	  status=ERROR_MALLOC;
+	  status=ERROR_MALLOC_FAILED; 
 	  goto TERMINATE;
    }
 
@@ -180,7 +184,7 @@ int k_cluster(graph* grp, int K, double *objval) {
    matbeg = (int*)calloc(numcols, sizeof(int));   /* as number of variables */
    matcnt = (int*)calloc(numcols, sizeof(int));
    if ((matbeg==NULL) || (matcnt==NULL)) {
-	  status=ERROR_MALLOC;
+	  status=ERROR_MALLOC_FAILED; 
 	  goto TERMINATE;
    }
 
@@ -260,7 +264,7 @@ int k_cluster(graph* grp, int K, double *objval) {
       update the place in matind/matval for its next constraint index */
 
    if ((matind==NULL) || (matval==NULL) || (next_ind==NULL)) {
-	  status=ERROR_MALLOC;
+	  status=ERROR_MALLOC_FAILED; 
 	  goto TERMINATE;
    }
 
@@ -389,7 +393,7 @@ int k_cluster(graph* grp, int K, double *objval) {
    indices = (int*)malloc(cnt*sizeof(int));
    ctype = (char*)malloc(cnt*sizeof(char));
    if ((indices==NULL) || (ctype==NULL)) {
-	  status=ERROR_MALLOC;
+	  status=ERROR_MALLOC_FAILED; 
 	  goto TERMINATE;
    }
 
@@ -416,7 +420,7 @@ int k_cluster(graph* grp, int K, double *objval) {
    /* obtaining the solution */
    x=(double*)malloc(numcols*sizeof(double)); /* will receive solution values of the variables */ 
    if (x==NULL) {
-	  status=ERROR_MALLOC;
+	  status=ERROR_MALLOC_FAILED; 
 	  goto TERMINATE;
    }
 
@@ -427,41 +431,35 @@ int k_cluster(graph* grp, int K, double *objval) {
    }
    
 
-   /* this is not a part from the ex., but for our personal validation */
-
-   /* Write the output to the screen. */
-
-   printf ("\nSolution status = %d\n", solstat);
-   printf ("Solution value  = %f\n", *objval);
-   printf ("Variables values: \n");
-
-   for (i=0; i<K*V; i++) {
-      printf ("X_%d_%d=%f ", i%V, i/V, x[i]);
-	  if (i%V == (V-1)) {
-		printf ("\n");
-	  }
-   }
-   printf ("\n");
-   for (i=K*V; i<numcols; i++) {
-      printf ("Z_%d_%d=%f ", (i-K*V)%E, (i-K*V)/E, x[i]);
-	  if ((i-K*V)%E == (E-1)) {
-		printf ("\n");
-	  }
-   }
-
-
    /* Finally, write a copy of the problem to a file. */
    /* This command is commented out, but you can uncomment it and use it to save 
 	  your lp file for your personal validation */
-   status = CPXwriteprob (env, lp, "sol.lp", NULL);
+
+   sol_file_path=(char*)malloc((strlen(output_folder)+FILE_NAME_LEN)*sizeof(char)); /* for .lp file */  
+    if (sol_file_path==NULL) {
+	  status=ERROR_MALLOC_FAILED; 
+	  goto TERMINATE;
+   }
+
+   strcpy(sol_file_path, output_folder);
+
+   i=sprintf(tmp, "/%d.lp", K);
+   if (i<0) {
+	  status=ERROR_MALLOC_FAILED; 
+	  goto TERMINATE;
+   }
+
+   strcat(sol_file_path, tmp);
+
+   status = CPXwriteprob (env, lp, sol_file_path, NULL);
    if ( status ) {
       fprintf (stderr, "Error: Failed to write LP to disk.\n");
       goto TERMINATE;
    }
 
-   /* end of: our validation part */
 
-   /* filling the cluster numbers in vertices array, according to the CPLEX solution
+
+   /* filling the cluster numbers in vertices array, according to the CPLEX solution.
       that way, we return the solution to main, together with objval */
    for (i=0; i<V; i++) {
 	   for (j=0; j<K; j++) {
