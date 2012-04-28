@@ -4,7 +4,6 @@
 /* Bring in the CPLEX function declarations and the C library 
    header file stdio.h with include of cplex.h. */
 #include <ilcplex/cplex.h>
-
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -14,7 +13,7 @@
 /* Bring in the declarations for the globals declarations */
 #include "graph.h"
 
-#define FILE_NAME_LEN 50
+#define FILE_NAME_LENGTH 50
 
 /* Include declaration for functions */
 void free_and_null (char **ptr);
