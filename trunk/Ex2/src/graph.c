@@ -8,44 +8,44 @@ int add_memory(graph *grp, int isVer) {
 	edge* tmp2=NULL;
 
 	if (isVer==1) {  /* add to vertices array. */
-		if ( (*grp).verLen == 0 ) {  /* wasn't allocated yet. */
+		if ( (*grp).numOfVerticesGroups == 0 ) {  /* wasn't allocated yet. */
 			tmp1=(vertex*)calloc(GROUP, sizeof(vertex));
 			if (tmp1 == NULL) {  /* failed. */
 				return ERROR_MALLOC_FAILED;
 			}
 			(*grp).vertices = tmp1;
 			tmp1=NULL;
-			(*grp).verLen++;
+			(*grp).numOfVerticesGroups++;
 			return 0;
 		} else {      /* adding 20 cells, reallocation. */
-			tmp1=(vertex*)realloc((*grp).vertices, (GROUP*((*grp).verLen+1))*sizeof(vertex));
+			tmp1=(vertex*)realloc((*grp).vertices, (GROUP*((*grp).numOfVerticesGroups+1))*sizeof(vertex));
 			if (tmp1 == NULL) {  /* failed. */
 				return ERROR_MALLOC_FAILED;
 			}
 			(*grp).vertices = tmp1;
 			tmp1=NULL;
-			(*grp).verLen++;
+			(*grp).numOfVerticesGroups++;
 			return 0;
 		}
 
 	} else { /* add to edges array. */
-		if ( (*grp).edgLen == 0 ) {  /* wasn't allocated yet. */
+		if ( (*grp).numOfEdgesGroups == 0 ) {  /* wasn't allocated yet. */
 			tmp2=(edge*)calloc(GROUP, sizeof(edge));
 			if (tmp2 == NULL) {  /* failed. */
 				return ERROR_MALLOC_FAILED;
 			}
 			(*grp).edges = tmp2;
 			tmp2=NULL;
-			(*grp).edgLen++;
+			(*grp).numOfEdgesGroups++;
 			return 0;
 		} else {      /* adding 20 cells, reallocation. */
-			tmp2=(edge*)realloc((*grp).edges, (GROUP*((*grp).edgLen+1))*sizeof(edge));
+			tmp2=(edge*)realloc((*grp).edges, (GROUP*((*grp).numOfEdgesGroups+1))*sizeof(edge));
 			if (tmp2 == NULL) {  /* failed. */
 				return ERROR_MALLOC_FAILED;
 			}
 			(*grp).edges = tmp2;
 			tmp2=NULL;
-			(*grp).edgLen++;
+			(*grp).numOfEdgesGroups++;
 			return 0;
 		}
 	}
@@ -120,7 +120,7 @@ int insert_vertex(graph *grp, char* nam, int ind) {
 	tmp=NULL;
 	strcpy((*((*grp).vertices+ind)).name,nam);
 
-	(*grp).numVer++;
+	(*grp).numOfVertices++;
 	return 0;
 }
 
@@ -131,7 +131,7 @@ void insert_edge(graph *grp, int ind, int v1, int v2, double w) {
 	(*((*grp).edges+ind)).v1_id=v1;
 	(*((*grp).edges+ind)).v2_id=v2;
 
-	(*grp).numEdg++;
+	(*grp).numOfEdges++;
 }
 
 
@@ -142,9 +142,9 @@ int add_vertex(graph *grp, char *nam) {
 	int i=0, check=0;
 	int mem=0;
 
-	if ( (*grp).numVer == (*grp).lastVerIdx+1 ) {
+	if ( (*grp).numOfVertices == (*grp).lastVerIdx+1 ) {
 
-		if ( (*grp).numVer == ((*grp).verLen * GROUP) ) {  /* array is full. */
+		if ( (*grp).numOfVertices == ((*grp).numOfVerticesGroups * GROUP) ) {  /* array is full. */
 			mem=add_memory(grp, 1);
 			if (mem!=0) {   /* reallocation failed. */
 				return mem;
@@ -193,7 +193,7 @@ int remove_vertex_by_id(graph *grp, int id) {
 	}
 	
 	(*((*grp).vertices+id)).deleted=true;
-	(*grp).numVer--;
+	(*grp).numOfVertices--;
 
 	free((*((*grp).vertices+id)).name);  /* memory free. */
 
@@ -248,9 +248,9 @@ int add_edge_by_ids(graph* grp, int v1, int v2, double w) {
 	}
 
 
-	if ( (*grp).numEdg == (*grp).lastEdgIdx+1 ) {
+	if ( (*grp).numOfEdges == (*grp).lastEdgIdx+1 ) {
 
-		if ( (*grp).numEdg == ((*grp).edgLen * GROUP) ) { /* array is full. */
+		if ( (*grp).numOfEdges == ((*grp).numOfEdgesGroups * GROUP) ) { /* array is full. */
 			mem=add_memory(grp, 0);
 			if (mem!=0) {   /* reallocation failed. */
 				return mem;
@@ -305,7 +305,7 @@ int remove_edge_by_id(graph* grp, int id) {
 	}
 
 	(*((*grp).edges+id)).deleted=true;
-	(*grp).numEdg--;
+	(*grp).numOfEdges--;
 
 	if (id==(*grp).lastEdgIdx) {
 		(*grp).lastEdgIdx--;
@@ -321,8 +321,8 @@ void print(graph *grp, bool clust) { /* cluster will call print with clust=1. */
 	char* name1;
 	char* name2;
 
-	if ((*grp).numVer > 0) {
-		printf("%d vertices:\n", (*grp).numVer);
+	if ((*grp).numOfVertices > 0) {
+		printf("%d vertices:\n", (*grp).numOfVertices);
 	}
 
 	for(i=0; i<=(*grp).lastVerIdx; i++) {
@@ -337,8 +337,8 @@ void print(graph *grp, bool clust) { /* cluster will call print with clust=1. */
 
 	}
 
-	if ((*grp).numEdg > 0) {
-		printf("%d edges:\n", (*grp).numEdg);
+	if ((*grp).numOfEdges > 0) {
+		printf("%d edges:\n", (*grp).numOfEdges);
 	}
 
 	for(i=0; i<=(*grp).lastEdgIdx; i++) {

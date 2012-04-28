@@ -17,13 +17,13 @@ typedef struct grp {
 	/* The last index of a non deleted edge */
 	int lastEdgIdx;
 	/* The number of groups */
-	int verLen;
+	int numOfVerticesGroups;
 	/* The number of groups */
-	int edgLen;
+	int numOfEdgesGroups;
 	/* The current number of vertices */
-	int numVer;
+	int numOfVertices;
 	/* The current number of edges */
-	int numEdg;
+	int numOfEdges;
 } graph;
 
 int add_vertex(graph*, char*);
@@ -61,7 +61,5 @@ void cluster(graph*, int);
 #define ERROR_MALLOC_FAILED 14
 #define ERROR_CLUSTERS_NUMBER_NOT_VALID 15
 #define ERROR_INVALID_LOOP 16
-
-
 
 #endif

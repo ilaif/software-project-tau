@@ -25,7 +25,7 @@
 */
 int k_cluster(graph* grp, int K, double *objval, char* output_folder) {
 
-   int i, j, V=grp->numVer, E=grp->numEdg;
+   int i, j, V=grp->numOfVertices, E=grp->numOfEdges;
    int T1=2*E*K, T2=E*K, T3=V, T4=K;  /* constraints types and sizes */
    int* next_ind=NULL;                
 
