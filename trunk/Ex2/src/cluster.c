@@ -457,7 +457,7 @@ int k_cluster(graph* my_graph, int K, double *objval, char* output_folder) {
       so, we return the solution to main with objval */
    for (i=0; i<V; i++) {
 	   for (j=0; j<K; j++) {
-		   if (IS_VALUE_1(x[j*V+i])) {  /* variable x_i_j is assigned to 1 */
+		   if (IS_VALUE_CLOSE_TO_1(x[j*V+i])) {  /* variable x_i_j is assigned to 1 */
 			   (my_graph->vertices+i)->cluster=j+1;
 			   break; /* current vertex cluster field is assigned, and we're done with this vertex. */
 		   }
