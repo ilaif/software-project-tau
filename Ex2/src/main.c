@@ -350,8 +350,8 @@ void graphToFile(graph *grp, FILE* res) {
 	char* name1;
 	char* name2;
 
-	if (grp->numVer > 0) {
-		fprintf(res, "%d vertices:\n", grp->numVer);
+	if (grp->numOfVertices > 0) {
+		fprintf(res, "%d vertices:\n", grp->numOfVertices);
 	}
 
 	for(i=0; i<=grp->lastVerIdx; i++) {
@@ -359,8 +359,8 @@ void graphToFile(graph *grp, FILE* res) {
 	}
 
 
-	if (grp->numEdg > 0) {
-		fprintf(res, "%d edges:\n", grp->numEdg);
+	if (grp->numOfEdges > 0) {
+		fprintf(res, "%d edges:\n", grp->numOfEdges);
 	}
 
 	for(i=0; i<=grp->lastEdgIdx; i++) {
@@ -396,10 +396,10 @@ int main(int argc, char *argv[]) {
 
 	grp.lastVerIdx=-1;    /* init. */
 	grp.lastEdgIdx=-1;
-	grp.verLen=0;
-	grp.edgLen=0;
-	grp.numVer=0;
-	grp.numEdg=0;
+	grp.numOfVerticesGroups=0;
+	grp.numOfEdgesGroups=0;
+	grp.numOfVertices=0;
+	grp.numOfEdges=0;
 	grp.vertices=NULL;
 	grp.edges=NULL;
 

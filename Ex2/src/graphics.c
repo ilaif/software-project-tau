@@ -10,7 +10,7 @@ void sizeClusters(graph* grp, Cluster* clusters, int K) {
 	vertex* vertices;
 
 	vertices = grp->vertices;
-	V = grp->numVer;
+	V = grp->numOfVertices;
 
 	for (i=0;i<K;i++) {
 		clusters[i].id = i+1;
@@ -95,8 +95,8 @@ xmlDocPtr generateXML(graph *grp) {
 	pRoot = xmlDocGetRootElement(pXMLDom);
 	vertices = grp->vertices;
 	edges = grp->edges;
-	V = grp->numVer;
-	E = grp->numEdg;
+	V = grp->numOfVertices;
+	E = grp->numOfEdges;
 	
 	/* create vertex nodes. */
 	for (i=0;i<V;i++) {
@@ -147,7 +147,7 @@ void paintXML(xmlDocPtr pXMLDom, graph *grp, Cluster *clusters, int k) {
 	char tmp[LONGEST_STR];
 	
 	vertices = grp->vertices;
-	V = grp->numVer;
+	V = grp->numOfVertices;
 
 	sizeClusters(grp,clusters,k);
 
@@ -203,8 +203,8 @@ void trimXML(xmlDocPtr pXMLDom, graph *grp, Cluster *clusters, int U) {
 	edge* edges;
 	xmlNodePtr pRoot,pNode;
 
-	V = grp->numVer;
-	E = grp->numEdg;
+	V = grp->numOfVertices;
+	E = grp->numOfEdges;
 	vertices = grp->vertices;
 	edges = grp->edges;
 
