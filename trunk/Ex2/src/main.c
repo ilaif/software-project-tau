@@ -1,6 +1,6 @@
 #include "graph.h"
 #include "cluster.h"
-#include "graphics.h"  
+#include "xgmml.h"
 
 #define MAX_LEN 305
 #define FILE_NAME_MAX_LEN 50
