@@ -171,13 +171,6 @@ int k_cluster(graph* my_graph, int K, double *objval, char* output_folder) {
 	   sense[i]='G';
    }
 
-
-   /* the mat### arrays */
-   
-   /* our varibales order: 
-      x_0_1,...,x_(|V|-1)_1,...,x_0_k,...,x_(|V|-1)_k,
-	  z_0_1,...,z_(|E|-1)_1,...,z_0_k,...,z_(|E|-1)_k */
-
    matbeg = (int*)calloc(numcols, sizeof(int));
    matcnt = (int*)calloc(numcols, sizeof(int));
    if ((matbeg==NULL) || (matcnt==NULL)) {
@@ -216,41 +209,6 @@ int k_cluster(graph* my_graph, int K, double *objval, char* output_folder) {
    for (i=0; i<numcols; i++) {
 	   matbeg[i]=matbeg[i-1]+matcnt[i-1];
    }
-
-   /* our constraints order (first by type): 
-      type1:
-	  z_0_1-(clust. 1 var. of 1st vertex of e0)<=0
-	  z_0_1-(clust. 1 var. of 2nd vertex of e0)<=0
-	  ...
-	  z_(|E|-1)_1-...<=0
-	  z_(|E|-1)_1-...<=0
-	  ...
-	  z_0_k-...<=0
-	  ...
-	  z_(|E|-1)_k-...<=0
-	  (total T1 const. of 2 varibales. 2*E variables per clust. num.)
-
-      type2:
-	  z_0_1-(clust. 1 var. of 1st vertex of e0)-(... 2nd vertex ...)=>-1
-	  ...
-	  z_(|E|-1)_1-(...)-(...)=>-1
-	  ........
-	  z_0_k-(...)-(...)=>-1
-	  ...
-	  z_(|E|-1)_k-(...)-(...)=>-1
-      (total T2 const. of 3 varibales. E variables per clust. num.)
-
-	  type3:
-	  x_0_1+...+x_0_k=1
-	  ...
-	  x_(|V|-1)_1+...+x_(|V|-1)_k=1
-      (total T3 const. of k varibales.)
-
-	  type4:
-	  x_0_1+...+x_(|V|-1)_1=>1
-	  ...
-	  x_0_k+...+x_(|V|-1)_k=>1
-      (total T4 const. of V varibales.) */
 
    /* same as the number of total instances of variables in constraints */
    matind = (int*)calloc((2*C1+3*C2+K*C3+V*C4), sizeof(int));
