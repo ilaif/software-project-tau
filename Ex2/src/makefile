@@ -14,12 +14,12 @@ LDFLAGS+= -lxml2
 all: kcluster
 
 clean:
-	rm main.o graph.o cluster.o graphics.o kcluster
+	rm main.o graph.o cluster.o xgmml.o kcluster
 
-kcluster: graph.o cluster.o main.o graphics.o
-	gcc -o kcluster main.o graph.o cluster.o graphics.o $(CFLAGS) $(LDFLAGS)
+kcluster: graph.o cluster.o main.o xgmml.o
+	gcc -o kcluster main.o graph.o cluster.o xgmml.o $(CFLAGS) $(LDFLAGS)
 
-main.o: main.c graph.o cluster.o graphics.o
+main.o: main.c graph.o cluster.o xgmml.o
 	gcc -c main.c $(CFLAGS)
 
 graph.o: graph.c graph.h types.h
@@ -28,5 +28,5 @@ graph.o: graph.c graph.h types.h
 cluster.o: cluster.c cluster.h graph.o
 	gcc -c cluster.c $(CFLAGS)
 	
-graphics.o: graphics.c graphics.h graph.o
-	gcc -c graphics.c $(CFLAGS)
+xgmml.o: xgmml.c xgmml.h graph.o
+	gcc -c xgmml.c $(CFLAGS)
