@@ -501,7 +501,7 @@ int main(int argc, char *argv[]) {
 
 	/* calculating the clustering and writing to results file,
 	   generating xml doc. (tree) and making xml files. */
-	pXMLDom = generate_xml(ptr);
+	pXMLDom = create_xml(ptr);
 
 	xml_filename=(char*)malloc((strlen(argv[2])+FILE_NAME_MAX_LEN)*sizeof(char));
 	if (xml_filename == NULL) {   
@@ -526,12 +526,12 @@ int main(int argc, char *argv[]) {
 			goto TERMINATE;
 		}
 
-		paint_xml(pXMLDom,ptr,clusters,k);
+		color_xml_nodes(pXMLDom,ptr,clusters,k);
 
 		strcpy(xml_filename, argv[2]); /* output folder */
 		sprintf(tmp,"/%d_clustering_solution.xgmml",k);
 		strcat(xml_filename,tmp);
-		xml_save_doc(pXMLDom,xml_filename,"UTF-8");
+		save_xml_doc(pXMLDom,xml_filename,"UTF-8");
 
 		free(clusters);
 
@@ -552,15 +552,15 @@ int main(int argc, char *argv[]) {
 		goto TERMINATE;
 	}
 
-	trim_xml(pXMLDom,ptr,clusters,numClustersUpperBound);
+	remove_xml_small_clusters(pXMLDom,ptr,clusters,numClustersUpperBound);
 	free(clusters);
 	
 
 	strcpy(xml_filename, argv[2]); /* output folder */
 	strcat(xml_filename,"/best_clusters.xgmml");
-	xml_save_doc(pXMLDom,xml_filename,"UTF-8");
+	save_xml_doc(pXMLDom,xml_filename,"UTF-8");
 
-	xml_free_doc(pXMLDom);
+	free_xml_doc(pXMLDom);
 
 
 TERMINATE:
