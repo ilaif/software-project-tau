@@ -234,7 +234,7 @@ int k_cluster(graph* my_graph, int K, double *objval, char* output_folder) {
       ((degree of vertex) constraints of each var.)
 	  as type1 is the first, those are also overall indexes */
    for (i=0; i<E; i++) {
-	   for (j=1; j<=K; j++) {  /* change */
+	   for (j=1; j<=K; j++) {
 	   /* we run on edges and clusters. we look on the 2 vertices of the edge.
 	      first of all, we go to the index of x_(ei end)_j in next_ind, skipping (j-1)*V vars.
 	      of lower clusters. then we put in matind(matval), according to next_int
