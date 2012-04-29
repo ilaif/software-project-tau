@@ -12,10 +12,6 @@
 typedef struct grp {
 	vertex *vertices;
 	edge *edges;
-	/* The last index of a non deleted vertex */
-	int lastVerIdx;
-	/* The last index of a non deleted edge */
-	int lastEdgIdx;
 	/* The number of groups */
 	int numOfVerticesGroups;
 	/* The number of groups */
@@ -24,23 +20,21 @@ typedef struct grp {
 	int numOfVertices;
 	/* The current number of edges */
 	int numOfEdges;
+	/* The last index of a non deleted vertex */
+	int lastVerIdx;
+	/* The last index of a non deleted edge */
+	int lastEdgIdx;
 } graph;
 
 int add_vertex(graph*, char*);
-
 int remove_vertex_by_id(graph*, int);
-
 int remove_vertex_by_name(graph*, char*);
-
 int add_edge_by_names(graph*, char*, char*, double);
-
 int add_edge_by_ids(graph*, int, int, double);
-
 int remove_edge_by_id(graph*, int);
-
 void print(graph*, bool);
-
 void cluster(graph*, int);
+
 
 #define ERROR_VERTEX_NAME_NOT_VALID 1
 #define ERROR_VERTEX_ID_NOT_NUMBER 2

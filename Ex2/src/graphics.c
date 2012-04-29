@@ -1,35 +1,11 @@
 #include "graphics.h"
 
-/* obtains clusters sizes. 
-time complexity is linear in graph size. */
-
-void sizeClusters(graph* grp, Cluster* clusters, int K) {
-
-	int i,V;
-	vertex v;
-	vertex* vertices;
-
-	vertices = grp->vertices;
-	V = grp->numOfVertices;
-
-	for (i=0;i<K;i++) {
-		clusters[i].id = i+1;
-		clusters[i].order = 0; /* init. */
-		clusters[i].size = 0;
-	}
-	for (i=0;i<V;i++) {	
-		v = vertices[i]; 
-		clusters[v.cluster-1].size += 1;
-	}
-}
-
-/* compares clusters by their size (for later sorting). */
-
-int compare_clusters_size(const void* c1, const void* c2) {
-	if (((Cluster*)c1)->size > ((Cluster*)c2)->size) {
-		return -1; /* for descending order sort. */
-	} else { 
-		if (((Cluster*)c1)->size < ((Cluster*)c2)->size)  {
+/* The function comapares between clusters by their size */
+int compare_clusters_size(const void* cluster1, const void* cluster2) {
+	if (((clusterProperties*)cluster1)->numOfVertices > ((clusterProperties*)cluster2)->numOfVertices) {
+		return -1;
+	} else {
+		if (((clusterProperties*)cluster1)->numOfVertices < ((clusterProperties*)cluster2)->numOfVertices)  {
 			return 1;
 		} else {
 			return 0;
@@ -37,13 +13,12 @@ int compare_clusters_size(const void* c1, const void* c2) {
 	}
 }
 
-/* compares clusters by their id (for later sorting). */
-
-int compare_clusters_id(const  void* c1, const void* c2)  {
-	if (((Cluster*)c1)->id > ((Cluster*)c2)->id) {
-		return 1; 
-	} else {  
-		if (((Cluster*)c1)->id < ((Cluster*)c2)->id) {
+/* The function compares between clusters by their id */
+int compare_clusters_id(const  void* cluster1, const void* cluster2)  {
+	if (((clusterProperties*)cluster1)->idNum > ((clusterProperties*)cluster2)->idNum) {
+		return 1;
+	} else {
+		if (((clusterProperties*)cluster1)->idNum < ((clusterProperties*)cluster2)->idNum) {
 			return -1;
 		} else {
 			return 0;
@@ -51,11 +26,36 @@ int compare_clusters_id(const  void* c1, const void* c2)  {
 	}
 }
 
-void xmlSaveDoc(xmlDocPtr pXMLDom, const char* filename, const char* encoding) {
+/* obtains clusters sizes. 
+time complexity is linear in graph size. */
+void calculate_clusters_sizes(graph* grp, clusterProperties* clusters, int K) {
+
+	int i;
+	int numOfVertices;
+	vertex ver;
+	vertex* vertices;
+
+	vertices = grp->vertices;
+	numOfVertices = grp->numOfVertices;
+
+	/* Init the clusters properties */
+	for (i=0;i<K;i++) {
+		clusters[i].idNum = i+1;
+		clusters[i].orderNum = 0;
+		clusters[i].numOfVertices = 0;
+	}
+
+	for (i=0;i<numOfVertices;i++) {	
+		ver = vertices[i]; 
+		clusters[ver.cluster-1].numOfVertices += 1;
+	}
+}
+
+void xml_save_doc(xmlDocPtr pXMLDom, const char* filename, const char* encoding) {
 	xmlSaveFileEnc(filename, pXMLDom, encoding);
 }
 
-void xmlFreeDocument(xmlDocPtr pXMLDom) {
+void xml_free_doc(xmlDocPtr pXMLDom) {
 	xmlFreeDoc(pXMLDom);
 }
 
@@ -67,7 +67,7 @@ void xmlUnlinkAndFree(xmlNodePtr pNode) {
 
 /* generates xml doc. for graph, without cluster painting (for reuse). */
 
-xmlDocPtr generateXML(graph *grp) {
+xmlDocPtr generate_xml(graph *grp) {
 	char str[LONGEST_STR]; 
 	char tmp[LONGEST_NUM]; 
 	int i,V,E;
@@ -108,11 +108,11 @@ xmlDocPtr generateXML(graph *grp) {
 		xmlNewProp(pNode,BAD_CAST "id",BAD_CAST tmp);
 
 		pNode=xmlNewChild(pNode,NULL,BAD_CAST "graphics",NULL); /* graphics child. */
-		xmlNewProp(pNode,BAD_CAST "type",BAD_CAST TYPE);
+		xmlNewProp(pNode,BAD_CAST "type",BAD_CAST GRAPHICS_TYPE);
 		xmlNewProp(pNode,BAD_CAST "fill",NULL);
-		xmlNewProp(pNode,BAD_CAST "width",BAD_CAST WIDTH);
+		xmlNewProp(pNode,BAD_CAST "width",BAD_CAST GRAPHICS_WIDTH);
 		xmlNewProp(pNode,BAD_CAST "cy:nodeLabel",BAD_CAST v.name);
-		xmlNewProp(pNode,BAD_CAST "cy:borderLineType",BAD_CAST LINE);
+		xmlNewProp(pNode,BAD_CAST "cy:borderLineType",BAD_CAST GRAPHICS_BORDER);
 	}
 
 	/* create edge nodes. */
@@ -139,7 +139,7 @@ xmlDocPtr generateXML(graph *grp) {
 
 /* paints nodes according to clustered graph. */
 
-void paintXML(xmlDocPtr pXMLDom, graph *grp, Cluster *clusters, int k) {
+void paint_xml(xmlDocPtr pXMLDom, graph *grp, clusterProperties *clusters, int k) {
 	int i,V;
 	vertex v;
 	xmlNodePtr pRoot,pNode,pGraphics;
@@ -149,10 +149,10 @@ void paintXML(xmlDocPtr pXMLDom, graph *grp, Cluster *clusters, int k) {
 	vertices = grp->vertices;
 	V = grp->numOfVertices;
 
-	sizeClusters(grp,clusters,k);
+	calculate_clusters_sizes(grp,clusters,k);
 
 	/* descending order sort by size. */
-	qsort(clusters,k,sizeof(Cluster),compare_clusters_size);
+	qsort(clusters,k,sizeof(clusterProperties),compare_clusters_size);
 
 	pRoot = xmlDocGetRootElement(pXMLDom);
 	pNode = xmlFirstElementChild(pRoot);
@@ -167,23 +167,23 @@ void paintXML(xmlDocPtr pXMLDom, graph *grp, Cluster *clusters, int k) {
 	
 		/* painting node according to size of cluster it belongs to. */
 
-		if (v.cluster==clusters[0].id) /* biggest cluster. */
+		if (v.cluster==clusters[0].idNum) /* biggest cluster. */
 			xmlSetProp(pGraphics,BAD_CAST "fill",BAD_CAST "#00FFFF");
-		else if (v.cluster==clusters[1].id)
+		else if (v.cluster==clusters[1].idNum)
 			xmlSetProp(pGraphics,BAD_CAST "fill",BAD_CAST "#0000FF");
-		else if (v.cluster==clusters[2].id)
+		else if (v.cluster==clusters[2].idNum)
 			xmlSetProp(pGraphics,BAD_CAST "fill",BAD_CAST "#8A2BE2");
-		else if (v.cluster==clusters[3].id)
+		else if (v.cluster==clusters[3].idNum)
 			xmlSetProp(pGraphics,BAD_CAST "fill",BAD_CAST "#A52A2A");
-		else if (v.cluster==clusters[4].id)
+		else if (v.cluster==clusters[4].idNum)
 			xmlSetProp(pGraphics,BAD_CAST "fill",BAD_CAST "#7FFF00");
-		else if (v.cluster==clusters[5].id)
+		else if (v.cluster==clusters[5].idNum)
 			xmlSetProp(pGraphics,BAD_CAST "fill",BAD_CAST "#006400");
-		else if (v.cluster==clusters[6].id)
+		else if (v.cluster==clusters[6].idNum)
 			xmlSetProp(pGraphics,BAD_CAST "fill",BAD_CAST "#FFD700");
-		else if (v.cluster==clusters[7].id)
+		else if (v.cluster==clusters[7].idNum)
 			xmlSetProp(pGraphics,BAD_CAST "fill",BAD_CAST "#FF69B4");
-		else if (v.cluster==clusters[8].id)
+		else if (v.cluster==clusters[8].idNum)
 			xmlSetProp(pGraphics,BAD_CAST "fill",BAD_CAST "#FF4500");
 		else /* 10th sized cluster and above. */
 			xmlSetProp(pGraphics,BAD_CAST "fill",BAD_CAST "#C0C0C0");
@@ -195,16 +195,17 @@ void paintXML(xmlDocPtr pXMLDom, graph *grp, Cluster *clusters, int k) {
 
 /* cleans the xml tree, to leave only 'big clusters'. */
 
-void trimXML(xmlDocPtr pXMLDom, graph *grp, Cluster *clusters, int U) {
-	int i,V,E;
+void trim_xml(xmlDocPtr pXMLDom, graph *grp, clusterProperties *clusters, int numClustersUpperBound) {
+	int i;
+	int numOfVertices,numOfEdges;
 	vertex v,u;	
 	edge e;
 	vertex* vertices;
 	edge* edges;
 	xmlNodePtr pRoot,pNode;
 
-	V = grp->numOfVertices;
-	E = grp->numOfEdges;
+	numOfVertices = grp->numOfVertices;
+	numOfEdges = grp->numOfEdges;
 	vertices = grp->vertices;
 	edges = grp->edges;
 
@@ -213,40 +214,40 @@ void trimXML(xmlDocPtr pXMLDom, graph *grp, Cluster *clusters, int U) {
 	/* changes the label of graph's root element */
 	xmlSetProp(pRoot, BAD_CAST "label", BAD_CAST "best_clusters");
 
-	if (U<=THRESHOLD) { /* we don't need to clean-up the tree in that case */
+	if (numClustersUpperBound<=THRESHOLD) { /* we don't need to clean-up the tree in that case */
 		return;
 	}
 	
-	sizeClusters(grp,clusters,U);
+	calculate_clusters_sizes(grp,clusters,numClustersUpperBound);
 
 	/* sorting by cluster size descending order. */
-	qsort(clusters,U,sizeof(Cluster),compare_clusters_size);
+	qsort(clusters,numClustersUpperBound,sizeof(clusterProperties),compare_clusters_size);
 
 	/* assigning ascending order, to filter in case of equal cluster sizes. */
-	for(i=0; i<U;i++) {
-		clusters[i].order=i;			
+	for(i=0; i<numClustersUpperBound;i++) {
+		clusters[i].orderNum=i;			
 	}
 
 	/* sorting by cluster id ascending order. */
-	qsort(clusters,U,sizeof(Cluster),compare_clusters_id);
+	qsort(clusters,numClustersUpperBound,sizeof(clusterProperties),compare_clusters_id);
 
 	pNode = xmlFirstElementChild(pRoot);
 
 	/* free not-needed vertex nodes. */
-	for(i=0;i<V;i++) {
+	for(i=0;i<numOfVertices;i++) {
 		v = vertices[i];
-		if (clusters[v.cluster-1].order >= THRESHOLD) {
+		if (clusters[v.cluster-1].orderNum >= THRESHOLD) {
 			xmlUnlinkAndFree(pNode); /* outside 5 biggest clusters. */
 		}
 		pNode = xmlNextElementSibling(pNode);
 	}
 
 	/* free not-needed edge nodes. */
-	for(i=0;i<E;i++) {
+	for(i=0;i<numOfEdges;i++) {
 		e = edges[i];
 		v = vertices[e.v1_id];
 		u = vertices[e.v2_id];
-		if ((clusters[v.cluster-1].order >= THRESHOLD) || (clusters[u.cluster-1].order >= THRESHOLD)) {
+		if ((clusters[v.cluster-1].orderNum >= THRESHOLD) || (clusters[u.cluster-1].orderNum >= THRESHOLD)) {
 			xmlUnlinkAndFree(pNode); /* one of v,u outside 5 biggest clusters. */
 		}
 		pNode = xmlNextElementSibling(pNode);
