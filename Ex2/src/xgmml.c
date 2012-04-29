@@ -208,16 +208,18 @@ void remove_xml_small_clusters(xmlDocPtr pXMLDom, graph *grp, clusterProperties 
 	vertex* vertices;
 	edge* edges;
 
-	xmlNodePtr pRoot,pNode;
+	xmlNodePtr ptrRoot;
+	xmlNodePtr ptrNode;
+	xmlNodePtr ptrTmpNode=NULL;
 
 	numOfVertices = grp->numOfVertices;
 	numOfEdges = grp->numOfEdges;
 	vertices = grp->vertices;
 	edges = grp->edges;
 
-	pRoot = xmlDocGetRootElement(pXMLDom);
+	ptrRoot = xmlDocGetRootElement(pXMLDom);
 
-	xmlSetProp(pRoot, BAD_CAST "label", BAD_CAST "best_clusters");
+	xmlSetProp(ptrRoot, BAD_CAST "label", BAD_CAST "best_clusters");
 
 	if (numClustersUpperBound <= THRESHOLD) {
 		return;
@@ -236,15 +238,18 @@ void remove_xml_small_clusters(xmlDocPtr pXMLDom, graph *grp, clusterProperties 
 	/* sort clusters by id */
 	qsort(clusters, numClustersUpperBound, sizeof(clusterProperties), compare_clusters_id);
 
-	pNode = xmlFirstElementChild(pRoot);
+	ptrNode = xmlFirstElementChild(ptrRoot);
 
 	/* free nodes of vertices */
 	for(i=0; i < numOfVertices; i++) {
 		vertex1 = vertices[i];
 		if (clusters[vertex1.cluster-1].orderNum >= THRESHOLD) {
-			xml_unlink_free(pNode);
+			ptrTmpNode=xmlNextElementSibling(ptrNode);
+			xml_unlink_free(ptrNode);
+			ptrNode=ptrTmpNode;
+		} else {
+			ptrNode = xmlNextElementSibling(ptrNode);
 		}
-		pNode = xmlNextElementSibling(pNode);
 	}
 
 	/* free nodes of edges */
@@ -253,9 +258,12 @@ void remove_xml_small_clusters(xmlDocPtr pXMLDom, graph *grp, clusterProperties 
 		vertex1 = vertices[edge1.v1_id];
 		vertex2 = vertices[edge1.v2_id];
 		if ((clusters[vertex1.cluster-1].orderNum >= THRESHOLD) || (clusters[vertex2.cluster-1].orderNum >= THRESHOLD)) {
-			xml_unlink_free(pNode);
+			ptrTmpNode=xmlNextElementSibling(ptrNode);
+			xml_unlink_free(ptrNode);
+			ptrNode=ptrTmpNode;
+		} else {
+			ptrNode = xmlNextElementSibling(ptrNode);
 		}
-		pNode = xmlNextElementSibling(pNode);
 	}
 }
 
