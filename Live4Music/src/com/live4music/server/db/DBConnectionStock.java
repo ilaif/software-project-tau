@@ -214,10 +214,10 @@ public class DBConnectionStock {
 																			   OrderStatusEnum.WAITING);
 			
 			String [] dateArr = order.getDate().split("/");
-			String toDateString = "'"+dateArr[0]+"/"+dateArr[1]+"/"+dateArr[2]+"','DD/MM/YYYY'";
+			String toDateString = "'"+dateArr[0]+"/"+dateArr[1]+"/"+dateArr[2]+"','%d/%m/%Y'";
 			String query = "INSERT INTO orders(ordering_store_id, supplying_store_id, album_id, quantity, order_date, status) " +
 							"VALUES("+StaticProgramTables.getThisStore().getStoreID()+","+order.getSupplyingStoreID()+","+order.getAlbumID()+"," +
-									""+order.getQuantity()+",TO_DATE("+toDateString+"),"+OrderStatusEnum.WAITING.getIntRep()+")";
+									""+order.getQuantity()+",STR_TO_DATE("+toDateString+"),"+OrderStatusEnum.WAITING.getIntRep()+")";
 			
 			int retOrderID = DBAccessLayer.insertAndGetID(query, "order_id");
 			if (retOrderID < 0){

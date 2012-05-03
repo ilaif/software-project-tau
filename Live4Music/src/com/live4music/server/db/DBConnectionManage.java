@@ -154,8 +154,8 @@ public class DBConnectionManage {
 				employee.getEmployeeID()+"," +
 				"'"+employee.getFirstName()+"'," +
 				"'"+employee.getLastName()+"'," +
-				"TO_DATE('"+employee.getEmploymentDate()+"','DD/MM/YYYY')"+","+
-				"TO_DATE('"+employee.getBirthDate()+"','DD/MM/YYYY')"+","+
+				"STR_TO_DATE('"+employee.getEmploymentDate()+"','%d/%m/%Y')"+","+
+				"STR_TO_DATE('"+employee.getBirthDate()+"','%d/%m/%Y')"+","+
 				"'"+employee.getAddress()+"',"+
 				"'"+employee.getPhone()+"',"+
 				"'"+employee.getCellPhone()+"',"+

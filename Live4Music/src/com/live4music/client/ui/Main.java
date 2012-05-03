@@ -1,17 +1,10 @@
 package com.live4music.client.ui;
 
 import java.awt.Dimension;
-import java.awt.Frame;
-import java.awt.Panel;
 import java.awt.Toolkit;
 import java.io.File;
-import java.net.URL;
-
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
@@ -30,12 +23,13 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
-
 import com.cloudgarden.resource.SWTResourceManager;
 import com.live4music.client.tables.TablesExamples;
 import com.live4music.server.db.DBConnectionPool;
 import com.live4music.shared.general.Debug;
 import com.live4music.shared.general.Debug.DebugOutput;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 
 /**
  * Main
@@ -130,12 +124,7 @@ public class Main extends org.eclipse.swt.widgets.Composite {
 	private static TableColumn searchTableColumnSongName;
 	private static TableColumn searchTableColumnSongArtist;
 	private static TableColumn searchTableColumnSongLength;
-	
-	// search results progress bar
-	private static Panel searchPanelDBProgress;
-	private static Frame searchFrameDBProgress;
 	private static Composite searchCompositeDBProgressContainer;
-	private static JLabel searchJLabelDBProgressBar;
 	
 	// Stock information group
 	private static Group searchGroupStockInfo;
@@ -286,12 +275,27 @@ public class Main extends org.eclipse.swt.widgets.Composite {
 	private static Text manageTextBoxDBSUpdateFileInput;
 	private static Button manageButtonDBSBrowse;
 	private static Button manageButtonDBSUpdate;
-	
-	// update DB progress bar
-	private static Panel managePanelDBProgress;
-	private static Frame manageFrameDBProgress;
 	private static Composite manageCompositeDBProgressContainer;
-	private static JLabel manageJLabelDBProgressBar;
+	private TabItem importDataTabItem;
+	private Composite importDataComposite;
+	private Label lblProccessing;
+	private Label searchLabelDBProgressBar;
+	private TabItem homeTabItem;
+	private Composite homeComposite;
+	private Label lblSearchMusicImage;
+	private Label lblSalesHistoryImage;
+	private Label lblManageStockImage;
+	private Label lblEmployeesImage;
+	private Label lblOrdersImage;
+	private Label lblImportDataImage;
+	private Label lblSearchMusic;
+	private Label lblSales;
+	private Label lblManageStock;
+	private Label lblEmployees;
+	private Label lblOrders;
+	private Label lblImportData;
+	private TabItem OrdersRequestsTabItem;
+	private Composite ordersComposite;
 
 	/**
 	* Auto-generated main method to display this 
@@ -404,6 +408,190 @@ public class Main extends org.eclipse.swt.widgets.Composite {
 				mainTabFolder.setSelection(0);
 				mainTabFolder.setBounds(10, 178, 983, 562);
 				mainTabFolder.setFont(defaultFont);
+				{
+					homeTabItem = new TabItem(mainTabFolder, SWT.NONE);
+					homeTabItem.setText("Home");
+					{
+						homeComposite = new Composite(mainTabFolder, SWT.NONE);
+						homeComposite.setBackgroundMode(SWT.INHERIT_DEFAULT);
+						homeComposite.setBackground(org.eclipse.wb.swt.SWTResourceManager.getColor(0, 0, 0));
+						homeTabItem.setControl(homeComposite);
+						{
+							lblSearchMusicImage = new Label(homeComposite, SWT.NONE);
+							lblSearchMusicImage.setCursor(org.eclipse.wb.swt.SWTResourceManager.getCursor(SWT.CURSOR_HAND));
+							lblSearchMusicImage.addMouseListener(new MouseAdapter() {
+								@Override
+								public void mouseDown(MouseEvent arg0) {
+									mainTabFolder.setSelection(1);
+								}
+							});
+							lblSearchMusicImage.setAlignment(SWT.CENTER);
+							lblSearchMusicImage.setBounds(128, 10, 196, 196);
+							Image musicIcon = new Image(display,relPath+"music.png");
+							lblSearchMusicImage.setImage(musicIcon);
+						}
+						{
+							lblSalesHistoryImage = new Label(homeComposite, SWT.NONE);
+							lblSalesHistoryImage.setCursor(org.eclipse.wb.swt.SWTResourceManager.getCursor(SWT.CURSOR_HAND));
+							lblSalesHistoryImage.addMouseListener(new MouseAdapter() {
+								@Override
+								public void mouseDown(MouseEvent arg0) {
+									mainTabFolder.setSelection(2);
+								}
+							});
+							lblSalesHistoryImage.setAlignment(SWT.CENTER);
+							lblSalesHistoryImage.setBounds(390, 10, 196, 196);
+							Image historyIcon = new Image(display,relPath+"sale.png");
+							lblSalesHistoryImage.setImage(historyIcon);
+						}
+						{
+							lblManageStockImage = new Label(homeComposite, SWT.NONE);
+							lblManageStockImage.setCursor(org.eclipse.wb.swt.SWTResourceManager.getCursor(SWT.CURSOR_HAND));
+							lblManageStockImage.addMouseListener(new MouseAdapter() {
+								@Override
+								public void mouseDown(MouseEvent arg0) {
+									mainTabFolder.setSelection(3);
+								}
+							});
+							lblManageStockImage.setAlignment(SWT.CENTER);
+							lblManageStockImage.setBounds(652, 10, 196, 196);
+							Image stockIcon = new Image(display,relPath+"stock.png");
+							lblManageStockImage.setImage(stockIcon);
+						}
+						{
+							lblEmployeesImage = new Label(homeComposite, SWT.NONE);
+							lblEmployeesImage.setCursor(org.eclipse.wb.swt.SWTResourceManager.getCursor(SWT.CURSOR_HAND));
+							lblEmployeesImage.addMouseListener(new MouseAdapter() {
+								@Override
+								public void mouseDown(MouseEvent arg0) {
+									mainTabFolder.setSelection(4);
+								}
+							});
+							lblEmployeesImage.setAlignment(SWT.CENTER);
+							lblEmployeesImage.setBounds(128, 272, 196, 196);
+							Image employeesIcon = new Image(display,relPath+"employees.png");
+							lblEmployeesImage.setImage(employeesIcon);
+						}
+						{
+							lblOrdersImage = new Label(homeComposite, SWT.NONE);
+							lblOrdersImage.setCursor(org.eclipse.wb.swt.SWTResourceManager.getCursor(SWT.CURSOR_HAND));
+							lblOrdersImage.addMouseListener(new MouseAdapter() {
+								@Override
+								public void mouseDown(MouseEvent arg0) {
+									mainTabFolder.setSelection(5);
+								}
+							});
+							lblOrdersImage.setAlignment(SWT.CENTER);
+							lblOrdersImage.setBounds(390, 272, 196, 196);
+							Image ordersIcon = new Image(display,relPath+"orders.png");
+							lblOrdersImage.setImage(ordersIcon);
+						}	
+						{
+							lblImportDataImage = new Label(homeComposite, SWT.NONE);
+							lblImportDataImage.setCursor(org.eclipse.wb.swt.SWTResourceManager.getCursor(SWT.CURSOR_HAND));
+							lblImportDataImage.addMouseListener(new MouseAdapter() {
+								@Override
+								public void mouseDown(MouseEvent arg0) {
+									mainTabFolder.setSelection(6);
+								}
+							});
+							lblImportDataImage.setAlignment(SWT.CENTER);
+							lblImportDataImage.setBounds(652, 272, 196, 196);
+							Image importIcon = new Image(display,relPath+"import.png");
+							lblImportDataImage.setImage(importIcon);
+						}						
+						{
+							lblSearchMusic = new Label(homeComposite, SWT.NONE);
+							lblSearchMusic.addMouseListener(new MouseAdapter() {
+								@Override
+								public void mouseDown(MouseEvent arg0) {
+									mainTabFolder.setSelection(1);
+								}
+							});
+							lblSearchMusic.setCursor(org.eclipse.wb.swt.SWTResourceManager.getCursor(SWT.CURSOR_HAND));
+							lblSearchMusic.setFont(org.eclipse.wb.swt.SWTResourceManager.getFont("Segoe UI", 16, SWT.BOLD));
+							lblSearchMusic.setAlignment(SWT.CENTER);
+							lblSearchMusic.setForeground(org.eclipse.wb.swt.SWTResourceManager.getColor(255, 255, 255));
+							lblSearchMusic.setBounds(128, 212, 196, 35);
+							lblSearchMusic.setText("Search 4 Music");
+						}
+						{
+							lblSales = new Label(homeComposite, SWT.NONE);
+							lblSales.addMouseListener(new MouseAdapter() {
+								@Override
+								public void mouseDown(MouseEvent arg0) {
+									mainTabFolder.setSelection(2);
+								}
+							});
+							lblSales.setText("Current Sales");
+							lblSales.setForeground(org.eclipse.wb.swt.SWTResourceManager.getColor(255, 255, 255));
+							lblSales.setFont(org.eclipse.wb.swt.SWTResourceManager.getFont("Segoe UI", 16, SWT.BOLD));
+							lblSales.setCursor(org.eclipse.wb.swt.SWTResourceManager.getCursor(SWT.CURSOR_HAND));
+							lblSales.setAlignment(SWT.CENTER);
+							lblSales.setBounds(390, 212, 196, 35);
+						}
+						{
+							lblManageStock = new Label(homeComposite, SWT.NONE);
+							lblManageStock.addMouseListener(new MouseAdapter() {
+								@Override
+								public void mouseDown(MouseEvent arg0) {
+									mainTabFolder.setSelection(3);
+								}
+							});
+							lblManageStock.setText("Manage Stock");
+							lblManageStock.setForeground(org.eclipse.wb.swt.SWTResourceManager.getColor(255, 255, 255));
+							lblManageStock.setFont(org.eclipse.wb.swt.SWTResourceManager.getFont("Segoe UI", 16, SWT.BOLD));
+							lblManageStock.setCursor(org.eclipse.wb.swt.SWTResourceManager.getCursor(SWT.CURSOR_HAND));
+							lblManageStock.setAlignment(SWT.CENTER);
+							lblManageStock.setBounds(652, 212, 196, 35);
+						}
+						{
+							lblEmployees = new Label(homeComposite, SWT.NONE);
+							lblEmployees.addMouseListener(new MouseAdapter() {
+								@Override
+								public void mouseDown(MouseEvent arg0) {
+									mainTabFolder.setSelection(4);
+								}
+							});
+							lblEmployees.setText("Employees");
+							lblEmployees.setForeground(org.eclipse.wb.swt.SWTResourceManager.getColor(255, 255, 255));
+							lblEmployees.setFont(org.eclipse.wb.swt.SWTResourceManager.getFont("Segoe UI", 16, SWT.BOLD));
+							lblEmployees.setCursor(org.eclipse.wb.swt.SWTResourceManager.getCursor(SWT.CURSOR_HAND));
+							lblEmployees.setAlignment(SWT.CENTER);
+							lblEmployees.setBounds(128, 474, 196, 35);
+						}
+						{
+							lblOrders = new Label(homeComposite, SWT.NONE);
+							lblOrders.addMouseListener(new MouseAdapter() {
+								@Override
+								public void mouseDown(MouseEvent arg0) {
+									mainTabFolder.setSelection(5);
+								}
+							});
+							lblOrders.setText("Orders / Requests");
+							lblOrders.setForeground(org.eclipse.wb.swt.SWTResourceManager.getColor(255, 255, 255));
+							lblOrders.setFont(org.eclipse.wb.swt.SWTResourceManager.getFont("Segoe UI", 16, SWT.BOLD));
+							lblOrders.setCursor(org.eclipse.wb.swt.SWTResourceManager.getCursor(SWT.CURSOR_HAND));
+							lblOrders.setAlignment(SWT.CENTER);
+							lblOrders.setBounds(390, 474, 196, 35);
+						}
+						{
+							lblImportData = new Label(homeComposite, SWT.NONE);
+							lblImportData.addMouseListener(new MouseAdapter() {
+								@Override
+								public void mouseDown(MouseEvent arg0) {
+									mainTabFolder.setSelection(6);
+								}
+							});
+							lblImportData.setText("Import Data");
+							lblImportData.setForeground(org.eclipse.wb.swt.SWTResourceManager.getColor(255, 255, 255));
+							lblImportData.setFont(org.eclipse.wb.swt.SWTResourceManager.getFont("Segoe UI", 16, SWT.BOLD));
+							lblImportData.setCursor(org.eclipse.wb.swt.SWTResourceManager.getCursor(SWT.CURSOR_HAND));
+							lblImportData.setAlignment(SWT.CENTER);
+							lblImportData.setBounds(652, 474, 196, 35);
+						}
+					}
+				}
 
 				{
 					/*
@@ -412,7 +600,7 @@ public class Main extends org.eclipse.swt.widgets.Composite {
 					 * Contains search fields, results and stock and sale actions
 					 */
 					searchTabItem = new TabItem(mainTabFolder, SWT.NONE);
-					searchTabItem.setText("Search");
+					searchTabItem.setText("Search 4 Music");
 					searchTabItem.setToolTipText("Search for Albums");
 					{
 						searchTabComposite = new Composite(mainTabFolder, SWT.NONE);
@@ -421,50 +609,50 @@ public class Main extends org.eclipse.swt.widgets.Composite {
 						{
 							searchGroupOptions = new Group(searchTabComposite, SWT.NONE);
 							searchGroupOptions.setLayout(null);
-							searchGroupOptions.setText("Search by");
-							searchGroupOptions.setBounds(5, 0, 355, 313);
+							searchGroupOptions.setText("Search");
+							searchGroupOptions.setBounds(10, 10, 498, 371);
 							searchGroupOptions.setFont(defaultFont);
 							{
 								searchBulletByAlbum = new Button(searchGroupOptions, SWT.RADIO | SWT.LEFT);
 								searchBulletByAlbum.setText("Search by album ID:");
-								searchBulletByAlbum.setBounds(12, 16, 129, 22);
+								searchBulletByAlbum.setBounds(10, 16, 129, 22);
 								searchBulletByAlbum.setSelection(true);
 								searchBulletByAlbum.setFont(defaultFont);
 							}
 							{
 								searchBulletOtherParameters = new Button(searchGroupOptions, SWT.RADIO | SWT.LEFT);
 								searchBulletOtherParameters.setText("Search by other parameters:");
-								searchBulletOtherParameters.setBounds(12, 42, 173, 22);
+								searchBulletOtherParameters.setBounds(10, 44, 173, 22);
 								searchBulletOtherParameters.setFont(defaultFont);
 							}
 							{
 								searchTextBoxAlbumID = new Text(searchGroupOptions, SWT.BORDER);
-								searchTextBoxAlbumID.setBounds(151, 16, 192, 22);
+								searchTextBoxAlbumID.setBounds(190, 17, 298, 22);
 								searchTextBoxAlbumID.setToolTipText("Enter album ID");
 								searchTextBoxAlbumID.setFont(defaultFont);
 							}
 							{
 								searchCheckBoxAlbumName = new Button(searchGroupOptions, SWT.CHECK | SWT.LEFT);
 								searchCheckBoxAlbumName.setText("Album name:");
-								searchCheckBoxAlbumName.setBounds(12, 69, 102, 22);
+								searchCheckBoxAlbumName.setBounds(10, 72, 102, 22);
 								searchCheckBoxAlbumName.setFont(defaultFont);
 							}
 							{
 								searchCheckBoxArtist = new Button(searchGroupOptions, SWT.CHECK | SWT.LEFT);
 								searchCheckBoxArtist.setText("Artist:");
-								searchCheckBoxArtist.setBounds(12, 93, 102, 21);
+								searchCheckBoxArtist.setBounds(10, 100, 102, 21);
 								searchCheckBoxArtist.setFont(defaultFont);
 							}
 							{
 								searchCheckBoxYear = new Button(searchGroupOptions, SWT.CHECK | SWT.LEFT);
 								searchCheckBoxYear.setText("Year from:");
-								searchCheckBoxYear.setBounds(12, 117, 102, 23);
+								searchCheckBoxYear.setBounds(10, 127, 102, 23);
 								searchCheckBoxYear.setFont(defaultFont);
 							}
 							{
 								searchCheckBoxSongNames = new Button(searchGroupOptions, SWT.CHECK | SWT.LEFT);
 								searchCheckBoxSongNames.setText("Song name(s):");
-								searchCheckBoxSongNames.setBounds(12, 141, 102, 22);
+								searchCheckBoxSongNames.setBounds(10, 156, 102, 22);
 								searchCheckBoxSongNames.setToolTipText("Enter song names / partial names separated by semicolons\n"+
 										"e.g. 'first song name;second song name;third song name'");
 								searchCheckBoxSongNames.setFont(defaultFont);
@@ -472,86 +660,86 @@ public class Main extends org.eclipse.swt.widgets.Composite {
 							{
 								searchCheckBoxGenres = new Button(searchGroupOptions, SWT.CHECK | SWT.LEFT);
 								searchCheckBoxGenres.setText("Genre(s):");
-								searchCheckBoxGenres.setBounds(12, 165, 82, 22);
+								searchCheckBoxGenres.setBounds(10, 190, 82, 22);
 								searchCheckBoxGenres.setFont(defaultFont);
 							}
 							{
 								searchTextBoxAlbumName = new Text(searchGroupOptions, SWT.BORDER);
-								searchTextBoxAlbumName.setBounds(118, 69, 225, 22);
+								searchTextBoxAlbumName.setBounds(190, 73, 299, 22);
 								searchTextBoxAlbumName.setFont(defaultFont);
 							}
 							{
 								searchTextBoxArtist = new Text(searchGroupOptions, SWT.BORDER);
-								searchTextBoxArtist.setBounds(118, 93, 225, 22);
+								searchTextBoxArtist.setBounds(190, 100, 298, 22);
 								searchTextBoxArtist.setFont(defaultFont);
 							}
 							{
 								searchTextBoxYearFrom = new Text(searchGroupOptions, SWT.BORDER);
-								searchTextBoxYearFrom.setBounds(118, 117, 54, 22);
+								searchTextBoxYearFrom.setBounds(190, 128, 108, 22);
 								searchTextBoxYearFrom.setFont(defaultFont);
 							}
 							{
 								searchLabelYearTo = new Label(searchGroupOptions, SWT.NONE);
 								searchLabelYearTo.setText("To:");
-								searchLabelYearTo.setBounds(190, 120, 30, 16);
+								searchLabelYearTo.setBounds(326, 131, 30, 16);
 								searchLabelYearTo.setFont(defaultFont);
 							}
 							{
 								searchTextBoxYearTo = new Text(searchGroupOptions, SWT.BORDER);
-								searchTextBoxYearTo.setBounds(224, 117, 60, 22);
+								searchTextBoxYearTo.setBounds(380, 128, 108, 22);
 								searchTextBoxYearTo.setFont(defaultFont);
 							}
 							{
 								searchTextBoxSongNames = new Text(searchGroupOptions, SWT.BORDER);
-								searchTextBoxSongNames.setBounds(118, 141, 225, 22);
+								searchTextBoxSongNames.setBounds(190, 157, 298, 22);
 								searchTextBoxSongNames.setFont(defaultFont);
 							}
 							{
 								searchCheckBoxGenresArr[0] = new Button(searchGroupOptions, SWT.CHECK | SWT.LEFT);
 								searchCheckBoxGenresArr[0].setText("Rock");
-								searchCheckBoxGenresArr[0].setBounds(12, 186, 78, 16);
+								searchCheckBoxGenresArr[0].setBounds(10, 222, 78, 16);
 								searchCheckBoxGenresArr[0].setFont(defaultFont);
 							}
 							{
 								searchCheckBoxGenresArr[1] = new Button(searchGroupOptions, SWT.CHECK | SWT.LEFT);
 								searchCheckBoxGenresArr[1].setText("Jazz");
-								searchCheckBoxGenresArr[1].setBounds(12, 206, 78, 16);
+								searchCheckBoxGenresArr[1].setBounds(10, 248, 78, 16);
 								searchCheckBoxGenresArr[1].setFont(defaultFont);
 							}
 							{
 								searchCheckBoxGenresArr[2] = new Button(searchGroupOptions, SWT.CHECK | SWT.LEFT);
 								searchCheckBoxGenresArr[2].setText("Pop");
-								searchCheckBoxGenresArr[2].setBounds(96, 186, 78, 16);
+								searchCheckBoxGenresArr[2].setBounds(112, 222, 78, 16);
 								searchCheckBoxGenresArr[2].setFont(defaultFont);
 							}
 							{
 								searchCheckBoxGenresArr[3] = new Button(searchGroupOptions, SWT.CHECK | SWT.LEFT);
 								searchCheckBoxGenresArr[3].setText("Blues");
-								searchCheckBoxGenresArr[3].setBounds(96, 206, 78, 16);
+								searchCheckBoxGenresArr[3].setBounds(112, 248, 78, 16);
 								searchCheckBoxGenresArr[3].setFont(defaultFont);
 							}
 							{
 								searchCheckBoxGenresArr[4] = new Button(searchGroupOptions, SWT.CHECK | SWT.LEFT);
 								searchCheckBoxGenresArr[4].setText("World");
-								searchCheckBoxGenresArr[4].setBounds(180, 186, 73, 16);
+								searchCheckBoxGenresArr[4].setBounds(212, 222, 73, 16);
 								searchCheckBoxGenresArr[4].setFont(defaultFont);
 							}
 							{
 								searchCheckBoxGenresArr[5] = new Button(searchGroupOptions, SWT.CHECK | SWT.LEFT);
 								searchCheckBoxGenresArr[5].setText("Hip-Hop");
-								searchCheckBoxGenresArr[5].setBounds(180, 206, 79, 16);
+								searchCheckBoxGenresArr[5].setBounds(212, 248, 79, 16);
 								searchCheckBoxGenresArr[5].setFont(defaultFont);
 							}
 							{
 								searchCheckBoxGenresArr[6] = new Button(searchGroupOptions, SWT.CHECK | SWT.LEFT);
 								searchCheckBoxGenresArr[6].setText("Electronic");
-								searchCheckBoxGenresArr[6].setBounds(265, 186, 78, 16);
+								searchCheckBoxGenresArr[6].setBounds(312, 222, 78, 16);
 								searchCheckBoxGenresArr[6].setFont(defaultFont);
 							}
 							{
 								searchCheckBoxGenresArr[7] = new Button(searchGroupOptions, SWT.CHECK | SWT.LEFT);
 								searchCheckBoxGenresArr[7].setText("Classical");
-								searchCheckBoxGenresArr[7].setBounds(265, 206, 78, 16);
+								searchCheckBoxGenresArr[7].setBounds(312, 248, 78, 16);
 								searchCheckBoxGenresArr[7].setFont(defaultFont);
 							}
 							/*{
@@ -569,30 +757,30 @@ public class Main extends org.eclipse.swt.widgets.Composite {
 							{
 								searchCheckBoxGenreOther = new Button(searchGroupOptions, SWT.CHECK | SWT.LEFT);
 								searchCheckBoxGenreOther.setText("Other:");
-								searchCheckBoxGenreOther.setBounds(12, 223, 70, 22);
+								searchCheckBoxGenreOther.setBounds(10, 274, 70, 22);
 								searchCheckBoxGenreOther.setFont(defaultFont);
 							}
 							{
 								searchTextBoxGenreOther = new Text(searchGroupOptions, SWT.BORDER);
-								searchTextBoxGenreOther.setBounds(86, 224, 255, 22);
+								searchTextBoxGenreOther.setBounds(190, 275, 298, 22);
 								searchTextBoxGenreOther.setFont(defaultFont);
 							}
 							{
 								searchButtonClear = new Button(searchGroupOptions, SWT.PUSH | SWT.CENTER);
 								searchButtonClear.setText("Clear Fields");
-								searchButtonClear.setBounds(12, 273, 156, 33);
+								searchButtonClear.setBounds(10, 328, 233, 33);
 								searchButtonClear.setFont(defaultFont);
 							}
 							{
 								searchButtonSearch = new Button(searchGroupOptions, SWT.PUSH | SWT.CENTER);
 								searchButtonSearch.setText("Search");
-								searchButtonSearch.setBounds(174, 273, 169, 33);
+								searchButtonSearch.setBounds(249, 328, 239, 33);
 								searchButtonSearch.setFont(defaultFont);
 							}
 							{
 								searchCompositeStockField = new Composite(searchGroupOptions, SWT.NONE);
 								searchCompositeStockField.setLayout(null);
-								searchCompositeStockField.setBounds(12, 247, 331, 20);
+								searchCompositeStockField.setBounds(10, 302, 478, 20);
 								{
 									searchLabelStock = new Label(searchCompositeStockField, SWT.NONE);
 									searchLabelStock.setText("Stock:");
@@ -602,19 +790,19 @@ public class Main extends org.eclipse.swt.widgets.Composite {
 								{
 									searchBulletInStockInStore = new Button(searchCompositeStockField, SWT.RADIO | SWT.LEFT);
 									searchBulletInStockInStore.setText("In store");
-									searchBulletInStockInStore.setBounds(244, 0, 75, 22);
+									searchBulletInStockInStore.setBounds(393, -1, 75, 22);
 									searchBulletInStockInStore.setFont(defaultFont);
 								}
 								{
 									searchBulletInStockInNetwork = new Button(searchCompositeStockField, SWT.RADIO | SWT.LEFT);
 									searchBulletInStockInNetwork.setText("In network");
-									searchBulletInStockInNetwork.setBounds(146, 0, 86, 22);
+									searchBulletInStockInNetwork.setBounds(281, -1, 86, 22);
 									searchBulletInStockInNetwork.setFont(defaultFont);
 								}
 								{
 									searchBulletInStockAll = new Button(searchCompositeStockField, SWT.RADIO | SWT.LEFT);
 									searchBulletInStockAll.setText("All");
-									searchBulletInStockAll.setBounds(64, 0, 70, 22);
+									searchBulletInStockAll.setBounds(180, 0, 70, 22);
 									searchBulletInStockAll.setSelection(true);
 									searchBulletInStockAll.setFont(defaultFont);
 								}
@@ -624,12 +812,24 @@ public class Main extends org.eclipse.swt.widgets.Composite {
 							searchGroupResults = new Group(searchTabComposite, SWT.NONE);
 							searchGroupResults.setLayout(null);
 							searchGroupResults.setText("Search Results");
-							searchGroupResults.setBounds(366, 0, 599, 524);
+							searchGroupResults.setBounds(514, 10, 451, 514);
 							searchGroupResults.setFont(defaultFont);
+							{
+								searchCompositeDBProgressContainer = new Composite(searchGroupResults, SWT.EMBEDDED);
+								searchCompositeDBProgressContainer.setBounds(13, 348, 428, 60);
+								{
+									searchLabelDBProgressBar = new Label(searchCompositeDBProgressContainer, SWT.NONE);
+									searchLabelDBProgressBar.setAlignment(SWT.CENTER);
+									searchLabelDBProgressBar.setFont(org.eclipse.wb.swt.SWTResourceManager.getFont("Segoe UI", 16, SWT.BOLD));
+									searchLabelDBProgressBar.setLocation(10, 10);
+									searchLabelDBProgressBar.setSize(406, 40);
+									searchLabelDBProgressBar.setText("Proccessing - Please Wait");
+								}
+							}
 							{
 								searchTableAlbumResults = new Table(searchGroupResults, SWT.BORDER | SWT.FULL_SELECTION
 										| SWT.H_SCROLL | SWT.V_SCROLL | SWT.SINGLE); // single row selection
-								searchTableAlbumResults.setBounds(13, 23, 576, 200);
+								searchTableAlbumResults.setBounds(13, 23, 428, 200);
 								searchTableAlbumResults.setHeaderVisible(true);
 								searchTableAlbumResults.setLinesVisible(true);
 								searchTableAlbumResults.setFont(defaultFont);
@@ -643,7 +843,7 @@ public class Main extends org.eclipse.swt.widgets.Composite {
 								searchTableColumnAlbumID.setWidth(tableWidth / numOfColumns);
 								
 								searchTableColumnAlbumName = new TableColumn(searchTableAlbumResults, SWT.NONE);
-								searchTableColumnAlbumName.setText("Album Name");
+								searchTableColumnAlbumName.setText("Name");
 								searchTableColumnAlbumName.setResizable(true);
 								searchTableColumnAlbumName.setMoveable(true);
 								searchTableColumnAlbumName.setWidth(tableWidth / numOfColumns);
@@ -675,7 +875,7 @@ public class Main extends org.eclipse.swt.widgets.Composite {
 							{
 								searchTableSongResults = new Table(searchGroupResults, SWT.BORDER | SWT.FULL_SELECTION
 										| SWT.H_SCROLL | SWT.V_SCROLL | SWT.SINGLE);
-								searchTableSongResults.setBounds(13, 330, 576, 184);
+								searchTableSongResults.setBounds(13, 265, 428, 239);
 								searchTableSongResults.setHeaderVisible(true);
 								searchTableSongResults.setLinesVisible(true);
 								searchTableSongResults.setFont(defaultFont);
@@ -690,7 +890,7 @@ public class Main extends org.eclipse.swt.widgets.Composite {
 								searchTableColumnSongTrack.setWidth(tableWidth / numOfColumns);
 								
 								searchTableColumnSongName = new TableColumn(searchTableSongResults, SWT.NONE);
-								searchTableColumnSongName.setText("Song name");
+								searchTableColumnSongName.setText("Song Name");
 								searchTableColumnSongName.setResizable(true);
 								searchTableColumnSongName.setMoveable(true);
 								searchTableColumnSongName.setWidth(tableWidth / numOfColumns);
@@ -708,23 +908,9 @@ public class Main extends org.eclipse.swt.widgets.Composite {
 								searchTableColumnSongLength.setWidth(tableWidth / numOfColumns);
 							}
 							{
-								searchCompositeDBProgressContainer = new Composite(searchGroupResults, SWT.EMBEDDED);
-								searchCompositeDBProgressContainer.setBounds(15, 230, 390, 60);
-								{
-									searchJLabelDBProgressBar = new JLabel("Searching", JLabel.CENTER);
-									searchJLabelDBProgressBar.setBounds(15, 230, 390, 50);									
-									searchFrameDBProgress = SWT_AWT.new_Frame(searchCompositeDBProgressContainer);
-									{
-										searchPanelDBProgress = new Panel();
-										searchFrameDBProgress.add(searchPanelDBProgress);
-										searchPanelDBProgress.add(searchJLabelDBProgressBar);
-									}
-								}
-							}
-							{
 								searchButtonShowSongs = new Button(searchGroupResults, SWT.PUSH | SWT.CENTER);
 								searchButtonShowSongs.setText("Show Song List");
-								searchButtonShowSongs.setBounds(15, 296, 574, 30);
+								searchButtonShowSongs.setBounds(13, 229, 428, 30);
 								searchButtonShowSongs.setFont(defaultFont);
 							}
 						}
@@ -732,61 +918,62 @@ public class Main extends org.eclipse.swt.widgets.Composite {
 							searchGroupStockInfo = new Group(searchTabComposite, SWT.NONE);
 							searchGroupStockInfo.setLayout(null);
 							searchGroupStockInfo.setText("Stock Information");
-							searchGroupStockInfo.setBounds(5, 319, 171, 146);
+							searchGroupStockInfo.setBounds(10, 387, 243, 137);
 							searchGroupStockInfo.setFont(defaultFont);
 							{
 								searchLabelStockInfoStoreStock = new Label(searchGroupStockInfo, SWT.NONE);
 								searchLabelStockInfoStoreStock.setText("Store stock:");
-								searchLabelStockInfoStoreStock.setBounds(12, 22, 152, 19);
+								searchLabelStockInfoStoreStock.setBounds(10, 21, 152, 19);
 								searchLabelStockInfoStoreStock.setFont(defaultFont);
 							}
 							{
 								searchLabelStockInfoLocation = new Label(searchGroupStockInfo, SWT.NONE);
 								searchLabelStockInfoLocation.setText("Storage location: ");
-								searchLabelStockInfoLocation.setBounds(12, 44, 152, 19);
+								searchLabelStockInfoLocation.setBounds(10, 46, 152, 19);
 								searchLabelStockInfoLocation.setFont(defaultFont);
 							}
 							{
 								searchLabelStockInfoPrice = new Label(searchGroupStockInfo, SWT.NONE);
 								searchLabelStockInfoPrice.setText("Price:");
-								searchLabelStockInfoPrice.setBounds(12, 66, 152, 19);
+								searchLabelStockInfoPrice.setBounds(10, 71, 152, 19);
 								searchLabelStockInfoPrice.setFont(defaultFont);
 							}
 							{
-								searchButtonStockInfoOrder = new Button(searchGroupStockInfo, SWT.PUSH | SWT.CENTER);
-								searchButtonStockInfoOrder.setText("Place an Order...");
-								searchButtonStockInfoOrder.setBounds(12, 113, 147, 23);
-								searchButtonStockInfoOrder.setFont(defaultFont);
+								searchButtonGetStockInfo = new Button(searchGroupStockInfo, SWT.PUSH | SWT.CENTER);
+								searchButtonGetStockInfo.setText("Stock Information");
+								searchButtonGetStockInfo.setBounds(10, 91, 107, 36);
+								searchButtonGetStockInfo.setFont(defaultFont);
 							}
 							{
-								searchButtonGetStockInfo = new Button(searchGroupStockInfo, SWT.PUSH | SWT.CENTER);
-								searchButtonGetStockInfo.setText("Get Stock Information");
-								searchButtonGetStockInfo.setBounds(12, 87, 147, 26);
-								searchButtonGetStockInfo.setFont(defaultFont);
+								searchButtonStockInfoOrder = new Button(searchGroupStockInfo, SWT.PUSH | SWT.CENTER);
+								searchButtonStockInfoOrder.setLocation(123, 91);
+								searchButtonStockInfoOrder.setSize(110, 36);
+								searchButtonStockInfoOrder.setText("Place an Order...");
+								searchButtonStockInfoOrder.setFont(defaultFont);
 							}
 						}
 						{
 							searchGroupSaleInfo = new Group(searchTabComposite, SWT.NONE);
 							searchGroupSaleInfo.setLayout(null);
 							searchGroupSaleInfo.setText("Sale");
-							searchGroupSaleInfo.setBounds(182, 319, 177, 146);
+							searchGroupSaleInfo.setBounds(259, 387, 249, 137);
 							searchGroupSaleInfo.setFont(defaultFont);
 							{
 								searchLabelSaleInfoQuantity = new Label(searchGroupSaleInfo, SWT.NONE);
 								searchLabelSaleInfoQuantity.setText("Add to sale with quantity:");
-								searchLabelSaleInfoQuantity.setBounds(8, 22, 157, 22);
+								searchLabelSaleInfoQuantity.setBounds(10, 22, 157, 22);
 								searchLabelSaleInfoQuantity.setFont(defaultFont);
 							}
 							{
 								searchTextBoxSaleInfoQuantity = new Text(searchGroupSaleInfo, SWT.BORDER);
 								searchTextBoxSaleInfoQuantity.setText("1");
-								searchTextBoxSaleInfoQuantity.setBounds(42, 52, 89, 22);
+								searchTextBoxSaleInfoQuantity.setBounds(10, 46, 229, 22);
 								searchTextBoxSaleInfoQuantity.setFont(defaultFont);
 							}
 							{
 								searchButtonSaleInfoSale = new Button(searchGroupSaleInfo, SWT.PUSH | SWT.CENTER);
 								searchButtonSaleInfoSale.setText("Add to Sale...");
-								searchButtonSaleInfoSale.setBounds(8, 88, 157, 48);
+								searchButtonSaleInfoSale.setBounds(10, 78, 229, 36);
 								searchButtonSaleInfoSale.setFont(defaultFont);
 							}
 						}
@@ -800,7 +987,7 @@ public class Main extends org.eclipse.swt.widgets.Composite {
 					 * 
 					 */
 					saleTabItem = new TabItem(mainTabFolder, SWT.NONE);
-					saleTabItem.setText("Sale");
+					saleTabItem.setText("Current Sales");
 					saleTabItem.setToolTipText("Manage current sale");
 					{
 						saleCompositeMain = new Composite(mainTabFolder, SWT.NONE);
@@ -809,41 +996,41 @@ public class Main extends org.eclipse.swt.widgets.Composite {
 						{
 							saleGroupSaleDetails = new Group(saleCompositeMain, SWT.NONE);
 							saleGroupSaleDetails.setLayout(null);
-							saleGroupSaleDetails.setText("Manage Current Sale");
-							saleGroupSaleDetails.setBounds(12, 0, 953, 56);
+							saleGroupSaleDetails.setText("Current Sale Information");
+							saleGroupSaleDetails.setBounds(10, 10, 955, 86);
 							saleGroupSaleDetails.setFont(defaultFont);
 							{
 								saleLabelSalesmanIDName = new Label(saleGroupSaleDetails, SWT.NONE);
 								saleLabelSalesmanIDName.setText("Salesman:");
-								saleLabelSalesmanIDName.setBounds(25, 24, 75, 18);
+								saleLabelSalesmanIDName.setBounds(10, 27, 75, 18);
 								saleLabelSalesmanIDName.setFont(defaultFont);
 							}
 							{
 								saleComboSalesmanIDNameInput = new Combo(saleGroupSaleDetails, SWT.READ_ONLY);
-								saleComboSalesmanIDNameInput.setBounds(106, 24, 309, 21);
+								saleComboSalesmanIDNameInput.setBounds(10, 51, 309, 21);
 								saleComboSalesmanIDNameInput.setFont(defaultFont);
 							}							
 							{
 								saleLabelSaleDate = new Label(saleGroupSaleDetails, SWT.NONE);
 								saleLabelSaleDate.setText("Date of sale:");
-								saleLabelSaleDate.setBounds(427, 25, 92, 18);
+								saleLabelSaleDate.setBounds(361, 27, 92, 18);
 								saleLabelSaleDate.setFont(defaultFont);
 							}
 							{
 								saleLabelSaleTime = new Label(saleGroupSaleDetails, SWT.NONE);
 								saleLabelSaleTime.setText("Time of sale:");
-								saleLabelSaleTime.setBounds(605, 25, 86, 18);
+								saleLabelSaleTime.setBounds(526, 27, 86, 18);
 								saleLabelSaleTime.setFont(defaultFont);
 							}
 							{
 								saleLabelDateInput = new Label(saleGroupSaleDetails, SWT.BORDER);
-								saleLabelDateInput.setBounds(524, 25, 75, 18);
+								saleLabelDateInput.setBounds(361, 53, 130, 18);
 								saleLabelDateInput.setText(MainFuncs.getDate());
 								saleLabelDateInput.setFont(defaultFont);
 							}
 							{
 								saleLabelTimeInput = new Label(saleGroupSaleDetails, SWT.BORDER);
-								saleLabelTimeInput.setBounds(696, 25, 69, 18);
+								saleLabelTimeInput.setBounds(526, 53, 130, 18);
 								saleLabelTimeInput.setText(MainFuncs.getTime());
 								saleLabelTimeInput.setFont(defaultFont);
 							}
@@ -851,7 +1038,7 @@ public class Main extends org.eclipse.swt.widgets.Composite {
 						{
 							saleTableSaleItems = new Table(saleCompositeMain, SWT.BORDER | SWT.FULL_SELECTION
 									| SWT.H_SCROLL | SWT.V_SCROLL | SWT.SINGLE);
-							saleTableSaleItems.setBounds(12, 63, 953, 385);
+							saleTableSaleItems.setBounds(10, 102, 955, 346);
 							saleTableSaleItems.setHeaderVisible(true);
 							saleTableSaleItems.setLinesVisible(true);
 							saleTableSaleItems.setFont(defaultFont);
@@ -866,7 +1053,7 @@ public class Main extends org.eclipse.swt.widgets.Composite {
 							saleTableColumnAlbumID.setWidth(tableWidth / numOfColumns);
 							
 							saleTableColumnAlbumName = new TableColumn(saleTableSaleItems, SWT.NONE);
-							saleTableColumnAlbumName.setText("Album name");
+							saleTableColumnAlbumName.setText("Name");
 							saleTableColumnAlbumName.setResizable(true);
 							saleTableColumnAlbumName.setMoveable(true);
 							saleTableColumnAlbumName.setWidth(111);
@@ -892,13 +1079,13 @@ public class Main extends org.eclipse.swt.widgets.Composite {
 						}
 						{
 							saleLabelTotalPriceValue = new Label(saleCompositeMain, SWT.BORDER);
-							saleLabelTotalPriceValue.setBounds(871, 454, 94, 22);
+							saleLabelTotalPriceValue.setBounds(871, 461, 94, 22);
 							saleLabelTotalPriceValue.setFont(defaultFont);
 						}
 						{
 							saleLabelTotalPrice = new Label(saleCompositeMain, SWT.NONE);
 							saleLabelTotalPrice.setText("Total price:");
-							saleLabelTotalPrice.setBounds(779, 455, 87, 22);
+							saleLabelTotalPrice.setBounds(778, 462, 87, 22);
 							saleLabelTotalPrice.setAlignment(SWT.RIGHT);
 							saleLabelTotalPrice.setFont(defaultFont);
 						}
@@ -917,7 +1104,7 @@ public class Main extends org.eclipse.swt.widgets.Composite {
 						{
 							saleButtonMakeSale = new Button(saleCompositeMain, SWT.PUSH | SWT.CENTER);
 							saleButtonMakeSale.setText("Make Sale");
-							saleButtonMakeSale.setBounds(872, 483, 93, 41);
+							saleButtonMakeSale.setBounds(872, 489, 93, 35);
 							saleButtonMakeSale.setFont(defaultFont);
 						}
 					}
@@ -930,7 +1117,7 @@ public class Main extends org.eclipse.swt.widgets.Composite {
 					 * 
 					 */
 					stockTabItem = new TabItem(mainTabFolder, SWT.NONE);
-					stockTabItem.setText("Stock");
+					stockTabItem.setText("Manage Stock");
 					stockTabItem.setToolTipText("View and manage orders and requests");
 					{
 						stockTabComposite = new Composite(mainTabFolder, SWT.NONE);
@@ -940,47 +1127,47 @@ public class Main extends org.eclipse.swt.widgets.Composite {
 							stockGroupOrderForm = new Group(stockTabComposite, SWT.NONE);
 							stockGroupOrderForm.setLayout(null);
 							stockGroupOrderForm.setText("Order Albums");
-							stockGroupOrderForm.setBounds(2, 0, 963, 147);
+							stockGroupOrderForm.setBounds(10, 10, 955, 514);
 							stockGroupOrderForm.setFont(defaultFont);
 							{
 								stockLabelAlbumID = new Label(stockGroupOrderForm, SWT.NONE);
 								stockLabelAlbumID.setText("Album ID:");
-								stockLabelAlbumID.setBounds(8, 38, 74, 22);
+								stockLabelAlbumID.setBounds(10, 18, 74, 22);
 								stockLabelAlbumID.setFont(defaultFont);
 							}
 							{
 								stockLabelAlbumIDInput = new Label(stockGroupOrderForm, SWT.BORDER);
-								stockLabelAlbumIDInput.setBounds(90, 36, 154, 22);
+								stockLabelAlbumIDInput.setBounds(10, 43, 193, 22);
 								stockLabelAlbumIDInput.setFont(defaultFont);
 							}
 							{
 								stockLabelDate = new Label(stockGroupOrderForm, SWT.NONE);
 								stockLabelDate.setText("Order date:");
-								stockLabelDate.setBounds(12, 71, 74, 22);
+								stockLabelDate.setBounds(10, 72, 74, 22);
 								stockLabelDate.setFont(defaultFont);
 							}
 							{
 								stockLabelOrderDateInput = new Label(stockGroupOrderForm, SWT.BORDER);
-								stockLabelOrderDateInput.setBounds(92, 71, 70, 22);
+								stockLabelOrderDateInput.setBounds(10, 97, 193, 22);
 								stockLabelOrderDateInput.setText(MainFuncs.getDate());
 								stockLabelOrderDateInput.setFont(defaultFont);
 							}
 							{
 								stockButtonCheckAvailability = new Button(stockGroupOrderForm, SWT.PUSH | SWT.CENTER);
-								stockButtonCheckAvailability.setText("Check Availability");
-								stockButtonCheckAvailability.setBounds(8, 105, 235, 33);
+								stockButtonCheckAvailability.setText("Check Availability at Other Stores");
+								stockButtonCheckAvailability.setBounds(10, 332, 193, 36);
 								stockButtonCheckAvailability.setFont(defaultFont);
 							}
 							{
 								stockLabelOrderFromStore = new Label(stockGroupOrderForm, SWT.NONE);
-								stockLabelOrderFromStore.setText("Order from:");
-								stockLabelOrderFromStore.setBounds(256, 18, 79, 24);
+								stockLabelOrderFromStore.setText("Album Availability at Stores:");
+								stockLabelOrderFromStore.setBounds(216, 18, 214, 24);
 								stockLabelOrderFromStore.setFont(defaultFont);
 							}
 							{
 								stockTableOrderAvailableStores = new Table(stockGroupOrderForm, SWT.BORDER | SWT.FULL_SELECTION
 										| SWT.H_SCROLL | SWT.V_SCROLL | SWT.SINGLE);
-								stockTableOrderAvailableStores.setBounds(254, 42, 469, 96);
+								stockTableOrderAvailableStores.setBounds(216, 43, 729, 451);
 								stockTableOrderAvailableStores.setHeaderVisible(true);
 								stockTableOrderAvailableStores.setLinesVisible(true);
 								stockTableOrderAvailableStores.setFont(defaultFont);
@@ -1008,112 +1195,69 @@ public class Main extends org.eclipse.swt.widgets.Composite {
 							{
 								stockLabelQuantityInStock = new Label(stockGroupOrderForm, SWT.NONE);
 								stockLabelQuantityInStock.setText("Quantity:");
-								stockLabelQuantityInStock.setBounds(842, 19, 52, 22);
+								stockLabelQuantityInStock.setBounds(10, 179, 182, 22);
 								stockLabelQuantityInStock.setFont(defaultFont);
 							}
 							{
 								stockLabelQuantityInStockInput = new Label(stockGroupOrderForm, SWT.BORDER);
-								stockLabelQuantityInStockInput.setBounds(895, 18, 57, 22);
+								stockLabelQuantityInStockInput.setBounds(10, 202, 193, 22);
 								stockLabelQuantityInStockInput.setFont(defaultFont);
 							}
 							{
 								stockLabelPrice = new Label(stockGroupOrderForm, SWT.NONE);
 								stockLabelPrice.setText("Price:");
-								stockLabelPrice.setBounds(738, 20, 52, 22);
+								stockLabelPrice.setBounds(10, 125, 182, 22);
 								stockLabelPrice.setFont(defaultFont);
 							}
 							{
 								stockLabelStorePriceInput = new Label(stockGroupOrderForm, SWT.BORDER);
-								stockLabelStorePriceInput.setBounds(790, 18, 46, 22);
+								stockLabelStorePriceInput.setBounds(10, 150, 193, 22);
 								stockLabelStorePriceInput.setFont(defaultFont);
 							}
 							{
 								stockLabelStorageLocation = new Label(stockGroupOrderForm, SWT.NONE);
 								stockLabelStorageLocation.setText("Location:");
-								stockLabelStorageLocation.setBounds(738, 44, 52, 22);
+								stockLabelStorageLocation.setBounds(10, 281, 182, 22);
 								stockLabelStorageLocation.setFont(defaultFont);
 							}
 							{
 								stockLabelStorageLocationInput = new Label(stockGroupOrderForm, SWT.BORDER);
-								stockLabelStorageLocationInput.setBounds(791, 43, 161, 22);
+								stockLabelStorageLocationInput.setBounds(10, 304, 193, 22);
 								stockLabelStorageLocationInput.setFont(defaultFont);
 							}
 							{
 								stockButtonPlaceOrder = new Button(stockGroupOrderForm, SWT.PUSH | SWT.CENTER);
-								stockButtonPlaceOrder.setText("Place Order");
-								stockButtonPlaceOrder.setBounds(832, 116, 121, 23);
+								stockButtonPlaceOrder.setText("Order From Selected Store");
+								stockButtonPlaceOrder.setBounds(11, 374, 192, 36);
 								stockButtonPlaceOrder.setFont(defaultFont);
 							}
 							{
 								stockButtonClearOrder = new Button(stockGroupOrderForm, SWT.PUSH | SWT.CENTER);
 								stockButtonClearOrder.setText("Clear Fields");
-								stockButtonClearOrder.setBounds(737, 94, 89, 45);
+								stockButtonClearOrder.setBounds(10, 458, 193, 36);
 								stockButtonClearOrder.setFont(defaultFont);
 							}
 							{
 								stockLabelQuantityToOrder = new Label(stockGroupOrderForm, SWT.NONE);
 								stockLabelQuantityToOrder.setText("Quantity to order:");
-								stockLabelQuantityToOrder.setBounds(737, 72, 108, 22);
+								stockLabelQuantityToOrder.setBounds(10, 230, 182, 22);
 								stockLabelQuantityToOrder.setFont(defaultFont);
 							}
 							{
 								stockTextBoxQuantityToOrder = new Text(stockGroupOrderForm, SWT.BORDER);
 								stockTextBoxQuantityToOrder.setText("1");
-								stockTextBoxQuantityToOrder.setBounds(852, 68, 100, 22);
+								stockTextBoxQuantityToOrder.setBounds(10, 253, 193, 22);
 								stockTextBoxQuantityToOrder.setFont(defaultFont);
 							}
 							{
 								stockButtonPlaceOrderSupplier = new Button(stockGroupOrderForm, SWT.PUSH | SWT.CENTER);
 								stockButtonPlaceOrderSupplier.setText("Order from Supplier");
-								stockButtonPlaceOrderSupplier.setBounds(832, 94, 121, 22);
+								stockButtonPlaceOrderSupplier.setBounds(10, 416, 193, 36);
 								stockButtonPlaceOrderSupplier.setFont(defaultFont);
 							}
 						}
 						{
-							stockTableOrders = new Table(stockTabComposite, SWT.BORDER | SWT.FULL_SELECTION
-									| SWT.H_SCROLL | SWT.V_SCROLL | SWT.SINGLE);
-							stockTableOrders.setBounds(5, 174, 960, 110);
-							stockTableOrders.setHeaderVisible(true);
-							stockTableOrders.setLinesVisible(true);
-							stockTableOrders.setFont(defaultFont);
 							int numOfColumns = 6; //7
-							int tableWidth = stockTableOrders.getClientArea().width - getBorderWidth()*2;
-							
-							stockTableColumnOrdersOrderID = new TableColumn(stockTableOrders, SWT.NONE);
-							stockTableColumnOrdersOrderID.setText("Order ID");
-							stockTableColumnOrdersOrderID.setResizable(true);
-							stockTableColumnOrdersOrderID.setMoveable(true);
-							stockTableColumnOrdersOrderID.setWidth(tableWidth / numOfColumns);
-							
-							stockTableColumnOrdersSupplierID = new TableColumn(stockTableOrders, SWT.NONE);
-							stockTableColumnOrdersSupplierID.setText("Supplier ID");
-							stockTableColumnOrdersSupplierID.setResizable(true);
-							stockTableColumnOrdersSupplierID.setMoveable(true);
-							stockTableColumnOrdersSupplierID.setWidth(tableWidth / numOfColumns);
-							
-							stockTableColumnOrdersAlbumID = new TableColumn(stockTableOrders, SWT.NONE);
-							stockTableColumnOrdersAlbumID.setText("Album ID");
-							stockTableColumnOrdersAlbumID.setResizable(true);
-							stockTableColumnOrdersAlbumID.setMoveable(true);
-							stockTableColumnOrdersAlbumID.setWidth(tableWidth / numOfColumns);
-							
-							stockTableColumnOrdersQuantity = new TableColumn(stockTableOrders, SWT.NONE);
-							stockTableColumnOrdersQuantity.setText("Quantity");
-							stockTableColumnOrdersQuantity.setResizable(true);
-							stockTableColumnOrdersQuantity.setMoveable(true);
-							stockTableColumnOrdersQuantity.setWidth(tableWidth / numOfColumns);
-							
-							stockTableColumnOrdersDate = new TableColumn(stockTableOrders, SWT.NONE);
-							stockTableColumnOrdersDate.setText("Order date");
-							stockTableColumnOrdersDate.setResizable(true);
-							stockTableColumnOrdersDate.setMoveable(true);
-							stockTableColumnOrdersDate.setWidth(tableWidth / numOfColumns);
-							
-							stockTableColumnOrdersStatus = new TableColumn(stockTableOrders, SWT.NONE);
-							stockTableColumnOrdersStatus.setText("Status");
-							stockTableColumnOrdersStatus.setResizable(true);
-							stockTableColumnOrdersStatus.setMoveable(true);
-							stockTableColumnOrdersStatus.setWidth(tableWidth / numOfColumns);
 							
 							/*
 							stockTableColumnOrdersCompletionDate = new TableColumn(stockTableOrders, SWT.NONE);
@@ -1124,50 +1268,7 @@ public class Main extends org.eclipse.swt.widgets.Composite {
 							*/
 						}
 						{
-							stockTableRequests = new Table(stockTabComposite, SWT.BORDER | SWT.FULL_SELECTION
-									| SWT.H_SCROLL | SWT.V_SCROLL | SWT.SINGLE);
-							stockTableRequests.setBounds(4, 317, 961, 104);
-							stockTableRequests.setHeaderVisible(true);
-							stockTableRequests.setLinesVisible(true);
-							stockTableRequests.setFont(defaultFont);
 							int numOfColumns = 6; // 7
-							int tableWidth = stockTableRequests.getClientArea().width - getBorderWidth()*2;
-							
-							stockTableColumnRequestsOrderID = new TableColumn(stockTableRequests, SWT.NONE);
-							stockTableColumnRequestsOrderID.setText("Order ID");
-							stockTableColumnRequestsOrderID.setResizable(true);
-							stockTableColumnRequestsOrderID.setMoveable(true);
-							stockTableColumnRequestsOrderID.setWidth(tableWidth / numOfColumns);
-							
-							stockTableColumnRequestsOrderingStoreID = new TableColumn(stockTableRequests, SWT.NONE);
-							stockTableColumnRequestsOrderingStoreID.setText("Requesting Store ID");
-							stockTableColumnRequestsOrderingStoreID.setResizable(true);
-							stockTableColumnRequestsOrderingStoreID.setMoveable(true);
-							stockTableColumnRequestsOrderingStoreID.setWidth(tableWidth / numOfColumns);
-							
-							stockTableColumnRequestsAlbumID = new TableColumn(stockTableRequests, SWT.NONE);
-							stockTableColumnRequestsAlbumID.setText("Album ID");
-							stockTableColumnRequestsAlbumID.setResizable(true);
-							stockTableColumnRequestsAlbumID.setMoveable(true);
-							stockTableColumnRequestsAlbumID.setWidth(tableWidth / numOfColumns);
-							
-							stockTableColumnRequestsQuantity = new TableColumn(stockTableRequests, SWT.NONE);
-							stockTableColumnRequestsQuantity.setText("Quantity");
-							stockTableColumnRequestsQuantity.setResizable(true);
-							stockTableColumnRequestsQuantity.setMoveable(true);
-							stockTableColumnRequestsQuantity.setWidth(tableWidth / numOfColumns);
-							
-							stockTableColumnRequestsDate = new TableColumn(stockTableRequests, SWT.NONE);
-							stockTableColumnRequestsDate.setText("Order date");
-							stockTableColumnRequestsDate.setResizable(true);
-							stockTableColumnRequestsDate.setMoveable(true);
-							stockTableColumnRequestsDate.setWidth(tableWidth / numOfColumns);
-							
-							stockTableColumnRequestsStatus = new TableColumn(stockTableRequests, SWT.NONE);
-							stockTableColumnRequestsStatus.setText("Status");
-							stockTableColumnRequestsStatus.setResizable(true);
-							stockTableColumnRequestsStatus.setMoveable(true);
-							stockTableColumnRequestsStatus.setWidth(tableWidth / numOfColumns);
 							
 							/*
 							stockTableColumnRequestsCompletionDate = new TableColumn(stockTableRequests, SWT.NONE);
@@ -1177,54 +1278,6 @@ public class Main extends org.eclipse.swt.widgets.Composite {
 							stockTableColumnRequestsCompletionDate.setWidth(tableWidth / numOfColumns);
 							*/
 						}						
-						{
-							stockLabelRequests = new Label(stockTabComposite, SWT.NONE);
-							stockLabelRequests.setText("Requests:");
-							stockLabelRequests.setBounds(6, 295, 64, 20);
-							stockLabelRequests.setFont(defaultFont);
-						}
-						{
-							stockButtonApproveRequest = new Button(stockTabComposite, SWT.PUSH | SWT.CENTER);
-							stockButtonApproveRequest.setText("Approve Request");
-							stockButtonApproveRequest.setBounds(864, 427, 101, 24);
-							stockButtonApproveRequest.setFont(defaultFont);
-						}
-						{
-							stockButtonDenyRequest = new Button(stockTabComposite, SWT.PUSH | SWT.CENTER);
-							stockButtonDenyRequest.setText("Deny Request");
-							stockButtonDenyRequest.setBounds(757, 427, 101, 24);
-							stockButtonDenyRequest.setFont(defaultFont);
-						}
-						{
-							stockButtonRefreshRequests = new Button(stockTabComposite, SWT.PUSH | SWT.CENTER);
-							stockButtonRefreshRequests.setText("Refresh");
-							stockButtonRefreshRequests.setBounds(650, 427, 101, 24);
-							stockButtonRefreshRequests.setFont(defaultFont);
-						}
-						{
-							stockLabelOrders = new Label(stockTabComposite, SWT.NONE);
-							stockLabelOrders.setText("Orders:");
-							stockLabelOrders.setBounds(7, 153, 60, 20);
-							stockLabelOrders.setFont(defaultFont);
-						}
-						{
-							stockButtonCancelOrder = new Button(stockTabComposite, SWT.PUSH | SWT.CENTER);
-							stockButtonCancelOrder.setText("Cancel Order");
-							stockButtonCancelOrder.setBounds(864, 290, 101, 24);
-							stockButtonCancelOrder.setFont(defaultFont);
-						}
-						{
-							stockButtonRemoveOrder = new Button(stockTabComposite, SWT.PUSH | SWT.CENTER);
-							stockButtonRemoveOrder.setText("Remove Order");
-							stockButtonRemoveOrder.setBounds(757, 290, 101, 24);
-							stockButtonRemoveOrder.setFont(defaultFont);
-						}
-						{
-							stockButtonRefreshOrders = new Button(stockTabComposite, SWT.PUSH | SWT.CENTER);
-							stockButtonRefreshOrders.setText("Refresh");
-							stockButtonRefreshOrders.setBounds(650, 290, 101, 24);
-							stockButtonRefreshOrders.setFont(defaultFont);
-						}
 					}
 				}
 				{
@@ -1235,7 +1288,7 @@ public class Main extends org.eclipse.swt.widgets.Composite {
 					 * 
 					 */
 					managementTabItem = new TabItem(mainTabFolder, SWT.NONE);
-					managementTabItem.setText("Management");
+					managementTabItem.setText("Employees");
 					managementTabItem.setToolTipText("View and manage employees, update database");
 					{
 						manageMainComposite = new Composite(mainTabFolder, SWT.NONE);
@@ -1244,13 +1297,13 @@ public class Main extends org.eclipse.swt.widgets.Composite {
 						{
 							manageLabelEmployees = new Label(manageMainComposite, SWT.NONE);
 							manageLabelEmployees.setText("Employees:");
-							manageLabelEmployees.setBounds(12, 12, 86, 22);
+							manageLabelEmployees.setBounds(10, 10, 86, 22);
 							manageLabelEmployees.setFont(defaultFont);
 						}
 						{
 							manageTableEmployees = new Table(manageMainComposite, SWT.BORDER | SWT.FULL_SELECTION
 									| SWT.H_SCROLL | SWT.V_SCROLL | SWT.SINGLE);
-							manageTableEmployees.setBounds(14, 34, 621, 216);
+							manageTableEmployees.setBounds(10, 34, 955, 257);
 							manageTableEmployees.setHeaderVisible(true);
 							manageTableEmployees.setLinesVisible(true);
 							manageTableEmployees.setFont(defaultFont);
@@ -1285,160 +1338,320 @@ public class Main extends org.eclipse.swt.widgets.Composite {
 							manageGroupEditEmployee = new Group(manageMainComposite, SWT.NONE);
 							manageGroupEditEmployee.setLayout(null);
 							manageGroupEditEmployee.setText("Edit Employee Details");
-							manageGroupEditEmployee.setBounds(641, 12, 324, 441);
+							manageGroupEditEmployee.setBounds(10, 297, 953, 227);
 							manageGroupEditEmployee.setFont(defaultFont);
 							{
 								manageLabelEmployeeID = new Label(manageGroupEditEmployee, SWT.NONE);
 								manageLabelEmployeeID.setText("ID:");
-								manageLabelEmployeeID.setBounds(12, 79, 25, 22);
+								manageLabelEmployeeID.setBounds(10, 76, 25, 22);
 								manageLabelEmployeeID.setFont(defaultFont);
 							}
 							{
 								manageTextBoxEmployeeIDInput = new Text(manageGroupEditEmployee, SWT.BORDER);
-								manageTextBoxEmployeeIDInput.setBounds(12, 101, 129, 22);
+								manageTextBoxEmployeeIDInput.setBounds(10, 101, 226, 22);
 								manageTextBoxEmployeeIDInput.setFont(defaultFont);
 							}
 							{
 								manageLabelEmployeeBirth = new Label(manageGroupEditEmployee, SWT.NONE);
 								manageLabelEmployeeBirth.setText("Date of birth:");
-								manageLabelEmployeeBirth.setBounds(177, 79, 78, 22);
+								manageLabelEmployeeBirth.setBounds(246, 76, 78, 22);
 								manageLabelEmployeeBirth.setFont(defaultFont);
 							}
 							{
 								manageTextBoxEmployeeBirthInput = new Text(manageGroupEditEmployee, SWT.BORDER);
-								manageTextBoxEmployeeBirthInput.setBounds(177, 101, 129, 22);
+								manageTextBoxEmployeeBirthInput.setBounds(246, 101, 226, 22);
 								manageTextBoxEmployeeBirthInput.setFont(defaultFont);
 							}
 							{
 								manageLabelEmployeeFName = new Label(manageGroupEditEmployee, SWT.NONE);
 								manageLabelEmployeeFName.setText("First name:");
-								manageLabelEmployeeFName.setBounds(12, 131, 62, 22);
+								manageLabelEmployeeFName.setBounds(482, 24, 62, 22);
 								manageLabelEmployeeFName.setFont(defaultFont);
 							}
 							{
 								manageTextBoxEmployeeFNameInput = new Text(manageGroupEditEmployee, SWT.BORDER);
-								manageTextBoxEmployeeFNameInput.setBounds(12, 153, 129, 22);
+								manageTextBoxEmployeeFNameInput.setBounds(482, 48, 226, 22);
 								manageTextBoxEmployeeFNameInput.setFont(defaultFont);
 							}
 							{
 								manageLabelEmployeeLName = new Label(manageGroupEditEmployee, SWT.NONE);
 								manageLabelEmployeeLName.setText("Last name:");
-								manageLabelEmployeeLName.setBounds(177, 131, 60, 22);
+								manageLabelEmployeeLName.setBounds(718, 24, 60, 22);
 								manageLabelEmployeeLName.setFont(defaultFont);
 							}
 							{
 								manageTextBoxEmployeeLNameInput = new Text(manageGroupEditEmployee, SWT.BORDER);
-								manageTextBoxEmployeeLNameInput.setBounds(178, 153, 129, 22);
+								manageTextBoxEmployeeLNameInput.setBounds(718, 48, 226, 22);
 								manageTextBoxEmployeeLNameInput.setFont(defaultFont);
 							}
 							{
 								manageLabelEmployeeEmploymentDate = new Label(manageGroupEditEmployee, SWT.NONE);
 								manageLabelEmployeeEmploymentDate.setText("Date of employment:");
-								manageLabelEmployeeEmploymentDate.setBounds(12, 24, 112, 22);
+								manageLabelEmployeeEmploymentDate.setBounds(10, 24, 112, 22);
 								manageLabelEmployeeEmploymentDate.setFont(defaultFont);
 							}
 							{
 								manageLabelEmployeeAddress = new Label(manageGroupEditEmployee, SWT.NONE);
 								manageLabelEmployeeAddress.setText("Address:");
-								manageLabelEmployeeAddress.setBounds(12, 183, 51, 22);
+								manageLabelEmployeeAddress.setBounds(482, 76, 51, 22);
 								manageLabelEmployeeAddress.setFont(defaultFont);
 							}
 							{
 								manageTextBoxEmployeeAddressInput = new Text(manageGroupEditEmployee, SWT.BORDER);
-								manageTextBoxEmployeeAddressInput.setBounds(12, 205, 296, 22);
+								manageTextBoxEmployeeAddressInput.setBounds(482, 101, 462, 22);
 								manageTextBoxEmployeeAddressInput.setFont(defaultFont);
 							}
 							{
 								manageLabelEmployeeStoreID = new Label(manageGroupEditEmployee, SWT.NONE);
 								manageLabelEmployeeStoreID.setText("Employing store ID:");
-								manageLabelEmployeeStoreID.setBounds(176, 24, 106, 22);
+								manageLabelEmployeeStoreID.setBounds(246, 24, 106, 22);
 								manageLabelEmployeeStoreID.setFont(defaultFont);
 							}
 							{
 								manageLabelEmployeeEmployeeStoreIDInput = new Label(manageGroupEditEmployee, SWT.BORDER);
-								manageLabelEmployeeEmployeeStoreIDInput.setBounds(176, 49, 130, 22);
+								manageLabelEmployeeEmployeeStoreIDInput.setBounds(246, 48, 226, 22);
 								manageLabelEmployeeEmployeeStoreIDInput.setFont(defaultFont);
 							}
 							{
 								manageLabelEmployeeEmploymentDateInput = new Label(manageGroupEditEmployee, SWT.BORDER);
-								manageLabelEmployeeEmploymentDateInput.setBounds(12, 50, 130, 22);
+								manageLabelEmployeeEmploymentDateInput.setBounds(10, 48, 226, 22);
 								manageLabelEmployeeEmploymentDateInput.setFont(defaultFont);
 							}
 							{
 								manageLabelEmployeePhone = new Label(manageGroupEditEmployee, SWT.NONE);
 								manageLabelEmployeePhone.setText("Phone:");
-								manageLabelEmployeePhone.setBounds(12, 235, 60, 22);
+								manageLabelEmployeePhone.setBounds(10, 129, 60, 22);
 								manageLabelEmployeePhone.setFont(defaultFont);
 							}
 							{
 								manageLabelEmployeeCellPhone = new Label(manageGroupEditEmployee, SWT.NONE);
 								manageLabelEmployeeCellPhone.setText("Cellular Phone:");
-								manageLabelEmployeeCellPhone.setBounds(180, 235, 102, 22);
+								manageLabelEmployeeCellPhone.setBounds(246, 129, 102, 22);
 								manageLabelEmployeeCellPhone.setFont(defaultFont);
 							}
 							{
 								manageTextBoxEmployeePhoneInput = new Text(manageGroupEditEmployee, SWT.BORDER);
-								manageTextBoxEmployeePhoneInput.setBounds(12, 257, 131, 22);
+								manageTextBoxEmployeePhoneInput.setBounds(10, 151, 226, 22);
 								manageTextBoxEmployeePhoneInput.setFont(defaultFont);
 							}
 							{
 								manageTextBoxEmployeeCellPhoneInput = new Text(manageGroupEditEmployee, SWT.BORDER);
-								manageTextBoxEmployeeCellPhoneInput.setBounds(177, 257, 131, 22);
+								manageTextBoxEmployeeCellPhoneInput.setBounds(246, 151, 226, 22);
 								manageTextBoxEmployeeCellPhoneInput.setFont(defaultFont);
 							}
 							{
 								manageLabelEmployeePosition = new Label(manageGroupEditEmployee, SWT.NONE);
 								manageLabelEmployeePosition.setText("Position:");
-								manageLabelEmployeePosition.setBounds(12, 291, 60, 22);
+								manageLabelEmployeePosition.setBounds(482, 129, 60, 22);
 								manageLabelEmployeePosition.setFont(defaultFont);
 							}
 							{
 								manageComboEmployeePositionInput = new Combo(manageGroupEditEmployee, SWT.READ_ONLY);
-								manageComboEmployeePositionInput.setBounds(12, 319, 294, 23);
+								manageComboEmployeePositionInput.setBounds(482, 151, 462, 23);
 								manageComboEmployeePositionInput.setFont(defaultFont);
 							}
 							{
 								manageButtonEmployeeNew = new Button(manageGroupEditEmployee, SWT.PUSH | SWT.CENTER);
 								manageButtonEmployeeNew.setText("New");
-								manageButtonEmployeeNew.setBounds(12, 363, 60, 30);
+								manageButtonEmployeeNew.setBounds(10, 187, 150, 30);
 								manageButtonEmployeeNew.setFont(defaultFont);
 							}
 							{
 								manageButtonEmployeeInsert = new Button(manageGroupEditEmployee, SWT.PUSH | SWT.CENTER);
 								manageButtonEmployeeInsert.setText("Insert");
-								manageButtonEmployeeInsert.setBounds(81, 363, 60, 30);
+								manageButtonEmployeeInsert.setBounds(166, 187, 150, 30);
 								manageButtonEmployeeInsert.setFont(defaultFont);
 							}
 							{
 								manageButtonEmployeeEdit = new Button(manageGroupEditEmployee, SWT.PUSH | SWT.CENTER);
 								manageButtonEmployeeEdit.setText("Edit");
-								manageButtonEmployeeEdit.setBounds(12, 399, 60, 30);
+								manageButtonEmployeeEdit.setBounds(322, 187, 150, 30);
 								manageButtonEmployeeEdit.setFont(defaultFont);
 							}
 							{
 								manageButtonEmployeeSave = new Button(manageGroupEditEmployee, SWT.PUSH | SWT.CENTER);
 								manageButtonEmployeeSave.setText("Save");
-								manageButtonEmployeeSave.setBounds(81, 399, 60, 30);
+								manageButtonEmployeeSave.setBounds(482, 187, 150, 30);
 								manageButtonEmployeeSave.setFont(defaultFont);
 							}
 							{
 								manageButtonEmployeeRemove = new Button(manageGroupEditEmployee, SWT.PUSH | SWT.CENTER);
 								manageButtonEmployeeRemove.setText("Remove Employee");
-								manageButtonEmployeeRemove.setBounds(150, 399, 157, 30);
+								manageButtonEmployeeRemove.setBounds(638, 187, 150, 30);
 								manageButtonEmployeeRemove.setFont(defaultFont);
 							}
 							{
 								manageButtonEmployeeNoSave = new Button(manageGroupEditEmployee, SWT.PUSH | SWT.CENTER);
 								manageButtonEmployeeNoSave.setText("Exit Without Saving");
-								manageButtonEmployeeNoSave.setBounds(150, 363, 157, 30);
+								manageButtonEmployeeNoSave.setBounds(794, 187, 150, 30);
 								manageButtonEmployeeNoSave.setFont(defaultFont);
 							}
 						}
+					}
+				}
+				{
+					OrdersRequestsTabItem = new TabItem(mainTabFolder, SWT.NONE);
+					OrdersRequestsTabItem.setText("Orders / Requests");
+					{
+						ordersComposite = new Composite(mainTabFolder, SWT.NONE);
+						OrdersRequestsTabItem.setControl(ordersComposite);
 						{
-							manageGroupDBSManage = new Group(manageMainComposite, SWT.NONE);
+							stockButtonCancelOrder = new Button(ordersComposite, SWT.PUSH | SWT.CENTER);
+							stockButtonCancelOrder.setBounds(379, 500, 101, 24);
+							stockButtonCancelOrder.setText("Cancel Order");
+							stockButtonCancelOrder.setFont(defaultFont);
+						}
+						{
+							stockButtonRemoveOrder = new Button(ordersComposite, SWT.PUSH | SWT.CENTER);
+							stockButtonRemoveOrder.setBounds(272, 500, 101, 24);
+							stockButtonRemoveOrder.setText("Remove Order");
+							stockButtonRemoveOrder.setFont(defaultFont);
+						}
+						{
+							stockButtonRefreshOrders = new Button(ordersComposite, SWT.PUSH | SWT.CENTER);
+							stockButtonRefreshOrders.setBounds(165, 500, 101, 24);
+							stockButtonRefreshOrders.setText("Refresh");
+							stockButtonRefreshOrders.setFont(defaultFont);
+						}
+						{
+						stockTableOrders = new Table(ordersComposite, SWT.BORDER | SWT.FULL_SELECTION
+								| SWT.H_SCROLL | SWT.V_SCROLL | SWT.SINGLE);
+						stockTableOrders.setBounds(10, 35, 470, 459);
+						stockTableOrders.setHeaderVisible(true);
+						stockTableOrders.setLinesVisible(true);
+						stockTableOrders.setFont(defaultFont);
+						int tableWidth = stockTableOrders.getClientArea().width - getBorderWidth()*2;
+						int numOfColumns = 6;
+						
+						stockTableColumnOrdersOrderID = new TableColumn(stockTableOrders, SWT.NONE);
+						stockTableColumnOrdersOrderID.setText("Order ID");
+						stockTableColumnOrdersOrderID.setResizable(true);
+						stockTableColumnOrdersOrderID.setMoveable(true);
+						stockTableColumnOrdersOrderID.setWidth(tableWidth / numOfColumns);
+						
+						stockTableColumnOrdersSupplierID = new TableColumn(stockTableOrders, SWT.NONE);
+						stockTableColumnOrdersSupplierID.setText("Supplier ID");
+						stockTableColumnOrdersSupplierID.setResizable(true);
+						stockTableColumnOrdersSupplierID.setMoveable(true);
+						stockTableColumnOrdersSupplierID.setWidth(tableWidth / numOfColumns);
+						
+						stockTableColumnOrdersAlbumID = new TableColumn(stockTableOrders, SWT.NONE);
+						stockTableColumnOrdersAlbumID.setText("Album ID");
+						stockTableColumnOrdersAlbumID.setResizable(true);
+						stockTableColumnOrdersAlbumID.setMoveable(true);
+						stockTableColumnOrdersAlbumID.setWidth(tableWidth / numOfColumns);
+						
+						stockTableColumnOrdersQuantity = new TableColumn(stockTableOrders, SWT.NONE);
+						stockTableColumnOrdersQuantity.setText("Quantity");
+						stockTableColumnOrdersQuantity.setResizable(true);
+						stockTableColumnOrdersQuantity.setMoveable(true);
+						stockTableColumnOrdersQuantity.setWidth(tableWidth / numOfColumns);
+						
+						stockTableColumnOrdersDate = new TableColumn(stockTableOrders, SWT.NONE);
+						stockTableColumnOrdersDate.setText("Order date");
+						stockTableColumnOrdersDate.setResizable(true);
+						stockTableColumnOrdersDate.setMoveable(true);
+						stockTableColumnOrdersDate.setWidth(tableWidth / numOfColumns);
+						
+						stockTableColumnOrdersStatus = new TableColumn(stockTableOrders, SWT.NONE);
+						stockTableColumnOrdersStatus.setText("Status");
+						stockTableColumnOrdersStatus.setResizable(true);
+						stockTableColumnOrdersStatus.setMoveable(true);
+						stockTableColumnOrdersStatus.setWidth(tableWidth / numOfColumns);
+						{
+							stockButtonApproveRequest = new Button(ordersComposite, SWT.PUSH | SWT.CENTER);
+							stockButtonApproveRequest.setBounds(864, 500, 101, 24);
+							stockButtonApproveRequest.setText("Approve Request");
+							stockButtonApproveRequest.setFont(defaultFont);
+						}
+						{
+							stockButtonDenyRequest = new Button(ordersComposite, SWT.PUSH | SWT.CENTER);
+							stockButtonDenyRequest.setBounds(757, 500, 101, 24);
+							stockButtonDenyRequest.setText("Deny Request");
+							stockButtonDenyRequest.setFont(defaultFont);
+						}
+						{
+							stockButtonRefreshRequests = new Button(ordersComposite, SWT.PUSH | SWT.CENTER);
+							stockButtonRefreshRequests.setBounds(650, 500, 101, 24);
+							stockButtonRefreshRequests.setText("Refresh");
+							stockButtonRefreshRequests.setFont(defaultFont);
+						}
+						}
+						{
+							
+						stockTableRequests = new Table(ordersComposite, SWT.BORDER | SWT.FULL_SELECTION
+								| SWT.H_SCROLL | SWT.V_SCROLL | SWT.SINGLE);
+						stockTableRequests.setBounds(495, 35, 470, 459);
+						stockTableRequests.setHeaderVisible(true);
+						stockTableRequests.setLinesVisible(true);
+						stockTableRequests.setFont(defaultFont);
+						int tableWidth = stockTableRequests.getClientArea().width - getBorderWidth()*2;
+						int numOfColumns = 6;
+						
+						stockTableColumnRequestsOrderID = new TableColumn(stockTableRequests, SWT.NONE);
+						stockTableColumnRequestsOrderID.setText("Order ID");
+						stockTableColumnRequestsOrderID.setResizable(true);
+						stockTableColumnRequestsOrderID.setMoveable(true);
+						stockTableColumnRequestsOrderID.setWidth(tableWidth / numOfColumns);
+						
+						stockTableColumnRequestsOrderingStoreID = new TableColumn(stockTableRequests, SWT.NONE);
+						stockTableColumnRequestsOrderingStoreID.setText("Requesting Store ID");
+						stockTableColumnRequestsOrderingStoreID.setResizable(true);
+						stockTableColumnRequestsOrderingStoreID.setMoveable(true);
+						stockTableColumnRequestsOrderingStoreID.setWidth(tableWidth / numOfColumns);
+						
+						stockTableColumnRequestsAlbumID = new TableColumn(stockTableRequests, SWT.NONE);
+						stockTableColumnRequestsAlbumID.setText("Album ID");
+						stockTableColumnRequestsAlbumID.setResizable(true);
+						stockTableColumnRequestsAlbumID.setMoveable(true);
+						stockTableColumnRequestsAlbumID.setWidth(tableWidth / numOfColumns);
+						
+						stockTableColumnRequestsQuantity = new TableColumn(stockTableRequests, SWT.NONE);
+						stockTableColumnRequestsQuantity.setText("Quantity");
+						stockTableColumnRequestsQuantity.setResizable(true);
+						stockTableColumnRequestsQuantity.setMoveable(true);
+						stockTableColumnRequestsQuantity.setWidth(tableWidth / numOfColumns);
+						
+						stockTableColumnRequestsDate = new TableColumn(stockTableRequests, SWT.NONE);
+						stockTableColumnRequestsDate.setText("Order date");
+						stockTableColumnRequestsDate.setResizable(true);
+						stockTableColumnRequestsDate.setMoveable(true);
+						stockTableColumnRequestsDate.setWidth(tableWidth / numOfColumns);
+						
+						stockTableColumnRequestsStatus = new TableColumn(stockTableRequests, SWT.NONE);
+						stockTableColumnRequestsStatus.setText("Status");
+						stockTableColumnRequestsStatus.setResizable(true);
+						stockTableColumnRequestsStatus.setMoveable(true);
+						stockTableColumnRequestsStatus.setWidth(tableWidth / numOfColumns);
+						{
+							stockLabelRequests = new Label(ordersComposite, SWT.NONE);
+							stockLabelRequests.setLocation(495, 10);
+							stockLabelRequests.setSize(64, 20);
+							stockLabelRequests.setText("Requests:");
+							stockLabelRequests.setFont(defaultFont);
+						}
+						{
+							stockLabelOrders = new Label(ordersComposite, SWT.NONE);
+							stockLabelOrders.setLocation(10, 10);
+							stockLabelOrders.setSize(60, 20);
+							stockLabelOrders.setText("Orders:");
+							stockLabelOrders.setFont(defaultFont);
+						}
+						}
+					}
+				}
+				{
+					importDataTabItem = new TabItem(mainTabFolder, SWT.NONE);
+					importDataTabItem.setText("Import Data");
+					{
+						importDataComposite = new Composite(mainTabFolder, SWT.NONE);
+						importDataTabItem.setControl(importDataComposite);
+						{
+							manageGroupDBSManage = new Group(importDataComposite, SWT.NONE);
+							manageGroupDBSManage.setLocation(10, 10);
+							manageGroupDBSManage.setSize(955, 129);
 							manageGroupDBSManage.setLayout(null);
-							manageGroupDBSManage.setText("Manage Database");
-							manageGroupDBSManage.setBounds(12, 296, 623, 157);
+							manageGroupDBSManage.setText("Import New Data");
 							manageGroupDBSManage.setFont(defaultFont);
 							{
 								manageLabelDBSUpdate = new Label(manageGroupDBSManage, SWT.NONE);
@@ -1448,35 +1661,31 @@ public class Main extends org.eclipse.swt.widgets.Composite {
 							}
 							{
 								manageTextBoxDBSUpdateFileInput = new Text(manageGroupDBSManage, SWT.BORDER);
-								manageTextBoxDBSUpdateFileInput.setBounds(14, 42, 599, 22);
+								manageTextBoxDBSUpdateFileInput.setBounds(12, 42, 933, 22);
 								manageTextBoxDBSUpdateFileInput.setEnabled(false);
 								manageTextBoxDBSUpdateFileInput.setFont(defaultFont);
 							}
 							{
 								manageButtonDBSBrowse = new Button(manageGroupDBSManage, SWT.PUSH | SWT.CENTER);
 								manageButtonDBSBrowse.setText("Browse...");
-								manageButtonDBSBrowse.setBounds(421, 69, 74, 23);
+								manageButtonDBSBrowse.setBounds(753, 70, 74, 23);
 								manageButtonDBSBrowse.setFont(defaultFont);
 							}
 							{
 								manageButtonDBSUpdate = new Button(manageGroupDBSManage, SWT.PUSH | SWT.CENTER);
 								manageButtonDBSUpdate.setText("Update Database");
-								manageButtonDBSUpdate.setBounds(501, 69, 112, 23);
+								manageButtonDBSUpdate.setBounds(833, 70, 112, 23);
 								manageButtonDBSUpdate.setFont(defaultFont);
 							}
 							{
 								manageCompositeDBProgressContainer = new Composite(manageGroupDBSManage, SWT.EMBEDDED);
-								manageCompositeDBProgressContainer.setBounds(12, 92, 401, 59);
+								manageCompositeDBProgressContainer.setBounds(223, 70, 401, 59);
 								{
-									manageJLabelDBProgressBar = new JLabel("Processing", JLabel.CENTER);
-									manageJLabelDBProgressBar.setBounds(16, 97, 397, 48);
-									
-									manageFrameDBProgress = SWT_AWT.new_Frame(manageCompositeDBProgressContainer);
-									{
-										managePanelDBProgress = new Panel();
-										manageFrameDBProgress.add(managePanelDBProgress);
-										managePanelDBProgress.add(manageJLabelDBProgressBar);
-									}
+									lblProccessing = new Label(manageCompositeDBProgressContainer, SWT.NONE);
+									lblProccessing.setFont(org.eclipse.wb.swt.SWTResourceManager.getFont("Segoe UI", 16, SWT.BOLD));
+									lblProccessing.setAlignment(SWT.CENTER);
+									lblProccessing.setBounds(10, 10, 381, 39);
+									lblProccessing.setText("Proccessing - Please Wait");
 								}
 							}
 							
@@ -2278,20 +2487,8 @@ public class Main extends org.eclipse.swt.widgets.Composite {
 		Main.shell = shell;
 	}
 
-	public static Panel getManagePanelDBProgress() {
-		return managePanelDBProgress;
-	}
-
-	public static Frame getManageFrameDBProgress() {
-		return manageFrameDBProgress;
-	}
-
 	public static Composite getManageCompositeDBProgressContainer() {
 		return manageCompositeDBProgressContainer;
-	}
-
-	public static JLabel getManageJLabelDBProgressBar() {
-		return manageJLabelDBProgressBar;
 	}
 
 	public static Composite getSearchCompositeDBProgressContainer() {

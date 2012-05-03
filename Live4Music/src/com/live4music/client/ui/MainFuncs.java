@@ -342,7 +342,10 @@ public class MainFuncs {
 	public static String getTime(){
         DateFormat dateFormat = new SimpleDateFormat("kk:mm");
         Date date = new Date();
-        return dateFormat.format(date);
+        String dateStr = dateFormat.format(date);
+        if(dateStr.startsWith("24"))
+        	dateStr = dateStr.replaceFirst("24", "00");
+        return dateStr;
     }
 	
 	//////////////

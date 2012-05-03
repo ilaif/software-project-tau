@@ -58,16 +58,16 @@ public class DBConnectionSale {
 			// UPDATE TABLE "SALES"
 			String [] timeArr = sale.getTime().split(":");
 			String [] dateArr = sale.getDate().split("/");
-			String toDateString = "'"+timeArr[0]+":"+timeArr[1]+" "+dateArr[0]+"/"+dateArr[1]+"/"+dateArr[2]+"','HH24:MI DD/MM/YYYY'";
+			String toDateString = "'"+timeArr[0]+":"+timeArr[1]+" "+dateArr[0]+"/"+dateArr[1]+"/"+dateArr[2]+"','%H:%i %d/%m/%Y'";
 			String insertQuery = "INSERT INTO sales(store_id, salesman_id, sale_time)" +
-								" VALUES("+StaticProgramTables.getThisStore().getStoreID()+","+sale.getSalesman().getEmployeeID()+", TO_DATE("+toDateString+"))";
+								" VALUES("+StaticProgramTables.getThisStore().getStoreID()+","+sale.getSalesman().getEmployeeID()+", STR_TO_DATE("+toDateString+"))";
 			queryList.add(insertQuery);
 						
 			
 			// UPDATE TABLE "ALBUM_SALES"
 			for (SaleTableItem saleTableItem : sale.getSaleItems().values()) {
 				queryList.add( "INSERT INTO album_sales(sale_id, album_id, quantity) " +
-						"VALUES(sales_seq.currval, "+saleTableItem.getAlbumID()+", "+saleTableItem.getQuantity()+")");
+						"VALUES((select max(sale_id) from sales), "+saleTableItem.getAlbumID()+", "+saleTableItem.getQuantity()+")");
 
 			}
 			

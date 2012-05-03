@@ -495,6 +495,8 @@ public class StockFuncs {
 		StaticProgramTables.orders.addOrder(order);
 		// update orders table view
 		updateOrdersTableView();
+		// switch to orders tab
+		MainFuncs.switchTab(5);
 		// flag DB as free
 		MainFuncs.setAllowDBAction(true);
 	}

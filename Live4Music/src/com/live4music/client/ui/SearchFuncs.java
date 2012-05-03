@@ -271,7 +271,7 @@ public class SearchFuncs {
 						Main.getStockButtonPlaceOrderSupplier().setEnabled(true);
 						
 						// move to stock tab
-						MainFuncs.switchTab(2);
+						MainFuncs.switchTab(3);
 					}
 				}
 		);
@@ -738,7 +738,7 @@ public class SearchFuncs {
 							selectedAlbum.getPrice());
 					
 					// jump to sale tab
-					MainFuncs.switchTab(1);
+					MainFuncs.switchTab(2);
 				}
 				
 			} catch (NumberFormatException nfe){
