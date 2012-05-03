@@ -1,0 +1,3 @@
+Manifest-Version: 1.0 
+Class-Path: swt.jar commons-compress-1.0.jar ojdbc5.jar org.eclipse.jface_3.5.1.jar 
+Main-Class: com.live4music.client.ui.Main

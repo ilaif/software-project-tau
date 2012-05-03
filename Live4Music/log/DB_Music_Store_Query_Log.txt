@@ -1,0 +1,86 @@
+SELECT store_id, city, address, phone_number, manager_id FROM stores;
+SELECT order_id, supplying_store_id, album_id, quantity, order_date, status FROM orders WHERE ordering_store_id=1;
+SELECT order_id, ordering_store_id, album_id, quantity, order_date, status FROM orders WHERE (supplying_store_id=1) AND (status=0);
+SELECT *
+FROM Employees
+WHERE store_id = 1;
+SELECT MAX(album_id) AS last_album_id
+FROM Albums;
+SELECT genre_id, genre_name FROM genres;
+SELECT artist_id, artist_name FROM artists;
+SELECT max(album_id) AS max_id FROM Albums;
+SELECT max(genre_id) AS max_id FROM genres;
+SELECT max(artist_id) AS max_id FROM artists;
+SELECT MAX(album_id) AS last_album_id
+FROM Albums;
+SELECT genre_id, genre_name FROM genres;
+SELECT artist_id, artist_name FROM artists;
+SELECT max(album_id) AS max_id FROM Albums;
+SELECT max(genre_id) AS max_id FROM genres;
+SELECT max(artist_id) AS max_id FROM artists;
+SELECT MAX(album_id) AS last_album_id
+FROM Albums;
+SELECT genre_id, genre_name FROM genres;
+SELECT artist_id, artist_name FROM artists;
+SELECT max(album_id) AS max_id FROM Albums;
+SELECT max(genre_id) AS max_id FROM genres;
+SELECT max(artist_id) AS max_id FROM artists;
+SELECT MAX(album_id) AS last_album_id
+FROM Albums;
+SELECT genre_id, genre_name FROM genres;
+SELECT artist_id, artist_name FROM artists;
+SELECT max(album_id) AS max_id FROM Albums;
+SELECT max(genre_id) AS max_id FROM genres;
+SELECT max(artist_id) AS max_id FROM artists;
+SELECT MAX(album_id) AS last_album_id
+FROM Albums;
+SELECT genre_id, genre_name FROM genres;
+SELECT artist_id, artist_name FROM artists;
+SELECT max(album_id) AS max_id FROM Albums;
+SELECT max(genre_id) AS max_id FROM genres;
+SELECT max(artist_id) AS max_id FROM artists;
+SELECT MAX(album_id) AS last_album_id
+FROM Albums;
+SELECT genre_id, genre_name FROM genres;
+SELECT artist_id, artist_name FROM artists;
+SELECT max(album_id) AS max_id FROM Albums;
+SELECT max(genre_id) AS max_id FROM genres;
+SELECT max(artist_id) AS max_id FROM artists;
+SELECT MAX(album_id) AS last_album_id
+FROM Albums;
+SELECT genre_id, genre_name FROM genres;
+SELECT artist_id, artist_name FROM artists;
+SELECT max(album_id) AS max_id FROM Albums;
+SELECT max(genre_id) AS max_id FROM genres;
+SELECT max(artist_id) AS max_id FROM artists;
+SELECT MAX(album_id) AS last_album_id
+FROM Albums;
+SELECT genre_id, genre_name FROM genres;
+SELECT artist_id, artist_name FROM artists;
+SELECT max(album_id) AS max_id FROM Albums;
+SELECT max(genre_id) AS max_id FROM genres;
+SELECT max(artist_id) AS max_id FROM artists;
+SELECT MAX(album_id) AS last_album_id
+FROM Albums;
+SELECT genre_id, genre_name FROM genres;
+SELECT artist_id, artist_name FROM artists;
+SELECT max(album_id) AS max_id FROM Albums;
+SELECT max(genre_id) AS max_id FROM genres;
+SELECT max(artist_id) AS max_id FROM artists;
+SELECT Albums.album_id, Albums.album_name, artists.artist_name, Albums.year, genres.genre_name, Albums.length_sec, Albums.price
+FROM Albums, artists, genres
+WHERE Albums.artist_id = artists.artist_id AND
+Albums.genre_id = genres.genre_id AND
+(genres.genre_name LIKE '%rock%')
+
+;
+SELECT Songs.track_num, Songs.song_name, artists.artist_name, Songs.length_sec
+FROM Songs, Artists
+WHERE Songs.album_id = 4385 AND
+Songs.artist_id = artists.artist_id
+ORDER BY Songs.track_num;
+SELECT Songs.track_num, Songs.song_name, artists.artist_name, Songs.length_sec
+FROM Songs, Artists
+WHERE Songs.album_id = 2193 AND
+Songs.artist_id = artists.artist_id
+ORDER BY Songs.track_num;
