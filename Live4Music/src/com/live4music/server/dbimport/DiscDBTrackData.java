@@ -10,8 +10,7 @@ public class DiscDBTrackData {
 	
 	
 	// C'tor	
-	public DiscDBTrackData(int trackNum, String trackTitle, int trackLengthSec)
-	{	
+	public DiscDBTrackData(int trackNum, String trackTitle, int trackLengthSec) {	
 		this.trackNum = trackNum;
 		this.title = trackTitle;	
 		this.lengthSdc = trackLengthSec;
@@ -49,8 +48,7 @@ public class DiscDBTrackData {
 		this.trackNum = trackNum;
 	}
 	
-	public	boolean	hasArtist()
-	{
+	public boolean hasArtist() {
 		return ((this.artist.length() > 0) && (this.artist != Constants.NOT_AVAILABLE));
 	}		
 	
@@ -60,36 +58,27 @@ public class DiscDBTrackData {
 	 *		possible other titles:
 	 *		artist1 / artist2 / ... / artistN / track name
 	 */	
-	public	void	parseTrackTitle()	
-	{		
+	public void parseTrackTitle() {		
 		this.name = "";
 		this.artist = Constants.NOT_AVAILABLE;
-		if (this.title.indexOf(Constants.TITLE_DELIMITER) != -1)
-		{		
+		if (this.title.indexOf(Constants.TITLE_DELIMITER) != -1) {		
 			String[] artistAndName = 	this.title.split(Constants.TITLE_DELIMITER);
-			if (artistAndName.length == 2)
-			{
+			if (artistAndName.length == 2) {
 				this.artist = artistAndName[0].trim();
 				this.name = artistAndName[1].trim();	
 			}						
-		}
-		// No slash, no artist defined for track	
-		else
-		{
+		} else { // No slash, no artist defined for track
 			this.name = this.title;	
 //			Debug.log("DiscDBParser::parseTarFile: INFO - no slash title: " + this.title);								
 		}		
 	}
 	
 	
-	public	boolean isValid()
-	{
+	public boolean isValid() {
 		// valid track is of from: artist / name (or it doesn't contain a " / ")
-		if (this.title.indexOf(Constants.TITLE_DELIMITER) != -1)
-		{		
+		if (this.title.indexOf(Constants.TITLE_DELIMITER) != -1) {		
 			String[] artistAndName = 	this.title.split(Constants.TITLE_DELIMITER);
-			if (artistAndName.length != 2)
-			{
+			if (artistAndName.length != 2) {
 				return false;
 			}
 		}		
@@ -100,25 +89,18 @@ public class DiscDBTrackData {
 	}
 	
 	
-	public	String	toString()
-	{
+	public String toString() {
 		String ret = this.trackNum + ". Title: " + this.title;
 
-		if (this.name != null)
-		{
+		if (this.name != null) {
 			ret += "   Name: " + this.name;
-		}
-		else
-		{
+		} else {
 			ret += "   Name: " + "N/A";
 		}
 
-		if (this.artist != null)
-		{
+		if (this.artist != null) {
 			ret += "   Artist: " + this.artist;
-		}
-		else
-		{
+		} else {
 			ret += "   Artist: " + "N/A";
 		}
 

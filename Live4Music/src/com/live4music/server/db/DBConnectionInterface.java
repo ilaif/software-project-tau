@@ -15,17 +15,12 @@ import com.live4music.shared.general.Debug.DebugOutput;
 /**
  * 
  * DB Connection Interface
- * =======================
+ * 
  * all functions used by gui to pass queries / transactions to the DB layer
  * for each method, the corresponding method in GuiUpdatesInterface, the one that
  * should be called when finishing, is mentioned in the javadoc
  * 
  * *** System out prints are for debugging ***
- * 
- * __      __   _ _         _         ___  ___
- * \ \    / / _(_) |_ ___  | |_ ___  |   \| _ )
- *  \ \/\/ / '_| |  _/ -_) |  _/ _ \ | |) | _ \
- *   \_/\_/|_| |_|\__\___|  \__\___/ |___/|___/ 
  *  
  **/
 

@@ -1,4 +1,5 @@
 package com.live4music.server.db;
+
 import java.sql.*;
 
 import java.util.LinkedList;
@@ -6,8 +7,6 @@ import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
 import com.live4music.shared.general.Debug;
-
-
 
 public class DBConnectionPool {
 	
@@ -35,8 +34,7 @@ public class DBConnectionPool {
 	 * @param pass
 	 */
 	public	static void	SetConnectionParams(String hostname, int portNum, 
-										String sid, String user, String pass)
-	{
+										String sid, String user, String pass) {
 		host = hostname;
 		port = portNum;
 		SID = sid;
@@ -52,28 +50,21 @@ public class DBConnectionPool {
 	 * If no connections available, create a new one and add to pool
 	 * @return
 	 */
-	public static Connection	getConnection()
-	{	
+	public static Connection getConnection() {	
 		/**
 		 * Connection Params must be set before using the pool
 		 */
-		if (!SetParams)
-		{
+		if (!SetParams) {
 			Debug.log("DBConnectionPool::getConnection: ERROR - connection parameter haven't been set yet");			
 			return null;			
 		}
-		try
-		{
+		try {
 			lock.lock();
 			// loading the driver in first connection 
-			if (FirstConnection)
-			{
-				try
-				{
+			if (FirstConnection) {
+				try {
 					Class.forName("com.mysql.jdbc.Driver");
-				}
-				catch (ClassNotFoundException e)
-				{
+				} catch (ClassNotFoundException e) {
 					Debug.log("DBConnectionPool::getConnection: ERROR - Unable to load the Oracle JDBC driver");
 					return null;
 				}
@@ -81,21 +72,16 @@ public class DBConnectionPool {
 			}
 			
 			// No connections ? create a new one and add to pool
-			if (connectionPool.isEmpty())
-			{				
-				try
-				{
+			if (connectionPool.isEmpty()) {	
+				try {
 					Connection conn = DriverManager.getConnection(
 							"jdbc:mysql://" + host + ":" + port + "/" +
 							SID, username, password);
-					if (conn == null)
-					{
+					if (conn == null) {
 						throw  new SQLException();
 					}
 					connectionPool.add(conn);
-				}
-				catch (SQLException e)
-				{
+				} catch (SQLException e) {
 					Debug.log("DBConnectionPool::getConnection: ERROR - Unable to connect - " + e.toString());
 					return null;
 				}								
@@ -104,9 +90,7 @@ public class DBConnectionPool {
 			// Now list is not empty, return one of the connections
 			nPassedConnections++;
 			return (connectionPool.remove(0));
-		}
-		finally
-		{
+		} finally {
 			lock.unlock();
 		}	
 	}
@@ -117,16 +101,12 @@ public class DBConnectionPool {
 	 * @pre:	The connection was retrieved from the pool
 	 * @param conn
 	 */
-	public static void	endConnection(Connection conn)
-	{			
-		try
-		{	
+	public static void	endConnection(Connection conn) {	
+		try	{	
 			lock.lock();
 			nPassedConnections--;
 			connectionPool.add(conn);			
-		}
-		finally
-		{
+		} finally {
 			lock.unlock();
 		}		
 	}
@@ -137,26 +117,18 @@ public class DBConnectionPool {
 	 * @Pre: All distributed connections have returned to the pool
 	 * 			(or else, they won't be closed)
 	 */
-	public static void closeAllConnections()
-	{
-		try
-		{
+	public static void closeAllConnections() {
+		try {
 			lock.lock();
-			for (Connection conn : connectionPool)
-			{
-				try
-				{
+			for (Connection conn : connectionPool) {
+				try {
 					conn.close();
-				}
-				catch (SQLException e)
-				{
+				} catch (SQLException e) {
 					Debug.log("DBConnectionPool::closeAllConnections: ERROR - exception when closing connection: " + e.toString());
 				}					
 			}
 			Debug.log("DBConnectionPool::closeAllConnections [INFO]: The number of requested and not returned connections is: "+nPassedConnections);
-		}
-		finally
-		{
+		} finally {
 			lock.unlock();
 			Debug.log("DBConnectionPool::closeAllConnections: INFO - closed all connections");		
 		}

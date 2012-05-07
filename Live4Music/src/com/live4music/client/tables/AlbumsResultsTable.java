@@ -3,10 +3,9 @@ package com.live4music.client.tables;
 import java.util.*;
 
 /**
- * created by Ariel
  * 
  * Albums search results table data structure
- * ==========================================
+ * 
  * holds all AlbumItem tuples search results held by their album ID
  */
 public class AlbumsResultsTable extends Table {

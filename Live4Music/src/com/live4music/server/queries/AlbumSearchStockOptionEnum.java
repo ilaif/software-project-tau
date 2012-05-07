@@ -1,15 +1,14 @@
 package com.live4music.server.queries;
 
 /**
- * created by Ariel
  * 
  * enum for the stock search option in the album search query
  */
 public enum AlbumSearchStockOptionEnum {
 
 	ALL(0, "All"),
-	NETWORK(1,"Network"),
-	STORE(2,"Store");
+	NETWORK(1, "Network"),
+	STORE(2, "Store");
 	
 	private int intRepresentation;
 	private String strRepresentation;

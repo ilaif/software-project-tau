@@ -3,10 +3,9 @@ package com.live4music.client.tables;
 import java.util.*;
 
 /**
- * created by Ariel
  * 
  * Current sale table data structure
- * =================================
+ * 
  * holds information on current sale:
  * - sale id
  * - salesman
@@ -15,6 +14,7 @@ import java.util.*;
  * - list of sale items (SaleTableItems)
  */
 public class SaleTable extends Table {
+	
 	private EmployeesTableItem salesman;
 	private String date;			//TODO format may be changed later on
 	private String time;

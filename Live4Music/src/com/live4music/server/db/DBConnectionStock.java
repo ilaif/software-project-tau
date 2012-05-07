@@ -23,12 +23,12 @@ public class DBConnectionStock {
 	/**
 	 * Date converter
 	 */
-	private String toGUIDate(Date d){
+	private String toGUIDate(Date d) {
 		String[] dateArr = d.toString().split("-");
 		return dateArr[2]+"/"+dateArr[1]+"/"+dateArr[0];
 	}
 	
-	private long getRandLocation(){
+	private long getRandLocation() {
 		long precision = 1000000000 * 100; 
 		long ret = ((new Random()).nextLong() % precision);
 		while (ret <= 0)
@@ -378,7 +378,6 @@ public class DBConnectionStock {
 	 */
 	public class GetRequestTable implements Runnable{
 
-		
 		public void run() {
 			Debug.log("DBConnectionStock.GetRequestTable thread is started");
 			
@@ -509,7 +508,8 @@ public class DBConnectionStock {
 	/**
 	 * Corresponds to DBConnectionInterface's "public static void placeOrderFromSupplier();"
 	 */
-	public class PlaceOrderFromSupplier implements Runnable{
+	public class PlaceOrderFromSupplier implements Runnable {
+		
 		private long albumID;
 		private int quantity;
 		

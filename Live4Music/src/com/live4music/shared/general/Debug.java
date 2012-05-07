@@ -8,8 +8,8 @@ import java.util.*;
 
 import com.live4music.client.ui.Main;
 
-
 public class Debug {
+	
 	private static final String LOG_FILE = "log"+Main.getSep()+"DB_Music_Store_Log.txt";
 	private static final String QUERY_FILE = "log"+Main.getSep()+"DB_Music_Store_Query_Log.txt";
 	private static BufferedWriter outputFile = null;

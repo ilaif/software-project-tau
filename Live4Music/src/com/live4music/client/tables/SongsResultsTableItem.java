@@ -1,11 +1,11 @@
 package com.live4music.client.tables;
 
 /**
- * created by Ariel
  * 
  * song item data structure for the SongResultsTable
  */
 public class SongsResultsTableItem {
+	
 	private int track;
 	private String songName;
 	private String songArtist;

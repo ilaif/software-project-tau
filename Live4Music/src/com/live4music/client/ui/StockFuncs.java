@@ -1,7 +1,5 @@
 package com.live4music.client.ui;
 
-import java.util.HashMap;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -18,11 +16,10 @@ import com.live4music.server.db.DBConnectionInterface;
 import com.live4music.server.queries.OrderAvailableStoresQuery;
 import com.live4music.server.queries.QueryErrorException;
 import com.live4music.shared.general.Debug;
-import com.live4music.shared.general.Debug.*;
+import com.live4music.shared.general.Debug.DebugOutput;
 
 
 /**
- * created by Ariel
  * 
  * Stock tab handlers
  */
@@ -478,7 +475,7 @@ public class StockFuncs {
 				return order;
 			}
 			
-		}catch(NumberFormatException nfe){
+		} catch(NumberFormatException nfe){
 			// quantity is not a number
 			throw new InvalidOrderException("Quantity must be an integer");
 		}

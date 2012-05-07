@@ -1,4 +1,5 @@
 package com.live4music.server.dbimport;
+
 import org.apache.commons.compress.compressors.bzip2.*;
 import org.apache.commons.compress.archivers.tar.*;	
 
@@ -30,13 +31,10 @@ public class DiscDBParser {
 		
 	
 	/** adds a list of albums to the general albums list **/
-	public static void addAlbumDataToList(List<DiscDBAlbumData> listToAdd)
-	{
+	public static void addAlbumDataToList(List<DiscDBAlbumData> listToAdd) {
 		lock.lock();
-		try
-		{		
-			while ((generalAlbumList.size()+listToAdd.size()) > Constants.MAX_ALBUMS_LIST_SIZE)
-			{
+		try {		
+			while ((generalAlbumList.size()+listToAdd.size()) > Constants.MAX_ALBUMS_LIST_SIZE) {
 				Debug.log("DiscDBParser::addAlbumDataToList: can't add " + listToAdd.size() + " albums, because list is to long, waiting for it to get shorted", Debug.DebugOutput.STDOUT);
 				// wait for other thread to remove elements
 				albumsListSizeDecreasedCondition.await();
@@ -45,28 +43,21 @@ public class DiscDBParser {
 			Debug.log("DiscDBParser::addAlbumDataToList: Added " + listToAdd.size() + " albums to outer list", Debug.DebugOutput.STDOUT);
 			// signal for anyone who is waiting for the list size to increase (in order to get elements)
 			albumsListSizeIncreasedCondition.signalAll();
-		}
-		catch (InterruptedException ex)
-		{
+		} catch (InterruptedException ex) {
 			Debug.log("DiscDBParser::addAlbumDataToList: ERROR - waiting for list to decrease was interupted: " + ex.toString());
-		}
-		finally
-		{
+		} finally {
 			lock.unlock();	
 		}		
 	}
 	
 	
 	/** returns (and removes) a list of albums from the general albums list **/
-	public static List<DiscDBAlbumData> removeAllbumsDataFromList(int size)
-	{
+	public static List<DiscDBAlbumData> removeAllbumsDataFromList(int size) {
 		List<DiscDBAlbumData> albumList = new LinkedList<DiscDBAlbumData>();
-		try
-		{
+		try {
 			lock.lock();
 			// get elements if list is long enough, or parser has finished
-			while ((generalAlbumList.size() < size) && !parseEnded)					
-			{
+			while ((generalAlbumList.size() < size) && !parseEnded)	{
 				// not enough elements to read - wait until there will be
 				Debug.log("DiscDBParser::removeAllbumsDataFromList: can't retrieve " + size + " albums, because list contains only " + generalAlbumList.size(), Debug.DebugOutput.STDOUT);
 				//Debug.log("DiscDBParser::removeAllbumsDataFromList: can't retrieve " + size + " albums, because list contains only " + generalAlbumList.size());
@@ -74,40 +65,31 @@ public class DiscDBParser {
 				albumsListSizeIncreasedCondition.await();				
 			}
 						
-			for (int i = 0; i< size && (!generalAlbumList.isEmpty()) ; i++)
-			{
+			for (int i = 0; i< size && (!generalAlbumList.isEmpty()) ; i++) {
 				albumList.add(i, generalAlbumList.remove(0));
 			}
 			Debug.log("DiscDBParser::removeAllbumsDataFromList: - retrieved " + albumList.size() + " albums from list", Debug.DebugOutput.STDOUT);
 			// signal for anyone who is waiting for the list size to decrease (in order to add elements)
 			albumsListSizeDecreasedCondition.signalAll();								
-		}
-		catch (InterruptedException ex)
-		{
+		} catch (InterruptedException ex) {
 			Debug.log("DiscDBParser::removeAllbumsDataFromList: ERROR - waiting for list to grow was interupted: " + ex.toString());
-		}
-		finally
-		{
+		} finally {
 			lock.unlock();
 		}
 		return albumList;
 	}
 
 	
-	private static void parseTarFile(String FileName, boolean isTarFile)	 throws IOException
-	{
+	private static void parseTarFile(String FileName, boolean isTarFile) throws IOException {
 		List<DiscDBAlbumData> albumList = new LinkedList<DiscDBAlbumData>();
 	//	List<String>	genereList = new LinkedList<String>();
 		/// Read tar file
 		BZip2CompressorInputStream bzIn = null;		// for decompressing bz2files
 		TarArchiveInputStream tarInput = null;
 		FileInputStream in = new FileInputStream(FileName);		
-		if (isTarFile)
-		{
+		if (isTarFile) {
 			tarInput = new TarArchiveInputStream(in);		
-		}
-		else
-		{
+		} else {
 			bzIn = new BZip2CompressorInputStream(in);		
 			tarInput = new TarArchiveInputStream(bzIn);
 		}
@@ -118,19 +100,15 @@ public class DiscDBParser {
 		long startTime = System.nanoTime();		// for performance measuring
 		long batchStartTime = System.nanoTime();		// for performance measuring
 		
-		try
-		{
+		try	{
 			parseEnded = false;
-			 while ((entry = tarInput.getNextTarEntry()) != null)
-			 {
+			 while ((entry = tarInput.getNextTarEntry()) != null) {
 				 // read entry
 				int offset = 0;
-				if (entry.getSize() > 0)
-				{
+				if (entry.getSize() > 0) {
 					// Read entry from file into buffer			
 					byte[] content = new byte[(int)entry.getSize()];
-					while ((offset >= 0) && (offset < entry.getSize())) 
-					{
+					while ((offset >= 0) && (offset < entry.getSize())) {
 						offset += tarInput.read(content, offset, content.length - offset);
 					}
 				 
@@ -145,18 +123,14 @@ public class DiscDBParser {
 					Parser par = new Parser(bfReader);
 					Random random = new Random();
 					 
-					try
-					 {
-						if (par.isCddbFormat()) 
-						{
+					try {
+						if (par.isCddbFormat())	{
 							// Run the parser for the entry
-							if (par.run()) 
-							{
+							if (par.run()) {
 								// Reset variables
 								String sGenere = Constants.UNKNOWN_GENRE;
 								// Get name of genre
-								if (par.getDgenre().trim().length() > 0) 
-								{
+								if (par.getDgenre().trim().length() > 0) {
 									sGenere = par.getDgenre().toLowerCase();
 								}			
 								
@@ -168,16 +142,12 @@ public class DiscDBParser {
 								boolean ascii = !(_notAsciiPattern.matcher(par.getDtitle()).find());
 								ascii = (ascii && !(_notAsciiPattern.matcher(par.getDgenre()).find())); 
 								boolean valid = discData.isValid();	// make sure disc name and artist is in valid format
-								for (int i = 0; i < par.getTrackOffsets().size() && (ascii && valid) ; i++)
-								{
+								for (int i = 0; i < par.getTrackOffsets().size() && (ascii && valid) ; i++) {
 									/* Get track length - in seconds */
 									int trackLnegthSec;
-									if (i < par.getTrackOffsets().size()-1)
-									{
+									if (i < par.getTrackOffsets().size()-1)	{
 										trackLnegthSec = getTrackLengthInSec(par.getTrackOffsets().get(i), par.getTrackOffsets().get(i+1));										
-									}
-									else
-									{
+									} else {
 										trackLnegthSec = getLastTrackLengthInSec(par.getTrackOffsets().get(i), discData.getLengthSec());
 									}									
 									
@@ -189,13 +159,11 @@ public class DiscDBParser {
 								
 								/* Disc and tracks titles are all in ASCII format */
 					//			System.out.println(discData.toString());
-								if (ascii && valid)
-								{
+								if (ascii && valid) {
 									legalsDiscs++;
 									
 									// move albums to "main" list, so someone else may read them
-									if (albumList.size() >= Constants.ALBUMS_BATCH_SIZE )
-									{
+									if (albumList.size() >= Constants.ALBUMS_BATCH_SIZE ) {
 										long estimatedTime = System.nanoTime() - batchStartTime;
 										estimatedTime /= 1000000;	// convert to ms
 										 Debug.log("DiscDBParser::parseTarFile: INFO - Parsed batch of files in " +  estimatedTime + " miliseconds");			 																			
@@ -206,25 +174,16 @@ public class DiscDBParser {
 										batchStartTime = System.nanoTime();											
 									}
 									albumList.add(discData);
-								}
-								else
-								{
+								} else {
 						//			System.out.println("Disc was not ASCII");
 								}
 							}								
-						}
-						else 
-						{
+						} else {
 							Debug.log("DiscDBParser::parseTarFile: ERROR - Cannot parse file #" + (index+1) + /*file +*/ " which is not a CDDB format CD text data file");								
 						}
-					 }
-					 catch	(Exception ex)
-					 {
+					 } catch (Exception ex) {
 						Debug.log("DiscDBParser::parseTarFile: ERROR - Exception occurred during parsing of file: " + (index+1) +/*+ file*/ " (" + ex.toString() + ")");						 
-
-					 }
-					 finally
-					 {
+					 } finally {
 						 par.close();
 						 bfReader.close();	
 						 bs.close();
@@ -242,17 +201,12 @@ public class DiscDBParser {
 			 long estimatedTime = System.nanoTime() - startTime;
 			 estimatedTime /= 1000000000;	// convert to seconds
 			 Debug.log("DiscDBParser::parseTarFile: SUCCESS - Parsed " + index + " albums (" + legalsDiscs + " valid), " /*+ genereList.size() + " generes.*/ + "Parse time: " + estimatedTime + " seconds");			 
-		}
-		catch (Exception exc)
-		{
+		} catch (Exception exc) {
 			Debug.log("DiscDBParser::parseTarFile: ERROR - Exception occurred during reading of file: " + (index+1) +/*+ file*/ " (" + exc.toString() + ") - parsing is terminated");			
-		}
-		finally
-		{
+		} finally {
 			parseEnded = true;
 			tarInput.close();
-			if (isTarFile)
-			{
+			if (isTarFile) {
 				bzIn.close();
 			}
 			in.close();
@@ -261,14 +215,12 @@ public class DiscDBParser {
 	
 	
 	/* Extract file in Bzip2 format, into tar file */
-	private static void parseZipFile(String fileName)	 throws IOException
-	{
+	private static void parseZipFile(String fileName) throws IOException {
 		parseTarFile(fileName, false);
 	}
 	
 	
-	public static void parseFile(String fileName) throws IOException 
-	{
+	public static void parseFile(String fileName) throws IOException {
 		// Always act as zip file
 		parseZipFile(fileName);
 	/*	// read bz2 file (which can come in form of *.tar.tar) into tar file
@@ -289,8 +241,7 @@ public class DiscDBParser {
 	 * @param nextTackOffset
 	 * @return
 	 */
-	public static int	getTrackLengthInSec(int offset, int nextTackOffset)
-	{
+	public static int getTrackLengthInSec(int offset, int nextTackOffset) {
 		int diff = nextTackOffset - offset;
 		int length = diff / TRACK_FRAMES_IN_SEC;
 		return length;
@@ -305,14 +256,12 @@ public class DiscDBParser {
 	 * @param nextTackOffset
 	 * @return
 	 */	
-	private static int	getLastTrackLengthInSec(int offset, int discLenghtSec)
-	{
+	private static int getLastTrackLengthInSec(int offset, int discLenghtSec) {
 		int nextOffset = discLenghtSec*TRACK_FRAMES_IN_SEC;
 		return getTrackLengthInSec(offset, nextOffset);		
 	}
 	
-	public static int	getCurrentAlbumListSize()
-	{
+	public static int getCurrentAlbumListSize() {
 		return generalAlbumList.size();
 	}
 }

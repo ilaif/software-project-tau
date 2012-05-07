@@ -3,10 +3,9 @@ package com.live4music.server.queries;
 import com.live4music.client.ui.Main;
 
 /**
- * created by Ariel
  * 
  * Order available stores query data structure
- * ===========================================
+ * 
  * holds order available stores query information:
  * - album ID
  */

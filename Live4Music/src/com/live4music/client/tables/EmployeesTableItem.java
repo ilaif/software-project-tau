@@ -1,10 +1,9 @@
 package com.live4music.client.tables;
 
 /**
- * created by Ariel
  * 
- * employee item for the employees table data structure
- * ====================================================
+ * Employee item for the employees table data structure
+ * 
  * holds single employee data:
  * - employee id
  * - employee first name
@@ -18,6 +17,7 @@ package com.live4music.client.tables;
  * - position
  */
 public class EmployeesTableItem {
+	
 	private int employeeID;
 	private String firstName;
 	private String lastName;

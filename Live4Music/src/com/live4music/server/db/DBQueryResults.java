@@ -6,7 +6,6 @@ import com.live4music.shared.general.*;
 /**
  * This class is created in order to return query results
  * in order to iterate ResultSet object, the connection and statement must stay open 
- * @author ROTEMD
  *
  */
 public class DBQueryResults {
@@ -15,8 +14,7 @@ public class DBQueryResults {
 	private Connection connection;
 	private Statement statement;
 	
-	public DBQueryResults(Connection conn, Statement stmt, ResultSet rs)
-	{
+	public DBQueryResults(Connection conn, Statement stmt, ResultSet rs) {
 		this.connection = conn;
 		this.statement = stmt;
 		this.resultSet = rs;

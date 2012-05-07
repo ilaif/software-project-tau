@@ -1,8 +1,8 @@
 package com.live4music.client.ui;
 
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.util.*;
+import java.util.NoSuchElementException;
+import java.util.Set;
+import java.util.StringTokenizer;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -18,9 +18,7 @@ import com.live4music.server.db.DBConnectionInterface;
 import com.live4music.shared.general.Debug;
 import com.live4music.shared.general.Debug.DebugOutput;
 
-
 /**
- * created by Ariel
  * 
  * Sale tab handlers
  */

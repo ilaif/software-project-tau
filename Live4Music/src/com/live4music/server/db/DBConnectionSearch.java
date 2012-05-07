@@ -11,7 +11,8 @@ import com.live4music.shared.general.Debug.*;
 
 public class DBConnectionSearch {
 	
-	public class GetAlbumsSearchResults implements Runnable{
+	public class GetAlbumsSearchResults implements Runnable {
+		
 		private AlbumSearchQuery albumSearchQuery;
 
 		public GetAlbumsSearchResults(AlbumSearchQuery albumSearchQuery) {

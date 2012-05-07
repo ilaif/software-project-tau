@@ -1,16 +1,7 @@
 package com.live4music.server.db;
 
-
-import java.sql.ResultSet;
-import java.util.LinkedList;
-import java.util.List;
-
-import com.live4music.server.dbimport.DiscDBParser;
-
-
 /**
  * Testing for DBAccessLayer
- * @author ROTEMD
  *
  */
 public class RunMe
@@ -79,13 +70,9 @@ public class RunMe
 //			ConfigurationManager cm = new ConfigurationManager("store.props");
 	//		System.out.println(cm.getHost() + "\n" + cm.getSID() + "\n" +
 		//			cm.getPort() + "\n" + cm.getUsername() + "\n" + cm.getPassword());
-		}
-		catch (Exception e)
-		{
-				int b;
-		}
-		finally
-		{
+		} catch (Exception e) {
+				
+		} finally {
 			DBConnectionPool.closeAllConnections();
 		}
 	}

@@ -1,12 +1,15 @@
 package com.live4music.client.ui;
 
-import com.live4music.client.tables.*;
-import com.live4music.server.queries.*;
-import com.live4music.shared.general.*;
-
+import com.live4music.client.tables.AlbumsResultsTable;
+import com.live4music.client.tables.EmployeesTable;
+import com.live4music.client.tables.OrderAvailableStoresTable;
+import com.live4music.client.tables.OrdersOrRequestsTable;
+import com.live4music.client.tables.SaleTable;
+import com.live4music.client.tables.StoresTable;
+import com.live4music.client.tables.StoresTableItem;
+import com.live4music.shared.general.ConfigurationManager;
 
 /**
- * created by Ariel
  * 
  * this class holds all the current (static) program's tables:
  * - stores table

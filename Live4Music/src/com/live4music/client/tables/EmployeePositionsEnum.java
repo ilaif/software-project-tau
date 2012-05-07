@@ -1,7 +1,6 @@
 package com.live4music.client.tables;
 
 /**
- * created by Ariel
  * 
  * enum for the employees positions in the employees table
  */

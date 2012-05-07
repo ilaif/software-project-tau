@@ -1,10 +1,9 @@
 package com.live4music.client.tables;
 
 /**
- * created by Ariel
  * 
  * Orders / Requests table item
- * ============================
+ * 
  * holds order / request information:
  * - order id
  * - ordering store id
@@ -15,6 +14,7 @@ package com.live4music.client.tables;
  * - status
  */
 public class OrdersOrRequestsTableItem {
+	
 	private int orderID;
 	private int orderingStoreID;
 	private int supplyingStoreID;

@@ -1,7 +1,6 @@
 package com.live4music.client.ui;
 
 /**
- * created by Ariel
  * 
  * enum for actions on orders or requests tables
  * used by DB to inform that action could not be taken

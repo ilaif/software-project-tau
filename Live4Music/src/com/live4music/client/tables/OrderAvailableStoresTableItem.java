@@ -1,16 +1,16 @@
 package com.live4music.client.tables;
 
 /**
- * created by Ariel
  * 
  * order's available stores table item
- * ===================================
+ * 
  * holds information about available store to order from:
  * - store id
  * - city
  * - quantity
  */
 public class OrderAvailableStoresTableItem {
+	
 	private int storeID;
 	private String city;
 	private int quantity;

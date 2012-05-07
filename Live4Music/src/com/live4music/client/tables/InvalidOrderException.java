@@ -6,11 +6,13 @@ import org.eclipse.swt.widgets.MessageBox;
 import com.live4music.client.ui.*;
 
 /**
- * created by Ariel
  * 
  * exception for wrong order in stock tab
  */
-public class InvalidOrderException extends Exception{
+public class InvalidOrderException extends Exception {
+	
+	private static final long serialVersionUID = -9017485340534996898L;
+	
 	MessageBox msgBox;
 	
 	/**

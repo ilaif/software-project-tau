@@ -3,10 +3,9 @@ package com.live4music.client.tables;
 import java.util.*;
 
 /**
- * created by Ariel
  * 
  * stores table data structure
- * ===========================
+ * 
  * holds informtaion about all network stores
  */
 public class StoresTable extends Table {

@@ -1,10 +1,9 @@
 package com.live4music.client.tables;
 
 /**
- * created by Ariel
  * 
  * Sale table item data structure for the sale table
- * =================================================
+ * 
  * holds sale information:
  * - album id
  * - album name
@@ -12,6 +11,7 @@ package com.live4music.client.tables;
  * - price per item
  */
 public class SaleTableItem {
+	
 	private long albumID;
 	private String albumName;
 	private int quantity;

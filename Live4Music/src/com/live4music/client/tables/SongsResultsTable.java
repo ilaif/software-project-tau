@@ -3,10 +3,9 @@ package com.live4music.client.tables;
 import java.util.*;
 
 /**
- * created by Ariel
  * 
  * Songs table data structure
- * ==========================
+ * 
  * holds all songs (by SongItem class) for the specified album id
  * for each song it holds:
  * - track (key)
@@ -15,6 +14,7 @@ import java.util.*;
  * - length (in seconds)
  */
 public class SongsResultsTable extends Table {
+	
 	private long albumID;
 	private Map<Integer,SongsResultsTableItem> songs = new HashMap<Integer,SongsResultsTableItem>();
 	

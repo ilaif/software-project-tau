@@ -1,7 +1,6 @@
 package com.live4music.server.queries;
 
 /**
- * created by Ariel
  * 
  * an abstract query class
  */

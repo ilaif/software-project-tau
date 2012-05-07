@@ -32,21 +32,17 @@ import java.util.ArrayList;
 public class Parser {
 
 	private File f;
-
 	private BufferedReader br;
 
 	private int length;
-
-	private String[] discid = new String[1];
+	private int dyear;
 	
 	private ArrayList<Integer> trackOffsets = new ArrayList<Integer>();
 
 	private String dtitle;
-
-	private int dyear;
-
 	private String dgenre;
 
+	private String[] discid = new String[1];
 	private String[] ttitle = new String[200];
 
 	/**
@@ -58,8 +54,7 @@ public class Parser {
 		f = file;
 	}
 	
-	public Parser(BufferedReader bf)
-	{
+	public Parser(BufferedReader bf) {
 		br = bf;
 		f = null;
 	}

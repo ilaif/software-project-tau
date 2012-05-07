@@ -1,18 +1,21 @@
 package com.live4music.client.ui;
 
-import org.eclipse.swt.*;
-import org.eclipse.swt.events.*;
-import org.eclipse.swt.widgets.*;
-import org.omg.CORBA.CharSeqHolder;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.TableItem;
 
-import com.live4music.client.tables.*;
-import com.live4music.server.db.*;
+import com.live4music.client.tables.EmployeePositionsEnum;
+import com.live4music.client.tables.EmployeesTable;
+import com.live4music.client.tables.EmployeesTableItem;
+import com.live4music.server.db.DBConnectionInterface;
 import com.live4music.shared.general.Debug;
 import com.live4music.shared.general.Debug.DebugOutput;
 
 
 /**
- * created by Ariel
  * 
  * Management tab handlers
  */

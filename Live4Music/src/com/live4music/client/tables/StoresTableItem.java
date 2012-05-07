@@ -1,10 +1,9 @@
 package com.live4music.client.tables;
 
 /**
- * created by Ariel
  * 
  * store table item
- * ================
+ * 
  * holds store information initialized at the beginning of the program:
  * - store id
  * - city
@@ -13,6 +12,7 @@ package com.live4music.client.tables;
  * - manager id
  */
 public class StoresTableItem {
+	
 	private int storeID;
 	private String city;
 	private String address;

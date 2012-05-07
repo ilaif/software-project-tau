@@ -1,24 +1,23 @@
 package com.live4music.client.ui;
 
-import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
 
-import org.eclipse.swt.*;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.MessageBox;
 
-import com.live4music.client.tables.*;
+import com.live4music.client.tables.StoresTableItem;
 import com.live4music.server.db.DBConnectionInterface;
 import com.live4music.server.db.DBConnectionPool;
-import com.live4music.shared.general.*;
-import com.live4music.shared.general.Debug.*;
+import com.live4music.shared.general.ConfigurationManager;
+import com.live4music.shared.general.Debug;
+import com.live4music.shared.general.Debug.DebugOutput;
 
 
 /**
- * created by Ariel
  * 
  * Main window handlers
  */

@@ -1,4 +1,5 @@
 package com.live4music.shared.general;
+
 import java.util.*;
 import java.io.*;
 
@@ -13,16 +14,13 @@ public class ConfigurationManager {
 	String	OS;
 	
 	
-	public ConfigurationManager(String fileName)
-	{
+	public ConfigurationManager(String fileName) {
 		loadConfiguration(fileName);
 	}
 	
 	
-	public boolean loadConfiguration(String fileName)
-	{
-		try
-		{
+	public boolean loadConfiguration(String fileName) {
+		try	{
 			Properties p = new Properties();
 			p.load(new FileInputStream(fileName));
 			

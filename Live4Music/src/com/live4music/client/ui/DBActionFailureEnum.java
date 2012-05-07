@@ -1,7 +1,6 @@
 package com.live4music.client.ui;
 
 /**
- * created by Ariel
  *
  * enum for specifying a DB action failure
  */

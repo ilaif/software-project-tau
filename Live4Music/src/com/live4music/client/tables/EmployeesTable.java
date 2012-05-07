@@ -3,10 +3,9 @@ package com.live4music.client.tables;
 import java.util.*;
 
 /**
- * created by Ariel
  * 
- * employees table data structure
- * ==============================
+ * Employees table data structure
+ * 
  * hold employees entries for current store:
  * - store id
  * - store's employees list

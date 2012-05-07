@@ -1,11 +1,11 @@
 package com.live4music.client.tables;
 
 /**
- * created by Ariel
  * 
  * abstract class for all tables in the program (not the DB tables!)
  */
 public abstract class Table {
+	
 	private String tableType;
 	
 	/**

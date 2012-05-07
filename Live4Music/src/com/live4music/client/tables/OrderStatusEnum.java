@@ -1,16 +1,15 @@
 package com.live4music.client.tables;
 
 /**
- * created by Ariel
  * 
  * enum for the order status used in the stock orders and requests tables
  */
 public enum OrderStatusEnum {
 	
-	WAITING(0,"Waiting"),
-	COMPLETED(1,"Completed"),
-	DENIED(2,"Denied"),
-	CANCELED(3,"Canceled");
+	WAITING(0, "Waiting"),
+	COMPLETED(1, "Completed"),
+	DENIED(2, "Denied"),
+	CANCELED(3, "Canceled");
 	
 	private int intRepresentation;
 	private String strRepresentation;

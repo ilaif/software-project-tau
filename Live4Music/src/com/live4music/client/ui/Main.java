@@ -1257,7 +1257,7 @@ public class Main extends org.eclipse.swt.widgets.Composite {
 							}
 						}
 						{
-							int numOfColumns = 6; //7
+//							int numOfColumns = 6; //7
 							
 							/*
 							stockTableColumnOrdersCompletionDate = new TableColumn(stockTableOrders, SWT.NONE);
@@ -1268,7 +1268,7 @@ public class Main extends org.eclipse.swt.widgets.Composite {
 							*/
 						}
 						{
-							int numOfColumns = 6; // 7
+//							int numOfColumns = 6; // 7
 							
 							/*
 							stockTableColumnRequestsCompletionDate = new TableColumn(stockTableRequests, SWT.NONE);

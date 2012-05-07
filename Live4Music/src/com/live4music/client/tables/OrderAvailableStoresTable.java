@@ -3,13 +3,13 @@ package com.live4music.client.tables;
 import java.util.*;
 
 /**
- * create by Ariel
  * 
  * order's available stores data structure
- * =======================================
+ * 
  * holds all stores that are available for an order, generated from query 
  */
 public class OrderAvailableStoresTable extends Table {
+	
 	private Map<Integer,OrderAvailableStoresTableItem> availableStores = new HashMap<Integer,OrderAvailableStoresTableItem>();
 	
 	/**

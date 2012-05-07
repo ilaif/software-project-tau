@@ -1,10 +1,14 @@
 package com.live4music.server.db;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
-import java.util.LinkedList;
 
-import com.live4music.shared.general.*;
+import com.live4music.shared.general.Debug;
 
 public class DBAccessLayer {
 
@@ -18,8 +22,7 @@ public class DBAccessLayer {
 	 * @param pass
 	 */
 	public	static void	SetConnectionParams(String hostname, int portNum, 
-			String sid, String user, String pass)
-	{
+			String sid, String user, String pass) {
 		DBConnectionPool.SetConnectionParams(hostname, portNum, sid, user, pass);
 	}
 	
@@ -30,37 +33,30 @@ public class DBAccessLayer {
 	 * @return DBQueryResults object which contains the results, null if error occurred
 	 * NOTICE - caller must close Query Results object after using it
 	 */
-	public	static DBQueryResults	executeQuery(String sql)
-	{
+	public static DBQueryResults executeQuery(String sql) {
 		// insert query to log
 		Debug.query(sql);
 		
 		// get connection to DB, and verify it
 		Connection conn = DBConnectionPool.getConnection();		
-		if (conn == null)
-		{
+		if (conn == null) {
 			Debug.log("DBAccessLayer::executeQuery: ERROR - failed getting connection to DB");			
 			return null;
 		}		
 		
-		ResultSet		rs;
-		Statement	stmt = null;
-		try
-		{		
+		ResultSet rs;
+		Statement stmt = null;
+		try {		
 			stmt = conn.createStatement();
 			
 			// execute  statement
 			rs = stmt.executeQuery(sql);
 			DBQueryResults results = new DBQueryResults(conn, stmt, rs);
 			return results;
-		}
-		catch	 (SQLException e)
-		{
+		} catch (SQLException e) {
 			Debug.log("DBAccessLayer::executeQuery: ERROR - exception occured during query:" + e.toString());				
 			return null;
-		}
-		finally
-		{
+		} finally {
 		//	closeStatementAndConnection(conn, stmt);
 		}			
 	}
@@ -71,36 +67,29 @@ public class DBAccessLayer {
 	 * @param sql
 	 * @return - number of rows updated by command (0 if no updates), -1 for error
 	 */
-	public	static int	executeUpdate(String sql)
-	{
+	public static int executeUpdate(String sql) {
 		// insert query to log
 		Debug.query(sql);
 		
 		// get connection to DB, and verify it
 		Connection conn = DBConnectionPool.getConnection();
-		if (conn == null)
-		{
+		if (conn == null) {
 			Debug.log("DBAccessLayer::executeUpdate: ERROR - failed getting connection to DB");				
 			return -1;
 		}		
 		
 		Statement	stmt = null;
 		int updated = 0;
-		try
-		{		
+		try {		
 			stmt = conn.createStatement();
 			
 			// execute  statement
 			updated = stmt.executeUpdate(sql);
 			return updated;
-		}
-		catch	 (SQLException e)
-		{
+		} catch (SQLException e) {
 			Debug.log("DBAccessLayer::executeUpdate: ERROR - exception occured during update:" + e.toString());				
 			return -1;
-		}
-		finally
-		{
+		} finally {
 			closeStatementAndConnection(conn, stmt);
 		}			
 	}
@@ -112,27 +101,23 @@ public class DBAccessLayer {
 	 * @param idFileldName - name of id field	
 	 * @return - id of the new row, -1 if error occurred
 	 */
-	public	static int	insertAndGetID(String sql, String idFileldName)
-	{
+	public static int insertAndGetID(String sql, String idFileldName) {
 		// get connection to DB, and verify it
 		Connection conn = DBConnectionPool.getConnection();		
-		if (conn == null)
-		{
+		if (conn == null) {
 			Debug.log("DBAccessLayer::insertAndGetID: ERROR - failed getting connection to DB");				
 			return -1;
 		}		
 		
-		ResultSet		rs;
-		Statement	stmt = null;
+		ResultSet rs;
+		Statement stmt = null;
 		int updated = 0;
-		try
-		{		
+		try {		
 			stmt = conn.createStatement();
 			
 			// execute  statement
 			updated = stmt.executeUpdate(sql, new String[]{idFileldName});
-			if (updated == 1)
-			{
+			if (updated == 1) {
 				rs		=	stmt.getGeneratedKeys();
 				rs.next();
 				int id		=	rs.getInt(1);				
@@ -142,35 +127,30 @@ public class DBAccessLayer {
 			}			
 			Debug.log("DBAccessLayer::insertAndGetID: ERROR - insert didn't add 1 row as expected (added " + updated + " rows)");
 			return -1;
-		}
-		catch	 (SQLException e)
-		{
+		} catch	 (SQLException e) {
 			Debug.log("DBAccessLayer::insertAndGetID: ERROR - exception occured during insert:" + e.toString());			
 			return -1;
-		}
-		finally
-		{
+		} finally {
 			closeStatementAndConnection(conn, stmt);
 		}			
 	}	
 	
 	
-	/** Run the SQL pattern in a batch
+	/** 
+	 * Run the SQL pattern in a batch
 	 * Each argument is in a different list 
 	 * (a list for argument 1 in all statements, a list for argument 2, ...)
 	 * and a list which indicates the type of each argument.
 	 * @pre		ALL arguments lists must be in the same order (duh...)
 	 * @return	the number of statements executed successfully
 	 **/		
-	public static int	executePatternBatch(String sqlPattern, List<List<Object>> argumentLists, List<FieldTypes> typesList)
-	{
+	public static int executePatternBatch(String sqlPattern, List<List<Object>> argumentLists, List<FieldTypes> typesList) {
 		// insert query to log
 //		Debug.query(sqlPattern);
 		
 		// get connection to DB, and verify it
 		Connection conn = DBConnectionPool.getConnection();
-		if (conn == null)
-		{
+		if (conn == null) {
 			Debug.log("DBAccessLayer::executePatternBatch: ERROR - failed getting connection to DB");			
 			return 0;
 		}
@@ -179,17 +159,13 @@ public class DBAccessLayer {
 		int	argsInStatement = typesList.size();
 		
 		PreparedStatement	pstmt = null;
-		try
-		{
+		try {
 			pstmt	=	conn.prepareStatement(sqlPattern);
 			// run over the statements
-			for (int statementIndex = 0; statementIndex < statementsNum; statementIndex++)				
-			{
+			for (int statementIndex = 0; statementIndex < statementsNum; statementIndex++) {
 				// parse each statement's arguments
-				for (int argumentIndex = 0; argumentIndex < argsInStatement; argumentIndex++)
-				{
-					switch (typesList.get(argumentIndex))
-					{						
+				for (int argumentIndex = 0; argumentIndex < argsInStatement; argumentIndex++) {
+					switch (typesList.get(argumentIndex)) {						
 						case FIELD_TYPE_INT:
 						{
 							if (argumentLists.get(argumentIndex).get(statementIndex) == null)
@@ -403,11 +379,9 @@ public class DBAccessLayer {
 	 * @param stmt
 	 * @return
 	 */
-	protected	static	int	doBatch(Connection conn, Statement stmt)
-	{
+	protected	static	int	doBatch(Connection conn, Statement stmt) {
 		int[] res = null;
-		try
-		{
+		try {
 			conn.setAutoCommit(false);
 			long startTime = System.nanoTime();		// for performance measuring
 			// Execute the statement
@@ -419,39 +393,26 @@ public class DBAccessLayer {
 			 Debug.log("DBAccessLayer::doBatch: INFO - batch done in " + estimatedTime + " miliseconds");
 			
 			// Check how many commands where executed
-			for (int i = 0; i < res.length; i++)
-			{
-				if (res[i] == Statement.EXECUTE_FAILED)
-				{
+			for (int i = 0; i < res.length; i++) {
+				if (res[i] == Statement.EXECUTE_FAILED) {
 					Debug.log("DBAccessLayer::doBatch: ERROR - error on command " + (i+1));					
 					return i;
 				}
 			}
 			conn.commit();
 			return res.length;
-		}
-		catch (SQLException e)
-		{
-			if (res == null)
-			{
+		} catch (SQLException e) {
+			if (res == null) {
 				Debug.log("DBAccessLayer::doBatch: ERROR - exception occured during update, no commands done:" + e.toString());					
 				return 0;
-			}
-			else
-			{
+			} else {
 				Debug.log("DBAccessLayer::doBatch: ERROR - exception occured during update, " + res.length + " commands done: " + e.toString());					
 				return res.length;
 			}
-		}
-		// release connection and statement - no matter what
-		finally
-		{
-			try
-			{
+		} finally { // release connection and statement - no matter what
+			try {
 				conn.setAutoCommit(true);
-			}
-			catch (SQLException e)
-			{
+			} catch (SQLException e) {
 				
 			}
 			closeStatementAndConnection(conn, stmt);
@@ -461,22 +422,16 @@ public class DBAccessLayer {
 	
 	/**	Handles release of connection and statement 
 	 **/
-	protected static void	closeStatementAndConnection(Connection conn, Statement pstmt)
-	{
-		try
-		{
-			if (pstmt != null)
-			{
+	protected static void closeStatementAndConnection(Connection conn, Statement pstmt) {
+		try {
+			if (pstmt != null) {
 				pstmt.close();
 				//Debug.log("DBAccessLayer::closeStatementAndConnection - closed statement");
 			}
 		}
-		catch (SQLException e)
-		{
+		catch (SQLException e) {
 			Debug.log("DBAccessLayer::closeStatementAndConnection - ERROR - Exception while trying to close statement:" + e.toString());
-		}
-		finally
-		{
+		} finally {
 			DBConnectionPool.endConnection(conn);
 			//Debug.log("DBAccessLayer::closeStatementAndConnection -  ended connection");
 		}

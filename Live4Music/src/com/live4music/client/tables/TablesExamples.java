@@ -9,7 +9,6 @@ import com.live4music.shared.general.Debug.DebugOutput;
 
 
 /**
- * created by Ariel
  * 
  * holds examples of tables classes, for debugging
  */
@@ -58,7 +57,7 @@ public class TablesExamples {
 	/**
 	 * initialize tables examples
 	 */
-	public static void initTablesExamples(){
+	public static void initTablesExamples() {
 		
 		// albums and songs results table example
 		
@@ -128,17 +127,17 @@ public class TablesExamples {
 		
 		// employees table example
 		
-		EmployeesTableItem employee1 = new EmployeesTableItem(123456789, "Ariel", "Stolerman",
-				"01/01/2010", "14/08/1984", "123 Ben-Yehuda St., Givatayim", "03-1234567", "054-5551234", 0,
+		EmployeesTableItem employee1 = new EmployeesTableItem(123456789, "Test1", "Test1",
+				"13/03/2012", "14/08/1989", "41 108th St., New York", "03-3232323", "054-2332323", 0,
 				EmployeePositionsEnum.NETWORK_MANAGER);
-		EmployeesTableItem employee2 = new EmployeesTableItem(987654253, "Kalev", "Alpernas",
-				"01/10/2009", "07/08/1986", "456 King George St., Ashdod", "08-9887263", "054-5556789", 0,
+		EmployeesTableItem employee2 = new EmployeesTableItem(987654253, "Test2", "Test2",
+				"21/02/2001", "07/08/1991", "86 44th St., New York", "08-323123", "054-4234234", 0,
 				EmployeePositionsEnum.MANAGER);
-		EmployeesTableItem employee3 = new EmployeesTableItem(928347462, "Vadim", "Stotland",
-				"03/01/2010", "04/09/1986", "789 Sami St., Petah-Tikva", "03-9181716", "054-5550099", 0,
+		EmployeesTableItem employee3 = new EmployeesTableItem(928347462, "Test3", "Test3",
+				"02/04/2012", "02/04/1982", "123 Trafalgar Square, London", "03-32132435", "054-432423", 0,
 				EmployeePositionsEnum.ASSIST_MANAGER);
-		EmployeesTableItem employee4 = new EmployeesTableItem(199292919, "Rotem", "Druker",
-				"01/01/2008", "13/07/1983", "91 Ben-Yehuda St., Tel-Aviv", "03-3456243", "054-5552626", 0,
+		EmployeesTableItem employee4 = new EmployeesTableItem(199292919, "Test4", "Test4",
+				"01/04/2011", "13/07/1992", "23 1st St., New York", "03-432423", "054-4324", 0,
 				EmployeePositionsEnum.SALESMAN);
 		
 		employees.addEmployee(employee1);

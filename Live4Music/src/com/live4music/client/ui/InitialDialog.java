@@ -1,7 +1,7 @@
 package com.live4music.client.ui;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -9,17 +9,19 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 import com.cloudgarden.resource.SWTResourceManager;
-import org.eclipse.swt.widgets.Label;
 
-/** Initial Dialog
-* ==============
-* presents stores table for selection by user
-* program is initiated by selected store's view 
-*/
+/** 
+ * Initial Dialog
+ * 
+ * presents stores table for selection by user
+ * program is initiated by selected store's view 
+ */
 public class InitialDialog extends org.eclipse.swt.widgets.Dialog {
+	
 	private static Display display;
 	private static InitialDialog inst;
 	private static Shell shell;

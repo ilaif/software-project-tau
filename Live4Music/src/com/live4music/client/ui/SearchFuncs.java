@@ -14,7 +14,6 @@ import com.live4music.shared.general.Debug.DebugOutput;
 
 
 /**
- * created by Ariel
  * 
  * Search tab handlers
  */

@@ -4,11 +4,13 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.MessageBox;
 
 /**
- * created by Ariel
  * 
  * exception for wrong employee details in manage tab
  */
 public class EmployeeDetailsValidityException extends Exception{
+
+	private static final long serialVersionUID = -3145408408256526047L;
+	
 	MessageBox msgBox;
 	
 	/**

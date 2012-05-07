@@ -5,10 +5,9 @@ import com.live4music.shared.general.Debug;
 import com.live4music.shared.general.Debug.DebugOutput;
 
 /**
- * created by Ariel
  * 
  * GUI updater interface
- * =====================
+ * 
  * all functions used by lower level to pass data and update the GUI tables accordingly
  */
 public class GuiUpdatesInterface {

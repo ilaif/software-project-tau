@@ -1,10 +1,9 @@
 package com.live4music.client.tables;
 
 /**
- * created by Ariel
  * 
  * Album item data structure
- * =========================
+ * 
  * holds all fields for a single album search result, to be inserted into an album search results table
  * also holds information relevant to sale and stock
  * contains the fields:

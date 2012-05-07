@@ -7,10 +7,9 @@ import com.live4music.client.ui.Main;
 import com.live4music.client.ui.MainFuncs;
 
 /**
- * created by Ariel
  * 
  * Album search query data structure
- * =================================
+ * 
  * holds album search query information:
  * - option #1: By album id:
  * 	* album ID

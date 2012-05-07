@@ -3,13 +3,13 @@ package com.live4music.client.tables;
 import java.util.*;
 
 /**
- * create by Ariel
  * 
  * orders / requests table data structure
- * ======================================
+ * 
  * holds order items for orders or requests table type
  */
 public class OrdersOrRequestsTable extends Table {
+	
 	private Map<Integer,OrdersOrRequestsTableItem> orders = new HashMap<Integer,OrdersOrRequestsTableItem>();
 	private boolean isOrder; // holds order / request
 

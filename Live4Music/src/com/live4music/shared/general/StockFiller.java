@@ -20,7 +20,7 @@ public class StockFiller {
 	private static final String STOCK_FILLER = "stores_stock_filler_transaction.sql";
 	private static BufferedWriter outputFile = null;
 	
-	public static void writeFillingTrans(){
+	public static void writeFillingTrans() {
 		Debug.log("*** writing sql filler ***", DebugOutput.STDOUT);
 		
 		String trans = "";
@@ -65,7 +65,7 @@ public class StockFiller {
 		}
 	}
 	
-	private static long getRandLocation(){
+	private static long getRandLocation() {
 		long precision = 1000000000 * 100; 
 		long ret = ((new Random()).nextLong() % precision);
 		while (ret <= 0)

@@ -1,24 +1,15 @@
 package com.live4music.server.db;
 
-import java.lang.annotation.Retention;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.jar.Attributes.Name;
 
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane.RestoreAction;
-
-import com.live4music.client.tables.AlbumsResultsTableItem;
 import com.live4music.client.tables.SaleTable;
 import com.live4music.client.tables.SaleTableItem;
-import com.live4music.client.tables.TablesExamples;
 import com.live4music.client.ui.DBActionFailureEnum;
 import com.live4music.client.ui.GuiUpdatesInterface;
 import com.live4music.client.ui.StaticProgramTables;
 import com.live4music.shared.general.Debug;
 import com.live4music.shared.general.Debug.DebugOutput;
-
 
 /**
  *	This class contains the Runnable classes for handling the GUI tab "SALE".
@@ -29,15 +20,13 @@ public class DBConnectionSale {
 	/**
 	 * Corresponds to DBConnectionInterface's "public static void makeSale(SaleTable sale);"
 	 */
-	public class MakeSale implements Runnable{
+	public class MakeSale implements Runnable {
+		
 		private SaleTable sale;
 		
 		public MakeSale(SaleTable sale) {
 			this.sale = sale;
 		}
-
-
-
 		
 		public void run() {
 			Debug.log("DBConnectionSale.MakeSale thread is started",DebugOutput.FILE,DebugOutput.STDOUT);

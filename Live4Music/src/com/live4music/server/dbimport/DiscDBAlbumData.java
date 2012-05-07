@@ -6,7 +6,6 @@ import java.util.List;
 
 public class DiscDBAlbumData {	
 	
-
 	private List<DiscDBTrackData> trackList = new LinkedList<DiscDBTrackData>();
 	private	String	title;	/* disc title, may include artist name */
 	private	String	name;
@@ -17,26 +16,18 @@ public class DiscDBAlbumData {
 	private int		Price;
 	private boolean isVariousArtists ;
 	
-
-	
-	public DiscDBAlbumData(String title, String genere, int year, int lengthSec)	
-	{	
+	public DiscDBAlbumData(String title, String genere, int year, int lengthSec) {	
 		this(title, genere, year, lengthSec, 0);
 	}
-	
-	
-	public DiscDBAlbumData(String title, String genere, int year, int lengthSec, int price)
-	{
+		
+	public DiscDBAlbumData(String title, String genere, int year, int lengthSec, int price)	{
 		this.title = title.trim();
 		this.genere = genere.trim();
 		this.lengthSec = lengthSec;
 		this.Price = price;
-		if (year > 0)
-		{
+		if (year > 0) {
 			this.year = Integer.toString(year);
-		}
-		else
-		{
+		} else {
 			this.year = "0";
 		}
 		
@@ -55,14 +46,12 @@ public class DiscDBAlbumData {
 	 * 
 	 * @param track
 	 */
-	public	void addTrackToList(DiscDBTrackData track)
-	{
+	public	void addTrackToList(DiscDBTrackData track) {
 		/*
 		 *  If albums has a single artist and track doesn't:
 		 *  set track artist to be the album's artist 
 		*/
-		if (!isVariousArtists() && hasArtist() && !track.hasArtist())
-		{
+		if (!isVariousArtists() && hasArtist() && !track.hasArtist()) {
 			track.setArtist(this.artist);
 		}
 		trackList.add(track.getTrackNum()-1, track);		
@@ -73,8 +62,7 @@ public class DiscDBAlbumData {
 	 * @param trackNum
 	 * @return
 	 */
-	public	DiscDBTrackData getTrack(int trackNum)
-	{
+	public	DiscDBTrackData getTrack(int trackNum) {
 		return trackList.get(trackNum-1);
 	}
 	
@@ -147,15 +135,11 @@ public class DiscDBAlbumData {
 	}	
 	
 	
-	public boolean checkVariousArtist()
-	{
+	public boolean checkVariousArtist() {
 		if (this.artist.toLowerCase().contains(Constants.VARIOUS_ARTITSTS_INDICATOR1) ||
-			this.artist.toLowerCase().contains(Constants.VARIOUS_ARTITSTS_INDICATOR2))
-		{
+			this.artist.toLowerCase().contains(Constants.VARIOUS_ARTITSTS_INDICATOR2)) {
 			setVariousArtists(true);			
-		}
-		else
-		{
+		} else {
 			setVariousArtists(false);			
 		}
 		return isVariousArtists();
@@ -163,27 +147,23 @@ public class DiscDBAlbumData {
 
 	
 	/** Try to get disc's name and artist, if the title is in the format of:
-	 *		artist / name
-	 *		possible other titles:
-	 *		artist1 / artist2 / ... / artistN / album name
-	 *		artist1 / artist2 / ... / artistN / album name (CD 1/2)
+	 *	artist / name
+	 *	possible other titles:
+	 *	artist1 / artist2 / ... / artistN / album name
+	 *	artist1 / artist2 / ... / artistN / album name (CD 1/2)
 	 */
-	public	void	parseDiscTitle()	
-	{
+	public void parseDiscTitle() {
 		this.name = "";
 		this.artist = Constants.NOT_AVAILABLE;
-		if (this.title.indexOf(Constants.TITLE_DELIMITER) != -1)
-		{		
+		if (this.title.indexOf(Constants.TITLE_DELIMITER) != -1) {		
 			String[] artistAndName = 	this.title.split(Constants.TITLE_DELIMITER);
-			if (artistAndName.length == 2)
-			{
+			if (artistAndName.length == 2) {
 				this.artist = artistAndName[0].trim();
 				this.name = artistAndName[1].trim();	
 			}
 		}
 		// No slash, handle it as various artists album
-		else
-		{
+		else {
 			this.name = this.title;
 			this.artist = Constants.VARIOUS_ARTITSTS;			
 //			Debug.log("DiscDBParser::parseTarFile: INFO - no slash title: " + this.title);								
@@ -191,14 +171,11 @@ public class DiscDBAlbumData {
 	}
 	
 	
-	public	boolean isValid()
-	{
+	public	boolean isValid() {
 		// valid disc is of from: artist / name (or it doesn't contain a " / ")
-		if (this.title.indexOf(Constants.TITLE_DELIMITER) != -1)
-		{		
+		if (this.title.indexOf(Constants.TITLE_DELIMITER) != -1) {		
 			String[] artistAndName = 	this.title.split(Constants.TITLE_DELIMITER);
-			if (artistAndName.length != 2)
-			{
+			if (artistAndName.length != 2) {
 				return false;
 			}
 		}
@@ -210,46 +187,35 @@ public class DiscDBAlbumData {
 	}
 	
 	
-	public	String	toString()	
-	{
+	public String toString() {
 		String ret = "Disc Title: " + this.title;
-		if (isVariousArtists())
-		{		this.artist = this.artist.replace("'", "''");
+		if (isVariousArtists()) {		
+			this.artist = this.artist.replace("'", "''");
 			ret += "(various Artists)";
 		}
 		ret += "\n";
-		if (this.name != null)
-		{
+		if (this.name != null) {
 			ret += "Name: " + this.name + "\n";
-		}
-		else
-		{
+		} else {
 			ret += "Name: " + "N/A" + "\n";
 		}
 
-		if (this.artist != null)
-		{
+		if (this.artist != null) {
 			ret += "Artist: " + this.artist + "\n";
-		}
-		else
-		{
+		} else {
 			ret += "Artist: " + "N/A" + "\n";
 		}
 
-		if (this.year != null)
-		{
+		if (this.year != null) {
 			ret += "Year: " + this.year + "\n";
-		}
-		else
-		{
+		} else {
 			ret += "Year: " + "N/A" + "\n";
 		}
 		
 		ret += "Genere: " + this.genere + "\n";
 		ret += "length: " + this.lengthSec + " seconds\n";
 		
-		for (DiscDBTrackData track : trackList)
-		{
+		for (DiscDBTrackData track : trackList) {
 			ret += "   " + track.toString();
 		}
 		return ret;
