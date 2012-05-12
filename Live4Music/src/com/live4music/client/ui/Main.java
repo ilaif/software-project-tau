@@ -102,10 +102,6 @@ public class Main extends org.eclipse.swt.widgets.Composite {
 	private static Button searchBulletInStockAll;
 	private static Button searchBulletInStockInStore;
 	private static Button searchBulletInStockInNetwork;
-	private static Button searchCheckBoxGenres;
-	private static Button[] searchCheckBoxGenresArr = new Button[6];
-	private static Button searchCheckBoxGenreOther;
-	private static Text searchTextBoxGenreOther;
 	private static Button searchButtonClear;
 	private static Button searchButtonSearch;
 	
@@ -615,155 +611,78 @@ public class Main extends org.eclipse.swt.widgets.Composite {
 							{
 								searchBulletByAlbum = new Button(searchGroupOptions, SWT.RADIO | SWT.LEFT);
 								searchBulletByAlbum.setText("Search by album ID:");
-								searchBulletByAlbum.setBounds(10, 16, 129, 22);
+								searchBulletByAlbum.setBounds(10, 22, 129, 22);
 								searchBulletByAlbum.setSelection(true);
 								searchBulletByAlbum.setFont(defaultFont);
 							}
 							{
 								searchBulletOtherParameters = new Button(searchGroupOptions, SWT.RADIO | SWT.LEFT);
 								searchBulletOtherParameters.setText("Search by other parameters:");
-								searchBulletOtherParameters.setBounds(10, 44, 173, 22);
+								searchBulletOtherParameters.setBounds(10, 72, 173, 22);
 								searchBulletOtherParameters.setFont(defaultFont);
 							}
 							{
 								searchTextBoxAlbumID = new Text(searchGroupOptions, SWT.BORDER);
-								searchTextBoxAlbumID.setBounds(190, 17, 182, 22);
+								searchTextBoxAlbumID.setBounds(190, 23, 182, 22);
 								searchTextBoxAlbumID.setToolTipText("Enter album ID");
 								searchTextBoxAlbumID.setFont(defaultFont);
 							}
 							{
 								searchCheckBoxAlbumName = new Button(searchGroupOptions, SWT.CHECK | SWT.LEFT);
 								searchCheckBoxAlbumName.setText("Album name:");
-								searchCheckBoxAlbumName.setBounds(10, 72, 102, 22);
+								searchCheckBoxAlbumName.setBounds(10, 106, 102, 22);
 								searchCheckBoxAlbumName.setFont(defaultFont);
 							}
 							{
 								searchCheckBoxArtist = new Button(searchGroupOptions, SWT.CHECK | SWT.LEFT);
 								searchCheckBoxArtist.setText("Artist:");
-								searchCheckBoxArtist.setBounds(10, 113, 102, 21);
+								searchCheckBoxArtist.setBounds(10, 151, 102, 21);
 								searchCheckBoxArtist.setFont(defaultFont);
 							}
 							{
 								searchCheckBoxYear = new Button(searchGroupOptions, SWT.CHECK | SWT.LEFT);
 								searchCheckBoxYear.setText("Year from:");
-								searchCheckBoxYear.setBounds(10, 150, 102, 23);
+								searchCheckBoxYear.setBounds(10, 194, 102, 23);
 								searchCheckBoxYear.setFont(defaultFont);
 							}
 							{
 								searchCheckBoxSongNames = new Button(searchGroupOptions, SWT.CHECK | SWT.LEFT);
 								searchCheckBoxSongNames.setText("Song name(s):");
-								searchCheckBoxSongNames.setBounds(10, 322, 102, 22);
+								searchCheckBoxSongNames.setBounds(10, 317, 102, 22);
 								searchCheckBoxSongNames.setToolTipText("Enter song names / partial names separated by semicolons\n"+
 										"e.g. 'first song name;second song name;third song name'");
 								searchCheckBoxSongNames.setFont(defaultFont);
 							}
 							{
-								searchCheckBoxGenres = new Button(searchGroupOptions, SWT.CHECK | SWT.LEFT);
-								searchCheckBoxGenres.setText("Genre(s):");
-								searchCheckBoxGenres.setBounds(10, 190, 82, 22);
-								searchCheckBoxGenres.setFont(defaultFont);
-							}
-							{
 								searchTextBoxAlbumName = new Text(searchGroupOptions, SWT.BORDER);
-								searchTextBoxAlbumName.setBounds(190, 73, 182, 22);
+								searchTextBoxAlbumName.setBounds(190, 107, 182, 22);
 								searchTextBoxAlbumName.setFont(defaultFont);
 							}
 							{
 								searchTextBoxArtist = new Text(searchGroupOptions, SWT.BORDER);
-								searchTextBoxArtist.setBounds(190, 113, 182, 22);
+								searchTextBoxArtist.setBounds(190, 151, 182, 22);
 								searchTextBoxArtist.setFont(defaultFont);
 							}
 							{
 								searchTextBoxYearFrom = new Text(searchGroupOptions, SWT.BORDER);
-								searchTextBoxYearFrom.setBounds(190, 151, 70, 22);
+								searchTextBoxYearFrom.setBounds(190, 195, 182, 22);
 								searchTextBoxYearFrom.setFont(defaultFont);
 							}
 							{
 								searchLabelYearTo = new Label(searchGroupOptions, SWT.NONE);
 								searchLabelYearTo.setText("To:");
-								searchLabelYearTo.setBounds(266, 154, 30, 16);
+								searchLabelYearTo.setBounds(190, 240, 30, 16);
 								searchLabelYearTo.setFont(defaultFont);
 							}
 							{
 								searchTextBoxYearTo = new Text(searchGroupOptions, SWT.BORDER);
-								searchTextBoxYearTo.setBounds(302, 151, 70, 22);
+								searchTextBoxYearTo.setBounds(190, 273, 182, 22);
 								searchTextBoxYearTo.setFont(defaultFont);
 							}
 							{
 								searchTextBoxSongNames = new Text(searchGroupOptions, SWT.BORDER);
-								searchTextBoxSongNames.setBounds(190, 323, 182, 22);
+								searchTextBoxSongNames.setBounds(190, 318, 182, 22);
 								searchTextBoxSongNames.setFont(defaultFont);
-							}
-							{
-								searchCheckBoxGenresArr[0] = new Button(searchGroupOptions, SWT.CHECK | SWT.LEFT);
-								searchCheckBoxGenresArr[0].setText("Electronic");
-								searchCheckBoxGenresArr[0].setBounds(10, 222, 78, 16);
-								searchCheckBoxGenresArr[0].setFont(defaultFont);
-							}
-							{
-								searchCheckBoxGenresArr[1] = new Button(searchGroupOptions, SWT.CHECK | SWT.LEFT);
-								searchCheckBoxGenresArr[1].setText("Blues");
-								searchCheckBoxGenresArr[1].setBounds(10, 248, 78, 16);
-								searchCheckBoxGenresArr[1].setFont(defaultFont);
-							}
-							{
-								searchCheckBoxGenresArr[2] = new Button(searchGroupOptions, SWT.CHECK | SWT.LEFT);
-								searchCheckBoxGenresArr[2].setText("Pop");
-								searchCheckBoxGenresArr[2].setBounds(112, 222, 78, 16);
-								searchCheckBoxGenresArr[2].setFont(defaultFont);
-							}
-							{
-								searchCheckBoxGenresArr[3] = new Button(searchGroupOptions, SWT.CHECK | SWT.LEFT);
-								searchCheckBoxGenresArr[3].setText("Jazz");
-								searchCheckBoxGenresArr[3].setBounds(112, 248, 78, 16);
-								searchCheckBoxGenresArr[3].setFont(defaultFont);
-							}
-							{
-								searchCheckBoxGenresArr[4] = new Button(searchGroupOptions, SWT.CHECK | SWT.LEFT);
-								searchCheckBoxGenresArr[4].setText("Classical");
-								searchCheckBoxGenresArr[4].setBounds(212, 222, 73, 16);
-								searchCheckBoxGenresArr[4].setFont(defaultFont);
-							}
-							{
-								searchCheckBoxGenresArr[5] = new Button(searchGroupOptions, SWT.CHECK | SWT.LEFT);
-								searchCheckBoxGenresArr[5].setText("Metal");
-								searchCheckBoxGenresArr[5].setBounds(212, 248, 79, 16);
-								searchCheckBoxGenresArr[5].setFont(defaultFont);
-							}
-							/*{
-								searchCheckBoxGenresArr[6] = new Button(searchGroupOptions, SWT.CHECK | SWT.LEFT);
-								searchCheckBoxGenresArr[6].setText("Rock");
-								searchCheckBoxGenresArr[6].setBounds(312, 222, 78, 16);
-								searchCheckBoxGenresArr[6].setFont(defaultFont);
-							}
-							{
-								searchCheckBoxGenresArr[7] = new Button(searchGroupOptions, SWT.CHECK | SWT.LEFT);
-								searchCheckBoxGenresArr[7].setText("World");
-								searchCheckBoxGenresArr[7].setBounds(312, 248, 78, 16);
-								searchCheckBoxGenresArr[7].setFont(defaultFont);
-							}
-							{
-								searchCheckBoxGenresArr[8] = new Button(searchGroupOptions, SWT.CHECK | SWT.LEFT);
-								searchCheckBoxGenresArr[8].setText("Hip-Hop");
-								searchCheckBoxGenresArr[8].setBounds(270, 186, 60, 16);
-								searchCheckBoxGenresArr[8].setFont(defaultFont);
-							}
-							{
-								searchCheckBoxGenresArr[9] = new Button(searchGroupOptions, SWT.CHECK | SWT.LEFT);
-								searchCheckBoxGenresArr[9].setText("Electronic");
-								searchCheckBoxGenresArr[9].setBounds(270, 206, 60, 16);
-								searchCheckBoxGenresArr[9].setFont(defaultFont);
-							}*/
-							{
-								searchCheckBoxGenreOther = new Button(searchGroupOptions, SWT.CHECK | SWT.LEFT);
-								searchCheckBoxGenreOther.setText("Other:");
-								searchCheckBoxGenreOther.setBounds(10, 280, 70, 22);
-								searchCheckBoxGenreOther.setFont(defaultFont);
-							}
-							{
-								searchTextBoxGenreOther = new Text(searchGroupOptions, SWT.BORDER);
-								searchTextBoxGenreOther.setBounds(190, 281, 182, 22);
-								searchTextBoxGenreOther.setFont(defaultFont);
 							}
 							{
 								searchButtonClear = new Button(searchGroupOptions, SWT.PUSH | SWT.CENTER);
@@ -1909,62 +1828,6 @@ public class Main extends org.eclipse.swt.widgets.Composite {
 
 	public static Button getSearchBulletInStockInNetwork() {
 		return searchBulletInStockInNetwork;
-	}
-
-	public static Button getSearchCheckBoxGenres() {
-		return searchCheckBoxGenres;
-	}
-
-	public static Button[] getSearchCheckBoxGenresArr(){
-		return searchCheckBoxGenresArr;
-	}
-	
-	public static Button getSearchCheckBoxGenreRock() {
-		return searchCheckBoxGenresArr[0];
-	}
-	
-	public static Button getSearchCheckBoxGenreJazz() {
-		return searchCheckBoxGenresArr[1];
-	}
-
-	public static Button getSearchCheckBoxGenre03() {
-		return searchCheckBoxGenresArr[2];
-	}
-
-	public static Button getSearchCheckBoxGenre04() {
-		return searchCheckBoxGenresArr[3];
-	}
-
-	public static Button getSearchCheckBoxGenre05() {
-		return searchCheckBoxGenresArr[4];
-	}
-
-	public static Button getSearchCheckBoxGenre06() {
-		return searchCheckBoxGenresArr[5];
-	}
-
-	public static Button getSearchCheckBoxGenre07() {
-		return searchCheckBoxGenresArr[6];
-	}
-
-	public static Button getSearchCheckBoxGenre08() {
-		return searchCheckBoxGenresArr[7];
-	}
-
-	public static Button getSearchCheckBoxGenre09() {
-		return searchCheckBoxGenresArr[8];
-	}
-
-	public static Button getSearchCheckBoxGenre10() {
-		return searchCheckBoxGenresArr[9];
-	}
-
-	public static Button getSearchCheckBoxGenreOther() {
-		return searchCheckBoxGenreOther;
-	}
-
-	public static Text getSearchTextBoxGenreOther() {
-		return searchTextBoxGenreOther;
 	}
 
 	public static Button getSearchButtonClear() {

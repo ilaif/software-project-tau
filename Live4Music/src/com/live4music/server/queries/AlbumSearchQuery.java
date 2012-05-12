@@ -1,8 +1,5 @@
 package com.live4music.server.queries;
 
-
-import org.eclipse.swt.widgets.*;
-
 import com.live4music.client.ui.Main;
 import com.live4music.client.ui.MainFuncs;
 
@@ -38,11 +35,6 @@ public class AlbumSearchQuery extends Query {
 	
 	private boolean hasSongNames = false;
 	private String songNames = null;
-	
-	private boolean hasGenres = false;
-	private boolean[] genresArr = new boolean[6];
-	private boolean hasOtherGenre = false;
-	private String otherGenre = null;
 	
 	private AlbumSearchStockOptionEnum stockOption = AlbumSearchStockOptionEnum.ALL;
 
@@ -130,37 +122,10 @@ public class AlbumSearchQuery extends Query {
 				if (songNamesText == null || songNamesText.length() == 0) // song names text is empty
 					throw new QueryErrorException("Song names option selected, field must have value", this.getQueryType());
 				else this.songNames = songNamesText.toLowerCase();
-			}
-			
-			// genres
-			this.hasGenres = Main.getSearchCheckBoxGenres().getSelection();
-			if (hasGenres){
-				boolean anySelected = false;
-				Button[] genres = Main.getSearchCheckBoxGenresArr();
-				for (Button g: genres) anySelected = anySelected || g.getSelection();
-				anySelected = anySelected || Main.getSearchCheckBoxGenreOther().getSelection();
-				
-				if (!anySelected) throw new QueryErrorException("Genres option selected, at least one genre must be selected",
-						this.getQueryType()); // no genres are selected
-				
-				// SET GENRES ARRAY
-				for (int i = 0; i < this.genresArr.length; i++){
-					genresArr[i] = genres[i].getSelection();
-				}
-				
-				String otherGenreText = Main.getSearchTextBoxGenreOther().getText();
-				otherGenreText = MainFuncs.replaceSubString(otherGenreText, "'", "''");
-				if (Main.getSearchCheckBoxGenreOther().getSelection() &&
-						(otherGenreText.length() == 0 || otherGenreText == null))
-					throw new QueryErrorException("Other genre option selected, field must have value", this.getQueryType()); // in case other genre selected but has no value
-				else { // SET OTHER GENRE
-					this.otherGenre = otherGenreText.toLowerCase();
-					this.hasOtherGenre = Main.getSearchCheckBoxGenreOther().getSelection();
-				}
-			}
+			}	
 			
 			// finally check if none option is selected, then throw error
-			if (!(hasAlbumName || hasArtist || hasYear || hasSongNames || hasGenres))
+			if (!(hasAlbumName || hasArtist || hasYear || hasSongNames))
 				throw new QueryErrorException("Must specify at least one album parameter", this.getQueryType());
 		}
 		
@@ -218,22 +183,6 @@ public class AlbumSearchQuery extends Query {
 
 	public String getSongNames() {
 		return songNames;
-	}
-
-	public boolean hasGenres() {
-		return hasGenres;
-	}
-
-	public boolean[] getGenresArr() {
-		return genresArr;
-	}
-
-	public boolean hasOtherGenre() {
-		return hasOtherGenre;
-	}
-
-	public String getOtherGenre() {
-		return otherGenre;
 	}
 
 	public static String[] getGenreNames() {

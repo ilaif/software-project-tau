@@ -108,26 +108,6 @@ public class SearchFuncs {
 				}
 		);
 		
-		Main.getSearchCheckBoxGenres().addSelectionListener(
-				new SelectionAdapter(){
-					public void widgetSelected(SelectionEvent e){
-						Debug.log("Search tab: genres checkbox changed",DebugOutput.FILE,DebugOutput.STDOUT);
-						// change artist text box accordingly
-						setSearchGenresState();
-					}
-				}
-		);
-		
-		Main.getSearchCheckBoxGenreOther().addSelectionListener(
-				new SelectionAdapter(){
-					public void widgetSelected(SelectionEvent e){
-						Debug.log("Search tab: other genre checkbox changed",DebugOutput.FILE,DebugOutput.STDOUT);
-						// change artist text box accordingly
-						setSearchGenreOtherState();
-					}
-				}
-		);
-		
 		// clear / search buttons
 		/////////////////////////
 		
@@ -321,11 +301,6 @@ public class SearchFuncs {
 		Main.getSearchTextBoxYearTo().setEnabled(!enableByAlbumID);
 		Main.getSearchCheckBoxSongNames().setEnabled(!enableByAlbumID);
 		Main.getSearchTextBoxSongNames().setEnabled(!enableByAlbumID);
-		Main.getSearchCheckBoxGenres().setEnabled(!enableByAlbumID);
-		Button[] genres = Main.getSearchCheckBoxGenresArr();
-		for (Button g: genres) g.setEnabled(!enableByAlbumID);
-		Main.getSearchCheckBoxGenreOther().setEnabled(!enableByAlbumID);
-		Main.getSearchTextBoxGenreOther().setEnabled(!enableByAlbumID);
 		// set album id search fields by enableByAlbumID
 		Main.getSearchTextBoxAlbumID().setEnabled(enableByAlbumID);
 		
@@ -336,8 +311,6 @@ public class SearchFuncs {
 			setSearchArtistState();
 			setSearchYearState();
 			setSearchSongNamesState();
-			setSearchGenresState();
-			setSearchGenreOtherState();
 		}
 	}
 	
@@ -374,26 +347,6 @@ public class SearchFuncs {
 		Main.getSearchTextBoxSongNames().setEnabled(isEnabled);
 	}
 	
-	/**
-	 * set genres checkboxes by its the genres checkbox state
-	 */
-	protected static void setSearchGenresState(){
-		boolean isEnabled = Main.getSearchCheckBoxGenres().getSelection();
-		Button[] genres = Main.getSearchCheckBoxGenresArr();
-		for (Button g: genres) g.setEnabled(isEnabled);
-		Main.getSearchCheckBoxGenreOther().setEnabled(isEnabled);
-		setSearchGenreOtherState();
-	}
-	
-	/**
-	 * set other genre text box by its checkbox state
-	 */
-	protected static void setSearchGenreOtherState(){
-		boolean isEnabled = Main.getSearchCheckBoxGenreOther().getSelection() &&	// other genre check box is on
-							Main.getSearchCheckBoxGenres().getSelection();			// and genres check box is on
-		Main.getSearchTextBoxGenreOther().setEnabled(isEnabled);
-	}
-	
 	////////////////////////////
 	//	handle search buttons //
 	////////////////////////////
@@ -406,18 +359,10 @@ public class SearchFuncs {
 		Main.getSearchTextBoxAlbumID().setText("");
 		Main.getSearchTextBoxAlbumName().setText("");
 		Main.getSearchTextBoxArtist().setText("");
-		Main.getSearchTextBoxGenreOther().setText("");
 		Main.getSearchTextBoxSaleInfoQuantity().setText("1");
 		Main.getSearchTextBoxSongNames().setText("");
 		Main.getSearchTextBoxYearFrom().setText("");
 		Main.getSearchTextBoxYearTo().setText("");
-		Main.getSearchTextBoxGenreOther().setText("");
-		// clear all check boxes in genres
-		for(Button g: Main.getSearchCheckBoxGenresArr()){
-			g.setSelection(false);
-		}
-		Main.getSearchCheckBoxGenreOther().setSelection(false);
-		Main.getSearchTextBoxGenreOther().setEnabled(false);
 	}
 	
 	/**
