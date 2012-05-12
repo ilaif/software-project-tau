@@ -163,7 +163,6 @@ public class SaleFuncs {
 				SearchFuncs.clearStockInfo();
 				Main.getSearchButtonGetStockInfo().setEnabled(false);
 				Main.getSearchButtonStockInfoOrder().setEnabled(false);
-				Main.getSearchButtonShowSongs().setEnabled(false);
 				Main.getSearchButtonSaleInfoSale().setEnabled(false);
 			}
 		}

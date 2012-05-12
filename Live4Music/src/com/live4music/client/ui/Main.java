@@ -232,7 +232,6 @@ public class Main extends org.eclipse.swt.widgets.Composite {
 	private static TableColumn manageTableColumnEmployeePName;
 	private static Button stockButtonPlaceOrderSupplier;
 	private static Button searchButtonGetStockInfo;
-	private static Button searchButtonShowSongs;
 	private static TableColumn manageTableColumnEmployeeLName;
 	private static TableColumn manageTableColumnEmployeePosition;
 	
@@ -782,7 +781,7 @@ public class Main extends org.eclipse.swt.widgets.Composite {
 							{
 								searchTableSongResults = new Table(searchGroupResults, SWT.BORDER | SWT.FULL_SELECTION
 										| SWT.H_SCROLL | SWT.V_SCROLL | SWT.SINGLE);
-								searchTableSongResults.setBounds(13, 323, 389, 181);
+								searchTableSongResults.setBounds(13, 287, 389, 217);
 								searchTableSongResults.setHeaderVisible(true);
 								searchTableSongResults.setLinesVisible(true);
 								searchTableSongResults.setFont(defaultFont);
@@ -813,12 +812,6 @@ public class Main extends org.eclipse.swt.widgets.Composite {
 								searchTableColumnSongLength.setResizable(true);
 								searchTableColumnSongLength.setMoveable(true);
 								searchTableColumnSongLength.setWidth(tableWidth / numOfColumns);
-							}
-							{
-								searchButtonShowSongs = new Button(searchGroupResults, SWT.PUSH | SWT.CENTER);
-								searchButtonShowSongs.setText("View Album's Songs");
-								searchButtonShowSongs.setBounds(13, 287, 389, 30);
-								searchButtonShowSongs.setFont(defaultFont);
 							}
 						}
 						{
@@ -2386,14 +2379,6 @@ public class Main extends org.eclipse.swt.widgets.Composite {
 	public static void setStockButtonRefreshRequests(
 			Button stockButtonRefreshRequests) {
 		Main.stockButtonRefreshRequests = stockButtonRefreshRequests;
-	}
-
-	public static Button getSearchButtonShowSongs() {
-		return searchButtonShowSongs;
-	}
-
-	public static void setSearchButtonShowSongs(Button searchButtonShowSongs) {
-		Main.searchButtonShowSongs = searchButtonShowSongs;
 	}
 
 	public static Button getSearchButtonGetStockInfo() {
