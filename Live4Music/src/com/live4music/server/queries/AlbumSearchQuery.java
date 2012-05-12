@@ -40,7 +40,7 @@ public class AlbumSearchQuery extends Query {
 	private String songNames = null;
 	
 	private boolean hasGenres = false;
-	private boolean[] genresArr = new boolean[8];
+	private boolean[] genresArr = new boolean[6];
 	private boolean hasOtherGenre = false;
 	private String otherGenre = null;
 	

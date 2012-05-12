@@ -103,7 +103,7 @@ public class Main extends org.eclipse.swt.widgets.Composite {
 	private static Button searchBulletInStockInStore;
 	private static Button searchBulletInStockInNetwork;
 	private static Button searchCheckBoxGenres;
-	private static Button[] searchCheckBoxGenresArr = new Button[8];
+	private static Button[] searchCheckBoxGenresArr = new Button[6];
 	private static Button searchCheckBoxGenreOther;
 	private static Text searchTextBoxGenreOther;
 	private static Button searchButtonClear;
@@ -609,8 +609,8 @@ public class Main extends org.eclipse.swt.widgets.Composite {
 						{
 							searchGroupOptions = new Group(searchTabComposite, SWT.NONE);
 							searchGroupOptions.setLayout(null);
-							searchGroupOptions.setText("Search");
-							searchGroupOptions.setBounds(10, 10, 498, 371);
+							searchGroupOptions.setText("Step 1 - Search 4 Albums");
+							searchGroupOptions.setBounds(10, 10, 383, 514);
 							searchGroupOptions.setFont(defaultFont);
 							{
 								searchBulletByAlbum = new Button(searchGroupOptions, SWT.RADIO | SWT.LEFT);
@@ -627,7 +627,7 @@ public class Main extends org.eclipse.swt.widgets.Composite {
 							}
 							{
 								searchTextBoxAlbumID = new Text(searchGroupOptions, SWT.BORDER);
-								searchTextBoxAlbumID.setBounds(190, 17, 298, 22);
+								searchTextBoxAlbumID.setBounds(190, 17, 182, 22);
 								searchTextBoxAlbumID.setToolTipText("Enter album ID");
 								searchTextBoxAlbumID.setFont(defaultFont);
 							}
@@ -640,19 +640,19 @@ public class Main extends org.eclipse.swt.widgets.Composite {
 							{
 								searchCheckBoxArtist = new Button(searchGroupOptions, SWT.CHECK | SWT.LEFT);
 								searchCheckBoxArtist.setText("Artist:");
-								searchCheckBoxArtist.setBounds(10, 100, 102, 21);
+								searchCheckBoxArtist.setBounds(10, 113, 102, 21);
 								searchCheckBoxArtist.setFont(defaultFont);
 							}
 							{
 								searchCheckBoxYear = new Button(searchGroupOptions, SWT.CHECK | SWT.LEFT);
 								searchCheckBoxYear.setText("Year from:");
-								searchCheckBoxYear.setBounds(10, 127, 102, 23);
+								searchCheckBoxYear.setBounds(10, 150, 102, 23);
 								searchCheckBoxYear.setFont(defaultFont);
 							}
 							{
 								searchCheckBoxSongNames = new Button(searchGroupOptions, SWT.CHECK | SWT.LEFT);
 								searchCheckBoxSongNames.setText("Song name(s):");
-								searchCheckBoxSongNames.setBounds(10, 156, 102, 22);
+								searchCheckBoxSongNames.setBounds(10, 322, 102, 22);
 								searchCheckBoxSongNames.setToolTipText("Enter song names / partial names separated by semicolons\n"+
 										"e.g. 'first song name;second song name;third song name'");
 								searchCheckBoxSongNames.setFont(defaultFont);
@@ -665,44 +665,44 @@ public class Main extends org.eclipse.swt.widgets.Composite {
 							}
 							{
 								searchTextBoxAlbumName = new Text(searchGroupOptions, SWT.BORDER);
-								searchTextBoxAlbumName.setBounds(190, 73, 299, 22);
+								searchTextBoxAlbumName.setBounds(190, 73, 182, 22);
 								searchTextBoxAlbumName.setFont(defaultFont);
 							}
 							{
 								searchTextBoxArtist = new Text(searchGroupOptions, SWT.BORDER);
-								searchTextBoxArtist.setBounds(190, 100, 298, 22);
+								searchTextBoxArtist.setBounds(190, 113, 182, 22);
 								searchTextBoxArtist.setFont(defaultFont);
 							}
 							{
 								searchTextBoxYearFrom = new Text(searchGroupOptions, SWT.BORDER);
-								searchTextBoxYearFrom.setBounds(190, 128, 108, 22);
+								searchTextBoxYearFrom.setBounds(190, 151, 70, 22);
 								searchTextBoxYearFrom.setFont(defaultFont);
 							}
 							{
 								searchLabelYearTo = new Label(searchGroupOptions, SWT.NONE);
 								searchLabelYearTo.setText("To:");
-								searchLabelYearTo.setBounds(326, 131, 30, 16);
+								searchLabelYearTo.setBounds(266, 154, 30, 16);
 								searchLabelYearTo.setFont(defaultFont);
 							}
 							{
 								searchTextBoxYearTo = new Text(searchGroupOptions, SWT.BORDER);
-								searchTextBoxYearTo.setBounds(380, 128, 108, 22);
+								searchTextBoxYearTo.setBounds(302, 151, 70, 22);
 								searchTextBoxYearTo.setFont(defaultFont);
 							}
 							{
 								searchTextBoxSongNames = new Text(searchGroupOptions, SWT.BORDER);
-								searchTextBoxSongNames.setBounds(190, 157, 298, 22);
+								searchTextBoxSongNames.setBounds(190, 323, 182, 22);
 								searchTextBoxSongNames.setFont(defaultFont);
 							}
 							{
 								searchCheckBoxGenresArr[0] = new Button(searchGroupOptions, SWT.CHECK | SWT.LEFT);
-								searchCheckBoxGenresArr[0].setText("Rock");
+								searchCheckBoxGenresArr[0].setText("Electronic");
 								searchCheckBoxGenresArr[0].setBounds(10, 222, 78, 16);
 								searchCheckBoxGenresArr[0].setFont(defaultFont);
 							}
 							{
 								searchCheckBoxGenresArr[1] = new Button(searchGroupOptions, SWT.CHECK | SWT.LEFT);
-								searchCheckBoxGenresArr[1].setText("Jazz");
+								searchCheckBoxGenresArr[1].setText("Blues");
 								searchCheckBoxGenresArr[1].setBounds(10, 248, 78, 16);
 								searchCheckBoxGenresArr[1].setFont(defaultFont);
 							}
@@ -714,37 +714,37 @@ public class Main extends org.eclipse.swt.widgets.Composite {
 							}
 							{
 								searchCheckBoxGenresArr[3] = new Button(searchGroupOptions, SWT.CHECK | SWT.LEFT);
-								searchCheckBoxGenresArr[3].setText("Blues");
+								searchCheckBoxGenresArr[3].setText("Jazz");
 								searchCheckBoxGenresArr[3].setBounds(112, 248, 78, 16);
 								searchCheckBoxGenresArr[3].setFont(defaultFont);
 							}
 							{
 								searchCheckBoxGenresArr[4] = new Button(searchGroupOptions, SWT.CHECK | SWT.LEFT);
-								searchCheckBoxGenresArr[4].setText("World");
+								searchCheckBoxGenresArr[4].setText("Classical");
 								searchCheckBoxGenresArr[4].setBounds(212, 222, 73, 16);
 								searchCheckBoxGenresArr[4].setFont(defaultFont);
 							}
 							{
 								searchCheckBoxGenresArr[5] = new Button(searchGroupOptions, SWT.CHECK | SWT.LEFT);
-								searchCheckBoxGenresArr[5].setText("Hip-Hop");
+								searchCheckBoxGenresArr[5].setText("Metal");
 								searchCheckBoxGenresArr[5].setBounds(212, 248, 79, 16);
 								searchCheckBoxGenresArr[5].setFont(defaultFont);
 							}
-							{
+							/*{
 								searchCheckBoxGenresArr[6] = new Button(searchGroupOptions, SWT.CHECK | SWT.LEFT);
-								searchCheckBoxGenresArr[6].setText("Electronic");
+								searchCheckBoxGenresArr[6].setText("Rock");
 								searchCheckBoxGenresArr[6].setBounds(312, 222, 78, 16);
 								searchCheckBoxGenresArr[6].setFont(defaultFont);
 							}
 							{
 								searchCheckBoxGenresArr[7] = new Button(searchGroupOptions, SWT.CHECK | SWT.LEFT);
-								searchCheckBoxGenresArr[7].setText("Classical");
+								searchCheckBoxGenresArr[7].setText("World");
 								searchCheckBoxGenresArr[7].setBounds(312, 248, 78, 16);
 								searchCheckBoxGenresArr[7].setFont(defaultFont);
 							}
-							/*{
+							{
 								searchCheckBoxGenresArr[8] = new Button(searchGroupOptions, SWT.CHECK | SWT.LEFT);
-								searchCheckBoxGenresArr[8].setText("Metal");
+								searchCheckBoxGenresArr[8].setText("Hip-Hop");
 								searchCheckBoxGenresArr[8].setBounds(270, 186, 60, 16);
 								searchCheckBoxGenresArr[8].setFont(defaultFont);
 							}
@@ -757,30 +757,30 @@ public class Main extends org.eclipse.swt.widgets.Composite {
 							{
 								searchCheckBoxGenreOther = new Button(searchGroupOptions, SWT.CHECK | SWT.LEFT);
 								searchCheckBoxGenreOther.setText("Other:");
-								searchCheckBoxGenreOther.setBounds(10, 274, 70, 22);
+								searchCheckBoxGenreOther.setBounds(10, 280, 70, 22);
 								searchCheckBoxGenreOther.setFont(defaultFont);
 							}
 							{
 								searchTextBoxGenreOther = new Text(searchGroupOptions, SWT.BORDER);
-								searchTextBoxGenreOther.setBounds(190, 275, 298, 22);
+								searchTextBoxGenreOther.setBounds(190, 281, 182, 22);
 								searchTextBoxGenreOther.setFont(defaultFont);
 							}
 							{
 								searchButtonClear = new Button(searchGroupOptions, SWT.PUSH | SWT.CENTER);
 								searchButtonClear.setText("Clear Fields");
-								searchButtonClear.setBounds(10, 328, 233, 33);
+								searchButtonClear.setBounds(10, 471, 173, 33);
 								searchButtonClear.setFont(defaultFont);
 							}
 							{
 								searchButtonSearch = new Button(searchGroupOptions, SWT.PUSH | SWT.CENTER);
 								searchButtonSearch.setText("Search");
-								searchButtonSearch.setBounds(249, 328, 239, 33);
+								searchButtonSearch.setBounds(190, 471, 182, 33);
 								searchButtonSearch.setFont(defaultFont);
 							}
 							{
 								searchCompositeStockField = new Composite(searchGroupOptions, SWT.NONE);
 								searchCompositeStockField.setLayout(null);
-								searchCompositeStockField.setBounds(10, 302, 478, 20);
+								searchCompositeStockField.setBounds(10, 364, 358, 90);
 								{
 									searchLabelStock = new Label(searchCompositeStockField, SWT.NONE);
 									searchLabelStock.setText("Stock:");
@@ -790,13 +790,13 @@ public class Main extends org.eclipse.swt.widgets.Composite {
 								{
 									searchBulletInStockInStore = new Button(searchCompositeStockField, SWT.RADIO | SWT.LEFT);
 									searchBulletInStockInStore.setText("In store");
-									searchBulletInStockInStore.setBounds(393, -1, 75, 22);
+									searchBulletInStockInStore.setBounds(180, 56, 70, 22);
 									searchBulletInStockInStore.setFont(defaultFont);
 								}
 								{
 									searchBulletInStockInNetwork = new Button(searchCompositeStockField, SWT.RADIO | SWT.LEFT);
 									searchBulletInStockInNetwork.setText("In network");
-									searchBulletInStockInNetwork.setBounds(281, -1, 86, 22);
+									searchBulletInStockInNetwork.setBounds(180, 28, 86, 22);
 									searchBulletInStockInNetwork.setFont(defaultFont);
 								}
 								{
@@ -811,25 +811,13 @@ public class Main extends org.eclipse.swt.widgets.Composite {
 						{
 							searchGroupResults = new Group(searchTabComposite, SWT.NONE);
 							searchGroupResults.setLayout(null);
-							searchGroupResults.setText("Search Results");
-							searchGroupResults.setBounds(514, 10, 451, 514);
+							searchGroupResults.setText("Step 2 - Select Album");
+							searchGroupResults.setBounds(399, 10, 414, 514);
 							searchGroupResults.setFont(defaultFont);
-							{
-								searchCompositeDBProgressContainer = new Composite(searchGroupResults, SWT.EMBEDDED);
-								searchCompositeDBProgressContainer.setBounds(13, 348, 428, 60);
-								{
-									searchLabelDBProgressBar = new Label(searchCompositeDBProgressContainer, SWT.NONE);
-									searchLabelDBProgressBar.setAlignment(SWT.CENTER);
-									searchLabelDBProgressBar.setFont(org.eclipse.wb.swt.SWTResourceManager.getFont("Segoe UI", 16, SWT.BOLD));
-									searchLabelDBProgressBar.setLocation(10, 10);
-									searchLabelDBProgressBar.setSize(406, 40);
-									searchLabelDBProgressBar.setText("Proccessing - Please Wait");
-								}
-							}
 							{
 								searchTableAlbumResults = new Table(searchGroupResults, SWT.BORDER | SWT.FULL_SELECTION
 										| SWT.H_SCROLL | SWT.V_SCROLL | SWT.SINGLE); // single row selection
-								searchTableAlbumResults.setBounds(13, 23, 428, 200);
+								searchTableAlbumResults.setBounds(13, 23, 389, 258);
 								searchTableAlbumResults.setHeaderVisible(true);
 								searchTableAlbumResults.setLinesVisible(true);
 								searchTableAlbumResults.setFont(defaultFont);
@@ -875,7 +863,7 @@ public class Main extends org.eclipse.swt.widgets.Composite {
 							{
 								searchTableSongResults = new Table(searchGroupResults, SWT.BORDER | SWT.FULL_SELECTION
 										| SWT.H_SCROLL | SWT.V_SCROLL | SWT.SINGLE);
-								searchTableSongResults.setBounds(13, 265, 428, 239);
+								searchTableSongResults.setBounds(13, 323, 389, 181);
 								searchTableSongResults.setHeaderVisible(true);
 								searchTableSongResults.setLinesVisible(true);
 								searchTableSongResults.setFont(defaultFont);
@@ -909,72 +897,84 @@ public class Main extends org.eclipse.swt.widgets.Composite {
 							}
 							{
 								searchButtonShowSongs = new Button(searchGroupResults, SWT.PUSH | SWT.CENTER);
-								searchButtonShowSongs.setText("Show Song List");
-								searchButtonShowSongs.setBounds(13, 229, 428, 30);
+								searchButtonShowSongs.setText("View Album's Songs");
+								searchButtonShowSongs.setBounds(13, 287, 389, 30);
 								searchButtonShowSongs.setFont(defaultFont);
 							}
 						}
 						{
 							searchGroupStockInfo = new Group(searchTabComposite, SWT.NONE);
 							searchGroupStockInfo.setLayout(null);
-							searchGroupStockInfo.setText("Stock Information");
-							searchGroupStockInfo.setBounds(10, 387, 243, 137);
+							searchGroupStockInfo.setText("Step 3 - Check Stock");
+							searchGroupStockInfo.setBounds(819, 10, 146, 217);
 							searchGroupStockInfo.setFont(defaultFont);
 							{
 								searchLabelStockInfoStoreStock = new Label(searchGroupStockInfo, SWT.NONE);
 								searchLabelStockInfoStoreStock.setText("Store stock:");
-								searchLabelStockInfoStoreStock.setBounds(10, 21, 152, 19);
+								searchLabelStockInfoStoreStock.setBounds(10, 21, 126, 19);
 								searchLabelStockInfoStoreStock.setFont(defaultFont);
 							}
 							{
 								searchLabelStockInfoLocation = new Label(searchGroupStockInfo, SWT.NONE);
-								searchLabelStockInfoLocation.setText("Storage location: ");
-								searchLabelStockInfoLocation.setBounds(10, 46, 152, 19);
+								searchLabelStockInfoLocation.setText("Location: ");
+								searchLabelStockInfoLocation.setBounds(10, 56, 126, 19);
 								searchLabelStockInfoLocation.setFont(defaultFont);
 							}
 							{
 								searchLabelStockInfoPrice = new Label(searchGroupStockInfo, SWT.NONE);
 								searchLabelStockInfoPrice.setText("Price:");
-								searchLabelStockInfoPrice.setBounds(10, 71, 152, 19);
+								searchLabelStockInfoPrice.setBounds(10, 92, 126, 19);
 								searchLabelStockInfoPrice.setFont(defaultFont);
 							}
 							{
 								searchButtonGetStockInfo = new Button(searchGroupStockInfo, SWT.PUSH | SWT.CENTER);
-								searchButtonGetStockInfo.setText("Stock Information");
-								searchButtonGetStockInfo.setBounds(10, 91, 107, 36);
+								searchButtonGetStockInfo.setText("Check Stock");
+								searchButtonGetStockInfo.setBounds(10, 129, 126, 36);
 								searchButtonGetStockInfo.setFont(defaultFont);
 							}
 							{
 								searchButtonStockInfoOrder = new Button(searchGroupStockInfo, SWT.PUSH | SWT.CENTER);
-								searchButtonStockInfoOrder.setLocation(123, 91);
-								searchButtonStockInfoOrder.setSize(110, 36);
-								searchButtonStockInfoOrder.setText("Place an Order...");
+								searchButtonStockInfoOrder.setLocation(10, 171);
+								searchButtonStockInfoOrder.setSize(126, 36);
+								searchButtonStockInfoOrder.setText("Order to Stock");
 								searchButtonStockInfoOrder.setFont(defaultFont);
 							}
 						}
 						{
 							searchGroupSaleInfo = new Group(searchTabComposite, SWT.NONE);
 							searchGroupSaleInfo.setLayout(null);
-							searchGroupSaleInfo.setText("Sale");
-							searchGroupSaleInfo.setBounds(259, 387, 249, 137);
+							searchGroupSaleInfo.setText("Step 4 - Sell");
+							searchGroupSaleInfo.setBounds(819, 233, 146, 139);
 							searchGroupSaleInfo.setFont(defaultFont);
 							{
 								searchLabelSaleInfoQuantity = new Label(searchGroupSaleInfo, SWT.NONE);
-								searchLabelSaleInfoQuantity.setText("Add to sale with quantity:");
-								searchLabelSaleInfoQuantity.setBounds(10, 22, 157, 22);
+								searchLabelSaleInfoQuantity.setText("Sell quantity:");
+								searchLabelSaleInfoQuantity.setBounds(10, 22, 126, 22);
 								searchLabelSaleInfoQuantity.setFont(defaultFont);
 							}
 							{
 								searchTextBoxSaleInfoQuantity = new Text(searchGroupSaleInfo, SWT.BORDER);
 								searchTextBoxSaleInfoQuantity.setText("1");
-								searchTextBoxSaleInfoQuantity.setBounds(10, 46, 229, 22);
+								searchTextBoxSaleInfoQuantity.setBounds(10, 55, 126, 22);
 								searchTextBoxSaleInfoQuantity.setFont(defaultFont);
 							}
 							{
 								searchButtonSaleInfoSale = new Button(searchGroupSaleInfo, SWT.PUSH | SWT.CENTER);
-								searchButtonSaleInfoSale.setText("Add to Sale...");
-								searchButtonSaleInfoSale.setBounds(10, 78, 229, 36);
+								searchButtonSaleInfoSale.setText("Sell");
+								searchButtonSaleInfoSale.setBounds(10, 93, 126, 36);
 								searchButtonSaleInfoSale.setFont(defaultFont);
+							}
+						}
+						{
+							searchCompositeDBProgressContainer = new Composite(searchTabComposite, SWT.EMBEDDED);
+							searchCompositeDBProgressContainer.setBounds(819, 378, 146, 124);
+							{
+								searchLabelDBProgressBar = new Label(searchCompositeDBProgressContainer, SWT.NONE);
+								searchLabelDBProgressBar.setAlignment(SWT.CENTER);
+								searchLabelDBProgressBar.setFont(org.eclipse.wb.swt.SWTResourceManager.getFont("Segoe UI", 16, SWT.BOLD));
+								searchLabelDBProgressBar.setLocation(0, 0);
+								searchLabelDBProgressBar.setSize(146, 124);
+								searchLabelDBProgressBar.setText("Proccessing Please Wait");
 							}
 						}
 					}

@@ -669,7 +669,7 @@ public class SearchFuncs {
 	 */
 	public static void clearStockInfo(){
 		Main.getSearchLabelStockInfoStoreStock().setText("Store stock: ");
-		Main.getSearchLabelStockInfoLocation().setText("Storage location: ");
+		Main.getSearchLabelStockInfoLocation().setText("Location: ");
 		Main.getSearchLabelStockInfoPrice().setText("Price: ");
 	}
 	
@@ -686,7 +686,7 @@ public class SearchFuncs {
 	 * @param str
 	 */
 	protected static void setLabelStockLocation(String str){
-		Main.getSearchLabelStockInfoLocation().setText("Storage location: "+str);
+		Main.getSearchLabelStockInfoLocation().setText("Location: "+str);
 	}
 	
 	/**
