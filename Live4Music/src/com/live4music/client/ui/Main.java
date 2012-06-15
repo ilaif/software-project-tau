@@ -297,10 +297,6 @@ public class Main extends org.eclipse.swt.widgets.Composite {
 	* org.eclipse.swt.widgets.Composite inside a new Shell.
 	*/
 	public static void main(String[] args) {
-		//////////////////////////////////////////
-		//		INIT EXAMPLES - TO BE REMOVED	//
-		//////////////////////////////////////////
-		TablesExamples.initTablesExamples();
 		
 		// Start GUI
 		showGUI();
