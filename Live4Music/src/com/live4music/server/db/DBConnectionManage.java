@@ -23,7 +23,7 @@ public class DBConnectionManage {
 			
 			String employeesQuery =
 				"SELECT *\n"+
-				"FROM Employees\n"+
+				"FROM employees\n"+
 				"WHERE store_id = " + StaticProgramTables.thisStore.getStoreID();
 			
 			DBQueryResults queryResults = DBAccessLayer.executeQuery(employeesQuery);
@@ -88,7 +88,7 @@ public class DBConnectionManage {
 			
 			String employeeExistsQuery =
 				"SELECT *\n"+
-				"FROM Employees\n"+
+				"FROM employees\n"+
 				"WHERE employee_id = " + employeeID;
 			
 			DBQueryResults queryResults = DBAccessLayer.executeQuery(employeeExistsQuery);
@@ -134,11 +134,11 @@ public class DBConnectionManage {
 			Debug.log("DBConnectionManage.InsertUpdateEmployee thread is started",DebugOutput.FILE,DebugOutput.STDOUT);
 
 			String employeeRemove = 
-				"DELETE FROM Employees\n"+
+				"DELETE FROM employees\n"+
 				"WHERE employee_id = " + employee.getEmployeeID();
 
 			String employeeInsert = 
-				"INSERT INTO Employees(" +
+				"INSERT INTO employees(" +
 				"employee_id, " +
 				"first_name, " +
 				"last_name, " +
@@ -167,7 +167,7 @@ public class DBConnectionManage {
 			sqlCommands.add(employeeInsert);
 			
 			if (employee.getPosition() == EmployeePositionsEnum.MANAGER){
-				String storeManagerUpdate = "UPDATE Stores\n" +
+				String storeManagerUpdate = "UPDATE stores\n" +
 					"SET manager_id = " + employee.getEmployeeID() + "\n" +
 					"WHERE store_id = " + StaticProgramTables.thisStore.getStoreID();
 				sqlCommands.add(storeManagerUpdate);
@@ -199,7 +199,7 @@ public class DBConnectionManage {
 		public void run() {
 			Debug.log("DBConnectionManage.RemoveEmployee thread is started",DebugOutput.FILE,DebugOutput.STDOUT);
 			
-			String employeeRemove = "DELETE FROM Employees\n" +
+			String employeeRemove = "DELETE FROM employees\n" +
 					"WHERE employee_id = "+employeeID;
 
 			if (DBAccessLayer.executeUpdate(employeeRemove) == -1){
@@ -308,7 +308,7 @@ public class DBConnectionManage {
 				
 				// Get last album id from DB.
 				Debug.log("DBConnectionManage.BatchAddToDB: access DB to get last album_id");
-				DBQueryResults maxAlbumID = DBAccessLayer.executeQuery("SELECT max(album_id) AS max_id FROM Albums");
+				DBQueryResults maxAlbumID = DBAccessLayer.executeQuery("SELECT max(album_id) AS max_id FROM albums");
 				if (maxAlbumID == null) {
 					Debug.log("DBConnectionManage.BatchAddToDB [ERROR]: failed while attempting to get max album_id");
 					GuiUpdatesInterface.notifyDBFailure(DBActionFailureEnum.UPDATE_DB_FAILURE);
@@ -580,7 +580,7 @@ public class DBConnectionManage {
 			int lastAlbumID = 0;
 
 			DBQueryResults maxIDQuery = DBAccessLayer.executeQuery("SELECT MAX(album_id) AS last_album_id\n" +
-					"FROM Albums");
+					"FROM albums");
 			if (maxIDQuery == null){
 				GuiUpdatesInterface.notifyDBFailure(DBActionFailureEnum.UPDATE_DB_FAILURE);
 				return;
@@ -614,9 +614,9 @@ public class DBConnectionManage {
 			}
 			
 			if (!fileParser.isFinishedSuccessfully() || !dbAdder.isFinishedSuccessfully()){ // Revert to previous DB state
-				DBAccessLayer.executeUpdate("DELETE FROM Albums\n" +
+				DBAccessLayer.executeUpdate("DELETE FROM albums\n" +
 						"WHERE album_id > " + lastAlbumID);
-				DBAccessLayer.executeUpdate("DELETE FROM Songs\n" +
+				DBAccessLayer.executeUpdate("DELETE FROM songs\n" +
 						"WHERE album_id > " + lastAlbumID);
 			}
 			if (fileParser.isFinishedSuccessfully() && dbAdder.isFinishedSuccessfully()) // only return finished successfully message when relevant.

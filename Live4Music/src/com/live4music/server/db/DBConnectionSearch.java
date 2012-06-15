@@ -22,24 +22,24 @@ public class DBConnectionSearch {
 		public void run() {
 			Debug.log("DBConnectionSearch.GetAlbumsSearchResults thread is started",DebugOutput.FILE,DebugOutput.STDOUT);
 			
-			String selectPart = "SELECT Albums.album_id, " +
-					"Albums.album_name, " +
+			String selectPart = "SELECT albums.album_id, " +
+					"albums.album_name, " +
 					"artists.artist_name, " +
-					"Albums.year, " +
+					"albums.year, " +
 					"genres.genre_name, " +
-					"Albums.length_sec, " +
-					"Albums.price\n";
-			String fromPart = "FROM Albums, artists, genres";
-			String wherePart = "WHERE Albums.artist_id = artists.artist_id AND\n" +
-					"Albums.genre_id = genres.genre_id"; 
+					"albums.length_sec, " +
+					"albums.price\n";
+			String fromPart = "FROM albums, artists, genres";
+			String wherePart = "WHERE albums.artist_id = artists.artist_id AND\n" +
+					"albums.genre_id = genres.genre_id"; 
 				
 			if (albumSearchQuery.isByAlbumID()){
 				wherePart += " AND\n" +
-						"Albums.album_id = " + albumSearchQuery.getAlbumID();
+						"albums.album_id = " + albumSearchQuery.getAlbumID();
 			} else {
 				if (albumSearchQuery.hasAlbumName()){
 					wherePart += " AND\n" +
-							"LOWER(Albums.album_name) LIKE '%" + albumSearchQuery.getAlbumName()+"%'";
+							"LOWER(albums.album_name) LIKE '%" + albumSearchQuery.getAlbumName()+"%'";
 					
 				}
 				if (albumSearchQuery.hasArtist()) {
@@ -49,15 +49,15 @@ public class DBConnectionSearch {
 				
 				if (albumSearchQuery.hasYear()){
 					wherePart += " AND\n" +
-							"Albums.year <= " + albumSearchQuery.getYearTo() + " AND\n" +
-							"Albums.year >= " + albumSearchQuery.getYearFrom();
+							"albums.year <= " + albumSearchQuery.getYearTo() + " AND\n" +
+							"albums.year >= " + albumSearchQuery.getYearFrom();
 				}
 				if (albumSearchQuery.hasSongNames()){
 					int i = 0;
 					for (String songName : albumSearchQuery.getSongNames().split(";")) {
-						fromPart += ", Songs s"+i;
+						fromPart += ", songs s"+i;
 						wherePart += " AND\n" +
-								"Albums.Album_id = s"+i+".album_id";						
+								"albums.Album_id = s"+i+".album_id";						
 						wherePart += " AND\n" +
 								"LOWER(s"+i+".song_name) LIKE '%" + songName + "%'";
 						i++;
@@ -65,14 +65,14 @@ public class DBConnectionSearch {
 				}
 				
 				if (albumSearchQuery.getStockOption() == AlbumSearchStockOptionEnum.STORE){
-					fromPart += ", Stock";
+					fromPart += ", stock";
 					wherePart += " AND\n" +
-							"Albums.album_id = Stock.album_id AND\n" +
-							"Stock.store_id = " + StaticProgramTables.thisStore.getStoreID();
+							"albums.album_id = stock.album_id AND\n" +
+							"stock.store_id = " + StaticProgramTables.thisStore.getStoreID();
 				} else if (albumSearchQuery.getStockOption() == AlbumSearchStockOptionEnum.NETWORK){
-					fromPart += ", Stock";
+					fromPart += ", stock";
 					wherePart += " AND\n" +
-							"Albums.album_id = Stock.album_id";
+							"albums.album_id = stock.album_id";
 				}
 			}
 			
@@ -127,11 +127,11 @@ public class DBConnectionSearch {
 		public void run() {
 			Debug.log("DBConnectionSearch.GetSongsResults thread is started",DebugOutput.FILE,DebugOutput.STDOUT);
 			
-			String songsQuery = "SELECT Songs.track_num, Songs.song_name, artists.artist_name, Songs.length_sec\n";
-			songsQuery += "FROM Songs, Artists\n";
-			songsQuery += "WHERE Songs.album_id = " + albumID + " AND\n" +
-					"Songs.artist_id = artists.artist_id\n";
-			songsQuery += "ORDER BY Songs.track_num";
+			String songsQuery = "SELECT songs.track_num, songs.song_name, artists.artist_name, songs.length_sec\n";
+			songsQuery += "FROM songs, artists\n";
+			songsQuery += "WHERE songs.album_id = " + albumID + " AND\n" +
+					"songs.artist_id = artists.artist_id\n";
+			songsQuery += "ORDER BY songs.track_num";
 			
 			DBQueryResults songsQueryResults = DBAccessLayer.executeQuery(songsQuery);
 			if (songsQueryResults == null){
