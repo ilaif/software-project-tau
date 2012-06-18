@@ -79,8 +79,14 @@ public class SaleFuncs {
 					public void widgetSelected(SelectionEvent e){
 						Debug.log("Sale tab: make sale button clicked",DebugOutput.FILE,DebugOutput.STDOUT);
 						
+						MessageBox makeSaleErrorMsg = new MessageBox(Main.getMainShell(),SWT.ICON_ERROR | SWT.OK);
+						makeSaleErrorMsg.setMessage("No employee selected");
+						makeSaleErrorMsg.setText("Make a sale Error");
+						if(getSelectedSalesman()==null){
+							makeSaleErrorMsg.open();
+						}
 						// check if DB is not busy, else pop a message
-						if (MainFuncs.isAllowDBAction()){
+						else if (MainFuncs.isAllowDBAction()){
 							// flag DB as busy
 							MainFuncs.setAllowDBAction(false);
 							
@@ -205,14 +211,22 @@ public class SaleFuncs {
 	 */
 	protected static int getSalesmanIDFromSelected(){
 		String employeeDetails = Main.getSaleComboSalesmanIDNameInput().getText();
-		StringTokenizer tokenizer = new StringTokenizer(employeeDetails,":");
-		try{
-			int id = Integer.parseInt(tokenizer.nextToken());
-			return id;
-		}catch(NumberFormatException nfe){
-			Debug.log("*** BUG: SaleFuncs.getSalesmanIDFromSelected - salesman id is not an integer", DebugOutput.FILE, DebugOutput.STDERR);
+		if(employeeDetails==null){
 			return -1;
-		}catch(NoSuchElementException nsee){return -1;}
+		}
+		else if (employeeDetails.trim()==""){
+			return -1;
+		}
+		else{
+			StringTokenizer tokenizer = new StringTokenizer(employeeDetails,":");
+			try{
+				int id = Integer.parseInt(tokenizer.nextToken());
+				return id;
+			}catch(NumberFormatException nfe){
+				Debug.log("*** BUG: SaleFuncs.getSalesmanIDFromSelected - salesman id is not an integer", DebugOutput.FILE, DebugOutput.STDERR);
+				return -1;
+			}catch(NoSuchElementException nsee){return -1;}
+		}
 	}
 	
 	/**

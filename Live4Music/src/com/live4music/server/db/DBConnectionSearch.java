@@ -22,7 +22,7 @@ public class DBConnectionSearch {
 		public void run() {
 			Debug.log("DBConnectionSearch.GetAlbumsSearchResults thread is started",DebugOutput.FILE,DebugOutput.STDOUT);
 			
-			String selectPart = "SELECT albums.album_id, " +
+			String selectPart = "SELECT distinct albums.album_id, " +
 					"albums.album_name, " +
 					"artists.artist_name, " +
 					"albums.year, " +
